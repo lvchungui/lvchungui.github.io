@@ -287,7 +287,7 @@ body.night .xe-comment p {
   padding: 0 10px;
 }
 /* 标题图标 */
-.linecons-tag:before {
+.nav-category h4.text-gray > i:before {
   font-size: 24px;
 }
 /* 标题 */
@@ -341,8 +341,27 @@ body.page-body.boxed-container.vsc-initialized {
 }
 .sidebar-menu .main-menu a {
   border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   transition: 0.3s;
   border-radius: 12px;
+}
+.sidebar-menu .main-menu a > i {
+  display: inline-flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-width: 24px;
+  margin-right: 0;
+  text-align: center;
+  line-height: 1;
+}
+.sidebar-menu .main-menu a > .title {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .sidebar-menu .main-menu a:hover {
   background: #888;
@@ -535,45 +554,18 @@ nav.navbar.user-info-navbar {
 
 /* 当前分类高亮 */
 .nav-category {
-  border: 1px solid transparent;
+  border: none;
   border-radius: 8px;
   margin-bottom: 8px;
   padding: 12px 10px 2px;
-  transition: border-color 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
 }
 
 .nav-category.is-active {
-  border-color: rgba(104, 216, 255, 0.8);
-  background: rgba(255, 255, 255, 0.34);
-  box-shadow:
-    0 0 0 1px rgba(104, 216, 255, 0.35),
-    0 0 18px rgba(104, 216, 255, 0.3),
-    inset 0 0 18px rgba(104, 216, 255, 0.12);
-}
-
-.nav-category.is-active h4.text-gray,
-.nav-category.is-active h4.text-gray .linecons-tag:before {
-  color: #1f9fd6;
-  text-shadow:
-    0 0 8px rgba(104, 216, 255, 0.75),
-    0 0 18px rgba(104, 216, 255, 0.45);
+  box-shadow: none;
 }
 
 .night .nav-category.is-active {
-  border-color: rgba(125, 211, 252, 0.88);
-  background: rgba(0, 0, 0, 0.24);
-  box-shadow:
-    0 0 0 1px rgba(125, 211, 252, 0.42),
-    0 0 20px rgba(125, 211, 252, 0.36),
-    inset 0 0 20px rgba(125, 211, 252, 0.16);
-}
-
-.night .nav-category.is-active h4.text-gray,
-.night .nav-category.is-active h4.text-gray .linecons-tag:before {
-  color: #7dd3fc;
-  text-shadow:
-    0 0 10px rgba(125, 211, 252, 0.8),
-    0 0 22px rgba(125, 211, 252, 0.5);
+  box-shadow: none;
 }
 
 /* 分类内容过多时启用内部滚动 */
@@ -654,29 +646,6 @@ nav.navbar.user-info-navbar {
 
 .night .nav-card-scroll.has-inner-scroll::-webkit-scrollbar-thumb {
   background: rgba(125, 211, 252, 0.78);
-}
-
-.sidebar-menu .main-menu a.is-current,
-.sidebar-menu .main-menu li.is-current > a {
-  background: rgba(104, 216, 255, 0.16);
-  box-shadow:
-    inset 3px 0 0 #68d8ff,
-    inset 0 0 0 1px rgba(104, 216, 255, 0.28),
-    0 0 16px rgba(104, 216, 255, 0.22);
-}
-
-.sidebar-menu .main-menu li.is-current-parent > a {
-  background: rgba(104, 216, 255, 0.1);
-}
-
-.sidebar-menu .main-menu a.is-current i,
-.sidebar-menu .main-menu a.is-current span,
-.sidebar-menu .main-menu li.is-current > a i,
-.sidebar-menu .main-menu li.is-current > a span {
-  color: #7dd3fc;
-  text-shadow:
-    0 0 8px rgba(125, 211, 252, 0.75),
-    0 0 18px rgba(125, 211, 252, 0.45);
 }
 
 /* 右侧二级导航 */
@@ -1126,38 +1095,28 @@ input#txt {
 
 /* Category panel colors */
 .nav-category {
-  background: linear-gradient(180deg, rgba(252, 254, 255, 0.94), rgba(237, 246, 250, 0.9));
-  border-color: rgba(174, 204, 218, 0.64);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.86),
-    0 12px 30px rgba(73, 116, 141, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.42);
+  background: #F9F9F9;
+  border: none;
+  box-shadow: none;
 }
 
 .nav-category.is-active {
-  background-color: rgba(241, 250, 255, 0.98);
-  background-image: linear-gradient(180deg, rgba(249, 253, 255, 0.98), rgba(232, 247, 253, 0.94));
-  border-color: rgba(116, 197, 224, 0.7);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 1px rgba(141, 214, 238, 0.22),
-    0 10px 28px rgba(81, 150, 176, 0.12),
-    0 0 24px rgba(117, 211, 243, 0.18);
+  background: #F9F9F9;
+  border: none;
+  box-shadow: none;
 }
 
 .night .nav-category,
 body.night .nav-category {
-  background: rgba(18, 27, 36, 0.86);
-  border-color: rgba(125, 211, 252, 0.24);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 12px 28px rgba(0, 0, 0, 0.24);
+  background: #2c2e2f;
+  border: none;
+  box-shadow: none;
 }
 
 .night .nav-category.is-active,
 body.night .nav-category.is-active {
-  background-color: rgba(18, 39, 54, 0.96);
-  background-image: linear-gradient(180deg, rgba(18, 39, 54, 0.96), rgba(18, 27, 36, 0.88));
+  background: #2c2e2f;
+  border: none;
 }
 
 .nav-card-scroll.has-inner-scroll::before {

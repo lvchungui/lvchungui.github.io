@@ -82,7 +82,6 @@ document.title = '北极熊说它怕冷的个人导航';
 
     function setPanel(parentName, subName) {
       var parentSections = Array.prototype.slice.call(document.querySelectorAll('.nav-category'));
-      var sidebarLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-menu .main-menu a[href^="#"]'));
 
       links.forEach(function (link) {
         var isSameParent = link.getAttribute('data-parent-category') === parentName;
@@ -104,26 +103,6 @@ document.title = '北极熊说它怕冷的个人导航';
 
       parentSections.forEach(function (section) {
         section.classList.toggle('is-active', section.getAttribute('data-category') === parentName);
-      });
-
-      sidebarLinks.forEach(function (link) {
-        var href = link.getAttribute('href') || '';
-        var targetName = '';
-
-        try {
-          targetName = decodeURIComponent(href.slice(1));
-        } catch (error) {
-          targetName = href.slice(1);
-        }
-
-        var isCurrentParent = targetName === parentName;
-        var item = link.closest('li');
-
-        link.classList.toggle('is-current', isCurrentParent);
-
-        if (item) {
-          item.classList.toggle('is-current', isCurrentParent);
-        }
       });
 
       if (window.lozad) {
@@ -209,8 +188,6 @@ document.title = '北极熊说它怕冷的个人导航';
     var sections = Array.prototype.slice.call(document.querySelectorAll('.nav-category'));
     var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidebar-menu .main-menu a[href^="#"]'));
     var subCategoryLinks = Array.prototype.slice.call(document.querySelectorAll('.sub-category-link[data-parent-category][data-sub-category]'));
-    var ticking = false;
-    var hasActiveCategory = Boolean(window.location.hash);
 
     if (!sections.length || (!navLinks.length && !subCategoryLinks.length)) {
       return;
@@ -226,19 +203,10 @@ document.title = '北极熊说它怕冷的个人导航';
     }
 
     function setActive(name) {
-      var activeParentItems = [];
-      var menuItems = Array.prototype.slice.call(document.querySelectorAll('.sidebar-menu .main-menu li'));
-      var sidebarActiveName = name;
-      hasActiveCategory = true;
-
       sections.forEach(function (section) {
         var sectionName = getSectionName(section);
 
         section.classList.toggle('is-active', sectionName === name);
-      });
-
-      navLinks.forEach(function (link) {
-        link.classList.remove('is-current');
       });
 
       subCategoryLinks.forEach(function (link) {
@@ -248,120 +216,22 @@ document.title = '北极熊说它怕冷的个人导航';
           link.classList.remove('is-current');
         }
       });
-
-      menuItems.forEach(function (item) {
-        item.classList.remove('is-current', 'is-current-parent');
-      });
-
-      navLinks.forEach(function (link) {
-        var isCurrent = getLinkTarget(link) === sidebarActiveName;
-        var item = link.closest('li');
-        var parentItem = item && item.parentElement ? item.parentElement.closest('li') : null;
-
-        if (!isCurrent) {
-          return;
-        }
-
-        link.classList.add('is-current');
-
-        if (item) {
-          item.classList.add('is-current');
-        }
-
-        if (parentItem) {
-          activeParentItems.push(parentItem);
-        }
-      });
-
-      activeParentItems.forEach(function (item) {
-        item.classList.add('is-current-parent');
-      });
     }
 
     function clearActive() {
-      var menuItems = Array.prototype.slice.call(document.querySelectorAll('.sidebar-menu .main-menu li'));
-
       sections.forEach(function (section) {
         section.classList.remove('is-active');
       });
-
-      navLinks.forEach(function (link) {
-        link.classList.remove('is-current');
-      });
-
-      menuItems.forEach(function (item) {
-        item.classList.remove('is-current', 'is-current-parent');
-      });
-    }
-
-    function getWatchLine() {
-      var navbar = document.querySelector('nav.navbar.user-info-navbar');
-      var navbarBottom = navbar ? navbar.getBoundingClientRect().bottom : 0;
-
-      return Math.min(Math.max(navbarBottom + 64, 112), window.innerHeight * 0.32);
-    }
-
-    function findCurrentSection() {
-      var watchLine = getWatchLine();
-      var current = sections[0];
-      var closestDistance = Infinity;
-
-      sections.forEach(function (section) {
-        var rect = section.getBoundingClientRect();
-        var containsWatchLine = rect.top <= watchLine && rect.bottom > watchLine;
-
-        if (containsWatchLine) {
-          current = section;
-          closestDistance = 0;
-          return;
-        }
-
-        if (rect.top <= watchLine) {
-          var distance = watchLine - rect.top;
-
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            current = section;
-          }
-        }
-      });
-
-      return current;
-    }
-
-    function updateActive() {
-      ticking = false;
-      setActive(getSectionName(findCurrentSection()));
-    }
-
-    function requestUpdate() {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(updateActive);
-      }
     }
 
     navLinks.forEach(function (link) {
       link.addEventListener('click', function () {
         setActive(getLinkTarget(link));
-        window.setTimeout(requestUpdate, 360);
       });
-    });
-
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', function () {
-      if (hasActiveCategory) {
-        requestUpdate();
-      }
-    }, { passive: true });
-    window.addEventListener('hashchange', function () {
-      hasActiveCategory = true;
-      requestUpdate();
     });
 
     if (window.location.hash) {
       setActive(decodeTarget(window.location.hash.slice(1)));
-      window.setTimeout(requestUpdate, 180);
     } else {
       clearActive();
     }
