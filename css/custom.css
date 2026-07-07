@@ -409,6 +409,63 @@ footer.main-footer.sticky.footer-type-1 {
 .night footer.main-footer.sticky.footer-type-1 {
   background: rgba(0, 0, 0, 0.7) !important;
 }
+.site-footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 56px;
+  padding: 8px 48px 8px 0;
+  color: #333;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.site-footer-info p {
+  margin: 0;
+}
+
+.footer-copyright {
+  font-size: 14px;
+  color: #222;
+}
+
+.footer-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+.footer-stats span,
+.footer-stats span#busuanzi_container_site_pv,
+.footer-stats span#busuanzi_container_site_uv,
+.footer-stats span#busuanzi_value_site_pv,
+.footer-stats span#busuanzi_value_site_uv {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.footer-separator {
+  color: #c4c4c4 !important;
+}
+
+.night .site-footer-info,
+.night .footer-copyright,
+.night .footer-stats {
+  color: #e0e0e0;
+}
+
+.night .footer-separator {
+  color: #666 !important;
+}
+
 .footer-inner p {
   text-align: center;
   vertical-align: center;
@@ -891,6 +948,20 @@ input#txt {
   .main-content {
     padding-left: 12px;
     padding-right: 12px;
+  }
+
+  .site-footer-info {
+    padding: 10px 36px 10px 0;
+    min-height: 68px;
+  }
+
+  .footer-copyright {
+    font-size: 13px;
+  }
+
+  .footer-stats {
+    gap: 4px 8px;
+    font-size: 12px;
   }
 
   .col-sm-3 {

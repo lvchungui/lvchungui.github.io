@@ -5,9 +5,11 @@ function search() {
     var siteResults = [];
     var siteSearchUrl = "site://nav";
     var siteSearchIcon = "/img/logo.png";
+    var defaultSearchUrl = "https://www.baidu.com/s?wd=";
+    var defaultSearchIcon = "0px 0px";
     var searchData = {
-        "thisSearch": siteSearchUrl,
-        "thisSearchIcon": siteSearchIcon,
+        "thisSearch": defaultSearchUrl,
+        "thisSearchIcon": defaultSearchIcon,
         "hotStatus": true,
         "data": [ {
             name: "百度",
@@ -101,14 +103,11 @@ function search() {
             type: "external"
         }]
     };
-    var localSearchData = localStorage.getItem("searchData");
-    if (localSearchData) {
-        try {
-            searchData = JSON.parse(localSearchData)
-        } catch (error) {
-            localStorage.removeItem("searchData")
-        }
+    var localHotStatus = localStorage.getItem("searchHotStatus");
+    if (localHotStatus === "true" || localHotStatus === "false") {
+        searchData.hotStatus = localHotStatus === "true";
     }
+    localStorage.removeItem("searchData");
 
     ensureSiteSearchEngine();
 
@@ -536,7 +535,7 @@ function search() {
     $("#hot-btn").click(function () {
         $(this).toggleClass("off");
         searchData.hotStatus = !searchData.hotStatus;
-        localStorage.searchData = JSON.stringify(searchData)
+        localStorage.setItem("searchHotStatus", String(searchData.hotStatus))
     });
     searchData.hotStatus ? $("#hot-btn").removeClass("off") : $("#hot-btn").addClass("off");
     $(".search-engine-list li").click(function () {
@@ -545,7 +544,6 @@ function search() {
         applySearchIcon(searchData.thisSearchIcon);
         searchData.thisSearch = searchData.data[index].url;
         $(".search-engine").css("display", "none");
-        localStorage.searchData = JSON.stringify(searchData);
 
         if (isSiteSearch()) {
             renderSiteResults($("#txt").val())

@@ -59,13 +59,18 @@
 
   <footer class="main-footer sticky footer-type-1">
   <div class="footer-inner">
-    <!-- Add your copyright text here -->
-    <!-- <p>
-      
-      &copy; 2021 - 2026
-      | Designed by <a href="http://viggoz.com" target="_blank"><strong>Viggo</strong></a> | Beautified By <a href="hassanwong.top"><strong></strong></a> | Powered by <a href="https://hexo.io/" target="_blank"><strong>Hexo</strong></a> & <a href="https://github.com/HCLonely/hexo-theme-webstack/" target="_blank"><strong>hexo-theme-webstack</strong></a>
-    </p> -->
-    
+    <div class="site-footer-info">
+      <p class="footer-copyright">Copyright &copy; 2022 - 2026&nbsp;&nbsp; 北极熊说它怕冷</p>
+      <p class="footer-stats">
+        
+        <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
+        <span class="footer-separator">|</span>
+        <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+        <span class="footer-separator">|</span>
+        
+        <span>本站运行时间 <span id="site-runtime">计算中...</span></span>
+      </p>
+    </div>
     <div class="go-up">
       <a href="#" onclick="switchNightMode()">
         <svg t="1593061068148" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1681" width="16" height="16">
@@ -93,6 +98,37 @@
 <script src="/js/xenon-custom.min.js"></script>
 
 
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+(function updateSiteRuntime() {
+  var startTime = new Date('2022-01-01T00:00:00+08:00').getTime();
+  var runtimeElement = document.getElementById('site-runtime');
+
+  if (!runtimeElement) {
+    return;
+  }
+
+  function pad(value) {
+    return value < 10 ? '0' + value : String(value);
+  }
+
+  function render() {
+    var seconds = Math.max(Math.floor((Date.now() - startTime) / 1000), 0);
+    var totalDays = Math.floor(seconds / 86400);
+    var years = Math.floor(totalDays / 365);
+    var days = totalDays % 365;
+    var hours = Math.floor((seconds % 86400) / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var restSeconds = seconds % 60;
+
+    runtimeElement.textContent = years + ' 年 ' + days + ' 天 ' + pad(hours) + ' 时 ' + pad(minutes) + ' 分 ' + pad(restSeconds) + ' 秒';
+  }
+
+  render();
+  window.setInterval(render, 1000);
+})();
+</script>
 
 <textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arimo, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; word-spacing: 0px; text-indent: 0px; line-height: 18.5714px; width: 53px;" class="autosizejs" id="autosizejs"></textarea>
 
