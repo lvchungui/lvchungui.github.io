@@ -1058,7 +1058,7 @@ input#txt {
   .main-content {
     padding-left: 0;
     padding-right: 0;
-    padding-top: 86px;
+    padding-top: 112px;
   }
 
   .site-footer-info {
@@ -1087,8 +1087,8 @@ input#txt {
   .col-sm-3 {
     width: 100%;
     float: none;
-    padding-left: 18px;
-    padding-right: 18px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   nav.navbar.user-info-navbar {
@@ -1096,7 +1096,7 @@ input#txt {
   }
 
   .sousuo {
-    padding: 56px 0 28px;
+    padding: 34px 0 28px;
   }
 
   input#txt {
@@ -1126,9 +1126,11 @@ input#txt {
   }
 
   .xe-widget.xe-conversations img {
-    width: 50px;
-    height: 50px;
+    width: 50px !important;
+    height: 50px !important;
     min-width: 50px;
+    max-width: 50px;
+    aspect-ratio: 1 / 1;
     border-radius: 50% !important;
     object-fit: cover;
   }
@@ -1144,7 +1146,13 @@ input#txt {
     flex: 0 0 50px;
     align-items: center;
     justify-content: center;
+    width: 50px;
+    height: 50px;
     padding-right: 0;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img img {
+    display: block;
   }
 
   .xe-widget.xe-conversations .xe-comment {
