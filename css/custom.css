@@ -192,6 +192,40 @@ strong.search-engine-tit {
 .xe-widget.xe-conversations .overflowClip_2 {
   transition: .3s;
 }
+
+.xe-widget.xe-conversations .xe-user-img {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  max-width: 42px;
+  max-height: 42px;
+  padding: 0 !important;
+  margin-right: 12px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.xe-widget.xe-conversations .xe-user-img img,
+.xe-widget.xe-conversations .xe-user-img img.img-circle {
+  display: block;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  object-fit: cover;
+  object-position: center;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+}
 /* .xe-widget.xe-conversations:hover img {
   transform: scale(0);
 } */
@@ -1355,12 +1389,12 @@ input#txt {
   }
 
   .xe-widget.xe-conversations img {
-    width: 50px !important;
-    height: 50px !important;
-    min-height: 50px;
-    min-width: 50px;
-    max-width: 50px;
-    max-height: 50px;
+    width: 42px !important;
+    height: 42px !important;
+    min-height: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    max-height: 42px;
     aspect-ratio: 1 / 1;
     border-radius: 50% !important;
     object-fit: cover;
@@ -1376,39 +1410,36 @@ input#txt {
 
   .xe-widget.xe-conversations .xe-user-img {
     display: inline-flex;
-    flex: 0 0 50px;
+    flex: 0 0 42px;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
-    min-width: 50px;
-    min-height: 50px;
-    max-width: 50px;
-    max-height: 50px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
     padding: 0 !important;
     overflow: hidden;
     border-radius: 50%;
     aspect-ratio: 1 / 1;
-    position: relative;
   }
 
   .xe-widget.xe-conversations .xe-user-img img {
     display: block;
-    flex: 0 0 50px;
-    width: 50px !important;
-    height: 50px !important;
+    flex: 0 0 42px;
+    width: 42px !important;
+    height: 42px !important;
     margin: 0 !important;
-    position: absolute;
-    inset: 0;
   }
 
   .xe-widget.xe-conversations .xe-user-img img.img-circle {
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
-    max-width: 50px !important;
-    max-height: 50px !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
     border-radius: 999px !important;
   }
 
