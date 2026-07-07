@@ -945,18 +945,42 @@ input#txt {
 }
 
 @media screen and (max-width: 767px) {
+  .sidebar-menu,
+  .sidebar-menu.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    width: 100%;
+  }
+
+  .sidebar-menu .sidebar-menu-inner {
+    position: relative;
+    width: 100%;
+  }
+
+  .sidebar-menu .main-menu {
+    max-height: calc(100vh - 86px);
+    margin: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .sidebar-menu .logo-env {
     display: flex;
     align-items: center;
-    min-height: 78px;
-    padding: 12px 18px;
+    justify-content: center;
+    min-height: 86px;
+    padding: 12px 16px;
   }
 
   .sidebar-menu .logo-env .logo {
     display: flex;
     align-items: center;
+    justify-content: center;
     min-width: 0;
-    width: calc(100% - 54px);
+    width: 100%;
   }
 
   .sidebar-menu .logo-env .logo a {
@@ -980,7 +1004,7 @@ input#txt {
 
   .sidebar-menu .logo-env .font_logo {
     display: block;
-    max-width: calc(100vw - 150px);
+    max-width: calc(100vw - 110px);
     overflow: hidden;
     color: #fff;
     font-size: 2.2rem;
@@ -990,10 +1014,7 @@ input#txt {
   }
 
   .mobile-menu-toggle {
-    display: flex !important;
-    align-items: center;
-    justify-content: flex-end;
-    margin-left: auto;
+    display: none !important;
   }
 
   .mobile-menu-toggle a {
@@ -1035,8 +1056,9 @@ input#txt {
   }
 
   .main-content {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 86px;
   }
 
   .site-footer-info {
@@ -1065,8 +1087,8 @@ input#txt {
   .col-sm-3 {
     width: 100%;
     float: none;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 18px;
+    padding-right: 18px;
   }
 
   nav.navbar.user-info-navbar {
@@ -1089,6 +1111,7 @@ input#txt {
   .xe-widget.xe-conversations {
     margin-bottom: 12px;
     min-height: auto;
+    padding: 14px 18px;
     border-radius: 10px;
   }
 
@@ -1099,13 +1122,35 @@ input#txt {
   .xe-widget.xe-conversations .xe-comment,
   .xe-widget.xe-conversations .overflowClip_1,
   .xe-widget.xe-conversations .overflowClip_2 {
-    width: calc(100% - 58px);
+    width: auto;
   }
 
   .xe-widget.xe-conversations img {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    border-radius: 50% !important;
     object-fit: cover;
+  }
+
+  .xe-widget.xe-conversations .xe-comment-entry {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img {
+    display: inline-flex;
+    flex: 0 0 50px;
+    align-items: center;
+    justify-content: center;
+    padding-right: 0;
+  }
+
+  .xe-widget.xe-conversations .xe-comment {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 0;
   }
 
   strong {
