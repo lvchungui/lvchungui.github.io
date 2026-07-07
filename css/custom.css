@@ -479,9 +479,134 @@ i::before {
 .sidebar-menu .main-menu li.has-sub > a:before {
   font-size: 17px;
 }
-/* 右下角回到首页图标 */
-.night div.go-up a i {
-  color: #fff;
+/* 右下角浮动操作按钮 */
+.go-up.floating-actions {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 28px !important;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  height: auto;
+}
+
+.go-up.floating-actions .floating-action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 50% !important;
+  background-color: rgba(244, 248, 252, 0.92) !important;
+  color: #53606c;
+  box-shadow:
+    0 12px 30px rgba(31, 46, 62, 0.16),
+    0 0 0 0 rgba(104, 216, 255, 0.4);
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform 0.32s ease,
+    color 0.32s ease,
+    border-color 0.32s ease,
+    background-color 0.32s ease,
+    box-shadow 0.32s ease;
+}
+
+.go-up.floating-actions .floating-action::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: inherit;
+  background: rgba(104, 216, 255, 0.14);
+  opacity: 0;
+  transform: scale(0.74);
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+.go-up.floating-actions .floating-action i {
+  position: relative;
+  z-index: 1;
+  color: inherit;
+  line-height: 1;
+  transition: transform 0.32s ease;
+}
+
+.go-up.floating-actions .floating-action i::before {
+  font-size: 20px;
+}
+
+.go-up.floating-actions .floating-action:hover {
+  border-color: rgba(104, 216, 255, 0.9);
+  background-color: rgba(244, 248, 252, 0.98) !important;
+  color: #1f9fd6;
+  box-shadow:
+    0 16px 34px rgba(31, 159, 214, 0.24),
+    0 0 0 7px rgba(104, 216, 255, 0.16),
+    0 0 26px rgba(104, 216, 255, 0.48);
+  transform: translateY(-4px) scale(1.06);
+}
+
+.go-up.floating-actions .floating-action:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.go-up.floating-actions .floating-action:hover i {
+  transform: scale(1.12) rotate(-8deg);
+}
+
+.go-up.floating-actions .floating-action-top:hover i {
+  transform: translateY(-2px) scale(1.12);
+}
+
+.go-up.floating-actions .floating-action:focus {
+  outline: none;
+}
+
+.go-up.floating-actions .floating-action:focus-visible {
+  outline: 2px solid rgba(104, 216, 255, 0.72);
+  outline-offset: 3px;
+}
+
+.night .go-up.floating-actions .floating-action,
+body.night .go-up.floating-actions .floating-action {
+  border-color: rgba(125, 211, 252, 0.24);
+  background-color: rgba(38, 43, 49, 0.94) !important;
+  color: #d7e3ee;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.34),
+    0 0 0 0 rgba(125, 211, 252, 0.36);
+}
+
+.night .go-up.floating-actions .floating-action::before,
+body.night .go-up.floating-actions .floating-action::before {
+  background: rgba(125, 211, 252, 0.18);
+}
+
+.night .go-up.floating-actions .floating-action:hover,
+body.night .go-up.floating-actions .floating-action:hover {
+  border-color: rgba(125, 211, 252, 0.88);
+  background-color: rgba(38, 48, 58, 0.98) !important;
+  color: #7dd3fc;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.38),
+    0 0 0 7px rgba(125, 211, 252, 0.15),
+    0 0 28px rgba(125, 211, 252, 0.44);
+}
+
+.night .go-up.floating-actions .floating-action:focus-visible,
+body.night .go-up.floating-actions .floating-action:focus-visible {
+  outline-color: rgba(125, 211, 252, 0.78);
+}
+
+body:not(.night) .go-up.floating-actions .floating-action-theme .fa-sun::before {
+  content: "\f186";
 }
 
 /* 底栏 */
@@ -1050,9 +1175,19 @@ input#txt {
     font-size: 22px;
   }
 
-  footer.main-footer .go-up {
-    right: 78px;
-    bottom: 28px;
+  footer.main-footer .go-up.floating-actions {
+    right: 14px !important;
+    bottom: 94px !important;
+    gap: 10px;
+  }
+
+  .go-up.floating-actions .floating-action {
+    width: 50px;
+    height: 50px;
+  }
+
+  .go-up.floating-actions .floating-action i::before {
+    font-size: 18px;
   }
 
   .main-content {

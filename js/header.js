@@ -580,4 +580,26 @@ function switchNightMode() {
         document.cookie = "night=0;path=/"
         console.log(' ');
     }
+    syncNightModeButton();
+}
+
+function syncNightModeButton() {
+    var button = document.querySelector('.floating-action-theme');
+    var icon = button ? button.querySelector('i') : null;
+    var isNight = document.body.classList.contains('night');
+
+    if (!button || !icon) {
+        return;
+    }
+
+    icon.classList.toggle('fa-sun', isNight);
+    icon.classList.toggle('fa-moon', !isNight);
+    button.setAttribute('aria-label', isNight ? '切换浅色模式' : '切换深色模式');
+    button.setAttribute('title', isNight ? '切换浅色模式' : '切换深色模式');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncNightModeButton);
+} else {
+    syncNightModeButton();
 }
