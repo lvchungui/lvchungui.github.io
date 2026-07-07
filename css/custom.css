@@ -1128,16 +1128,16 @@ input#txt {
   .sidebar-menu .logo-env {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 0;
     height: 64px;
-    padding: 8px 12px;
+    padding: 8px 16px;
   }
 
   .sidebar-menu .logo-env .logo {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-width: 0;
     width: 100%;
   }
@@ -1192,7 +1192,7 @@ input#txt {
   .mobile-category-toggle {
     position: fixed;
     right: 14px;
-    bottom: 28px;
+    bottom: 18px;
     z-index: 9999;
     display: inline-flex !important;
     align-items: center;
@@ -1267,7 +1267,7 @@ input#txt {
 
   footer.main-footer .go-up.floating-actions {
     right: 14px !important;
-    bottom: 88px !important;
+    bottom: 58px !important;
     gap: 10px;
   }
 
@@ -1365,6 +1365,7 @@ input#txt {
     border-radius: 50% !important;
     object-fit: cover;
     object-position: center;
+    box-sizing: border-box;
   }
 
   .xe-widget.xe-conversations .xe-comment-entry {
@@ -1381,15 +1382,34 @@ input#txt {
     width: 50px;
     height: 50px;
     min-width: 50px;
+    min-height: 50px;
     max-width: 50px;
-    padding-right: 0;
+    max-height: 50px;
+    padding: 0 !important;
     overflow: hidden;
     border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    position: relative;
   }
 
   .xe-widget.xe-conversations .xe-user-img img {
     display: block;
     flex: 0 0 50px;
+    width: 50px !important;
+    height: 50px !important;
+    margin: 0 !important;
+    position: absolute;
+    inset: 0;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img img.img-circle {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+    border-radius: 999px !important;
   }
 
   .xe-widget.xe-conversations .xe-comment {
