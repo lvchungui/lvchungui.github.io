@@ -51,13 +51,60 @@
   
   <link rel="stylesheet" type="text/css" href="/css/custom.css"> <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2204525_jxth1d6fs6o.css"> <link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/long/font/regular.css" media="all" onload="this.media='all'" />
   
+  
+  <style id="pm-appearance">
+    :root {
+      --pm-nav-font-size: 17px;
+      --pm-nav-icon-size: 18px;
+      --pm-nav-icon-width: 28px;
+      --pm-nav-gap: 12px;
+      --pm-nav-item-pad: 11px;
+      --pm-search-width: 717px;
+      --pm-search-height: 50px;
+      --pm-search-font: 16px;
+      --pm-search-radius: 10px;
+      --pm-engine-gap: 10px;
+      --pm-engine-left: 0px;
+      --pm-engine-right: auto;
+      --pm-engine-shift: 0px;
+      --pm-engine-dx: 0px;
+      --pm-eng-panel-w: 50%;
+      --pm-eng-cols: 3;
+      --pm-eng-col-gap: 10px;
+      --pm-eng-row-gap: 10px;
+      --pm-eng-item-h: 30px;
+      --pm-eng-font: 14px;
+      --pm-eng-icon-gap: 5px;
+      --pm-eng-item-align: flex-start;
+    }
+  </style>
+  <!-- 深浅模式：在首屏绘制前就把 night 类挂到 <html> 上，避免刷新时先闪一下浅色 -->
+  <script>
+    (function () {
+      try {
+        var match = document.cookie.match(/(?:^|;\s*)night=([^;]*)/);
+        var value = match ? match[1] : '';
+        var hour = new Date().getHours();
+        var night = value === '1' || (value === '' && (hour >= 18 || hour < 6));
+        if (night) {
+          document.documentElement.classList.add('night');
+        }
+      } catch (error) {}
+    })();
+  </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
 
 </head>
 
 
 
-<body class="page-body">
+
+
+
+<body class="page-body pm-mode">
+<!-- 紧跟 body：把首屏前算出的深浅模式同步到 body，避免内容先按浅色绘制；
+     同时给 <html> 打上 pm-mode，让文档根也锁死 overflow，防止气泡等元素顶出页面滚动条 -->
+<script>document.documentElement.classList.add('pm-mode'); if (document.documentElement.classList.contains('night')) { document.body.classList.add('night'); }</script>
 <div class="page-container">
 <div class="sidebar-menu toggle-others fixed">
   <div class="sidebar-menu-inner">
@@ -78,6 +125,13 @@
         <a href="#常用工具" class="smooth">
             <i class="fas fa-tools"></i>
             <span class="title">常用工具</span>
+          </a>
+      </li>
+      
+      <li>
+        <a href="#人工智能" class="smooth">
+            <i class="fas fa-robot"></i>
+            <span class="title">人工智能</span>
           </a>
       </li>
       
@@ -174,7 +228,10 @@
     </ul> -->
     <!--  -->
     </nav>
-    
+
+  
+  <!-- 搜索条：最上方一条，不随内容滚动 -->
+  <div class="pm-searchbar">
     <section class="sousuo">
       <div class="search">
         <div class="search-box">
@@ -195,10 +252,30 @@
           <ul class="search-engine-list search-engine-list_zmki_ul">
           </ul>
         </div>
+      </div>
     </section>
-    <script>search()</script>
+    <!-- 深浅模式切换：搜索条右端（面板右上角） -->
+    <a href="#" class="pm-theme-toggle floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
+      <i class="fas fa-moon"></i>
+    </a>
+  </div>
+  <script>search()</script>
   
+
+  <!-- 分类标题行：当前分类名 + 站点数（搜索条下方） -->
+  <div class="pm-topbar">
+    <div class="pm-title">
+      <i class="fas fa-tools"></i>
+      <span class="pm-name">常用工具</span>
+      <em class="pm-count"></em>
+    </div>
+  </div>
+
+  <!-- 内容滚动区 -->
+  <div class="pm-scroll">
   
+  </div>
+
     
 <script src="/js/footer.js"></script>
 
@@ -220,9 +297,6 @@
     <div class="go-up floating-actions" aria-label="页面快捷操作">
       <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
         <i class="fas fa-sun"></i>
-      </a>
-      <a href="#" class="floating-action floating-action-top" rel="go-top" onclick="this.blur();" aria-label="返回顶部" title="返回顶部">
-        <i class="fas fa-angle-up"></i>
       </a>
       <!-- <a href="#" data-toggle="sidebar">
         <i class="fas fa-bars"></i>
@@ -274,9 +348,7 @@
 })();
 </script>
 
-
-<script src="/js/lozad.min.js"></script>
-
+<textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arimo, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; word-spacing: 0px; text-indent: 0px; line-height: 18.5714px; width: 53px;" class="autosizejs" id="autosizejs"></textarea>
 
 
   

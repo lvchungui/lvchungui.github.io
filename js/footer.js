@@ -61,12 +61,14 @@ $("a.smooth").click(function (e) {
 });
 (function () {
   if (document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1") === '') {
-    if (new Date().getHours() > 22 || new Date().getHours() < 6) {
+    if (new Date().getHours() >= 18 || new Date().getHours() < 6) {
       document.body.classList.add('night');
+      document.documentElement.classList.add('night');
       document.cookie = "night=1;path=/";
       console.log('夜间模式开启');
     } else {
       document.body.classList.remove('night');
+      document.documentElement.classList.remove('night');
       document.cookie = "night=0;path=/";
       console.log('夜间模式关闭');
     }
@@ -74,8 +76,10 @@ $("a.smooth").click(function (e) {
     var night = document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1") || '0';
     if (night == '0') {
       document.body.classList.remove('night');
+      document.documentElement.classList.remove('night');
     } else if (night == '1') {
       document.body.classList.add('night');
+      document.documentElement.classList.add('night');
     }
   }
 })();
@@ -89,11 +93,13 @@ $("a.smooth").click(function (e) {
   function applyNightMode(enable) {
     if (enable) {
       document.body.classList.add('night');
+      document.documentElement.classList.add('night');
       document.cookie = "night=1;path=/";
       return;
     }
 
     document.body.classList.remove('night');
+    document.documentElement.classList.remove('night');
     document.cookie = "night=0;path=/";
   }
 
@@ -116,7 +122,16 @@ $("a.smooth").click(function (e) {
     return next;
   }
 
+  function isManualChoice() {
+    return /(?:^|;\s*)night_manual=1(?:;|$)/.test(document.cookie);
+  }
+
   function syncNightModeByTime() {
+    /* 用户手动切过深浅模式就按用户的来，不再按时间覆盖 */
+    if (isManualChoice()) {
+      return;
+    }
+
     applyNightMode(shouldUseNightMode(new Date()));
   }
 

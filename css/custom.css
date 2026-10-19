@@ -175,6 +175,18 @@ strong.search-engine-tit {
 }
 /* 搜索框 ------------------------------------------------------------ 结束 */
 
+/* 防止卡片内的提示文字（.xe-comment 绝对定位 + margin-left）在最右一列顶出视口，
+   触发浏览器底部的横向滚动条。Windows 上垂直滚动条占约 15px，会把可用宽度再压小，
+   这 3px 的溢出就会变成一条横跨整宽的深色细条。只裁横向溢出，不影响布局尺寸。 */
+html {
+  overflow-x: hidden;
+}
+
+/* 深浅模式：<html> 也在首屏前带上 night，先把画布底色压成深色，避免刷新闪白 */
+html.night {
+  background-color: #16181d;
+}
+
 /* 网址卡片 ---------------------------------------------------------- 开始*/
 .xe-widget.xe-conversations .xe-comment,
 .xe-widget.xe-conversations .overflowClip_1,
@@ -578,10 +590,6 @@ i::before {
 
 .go-up.floating-actions .floating-action:hover i {
   transform: scale(1.12) rotate(-8deg);
-}
-
-.go-up.floating-actions .floating-action-top:hover i {
-  transform: translateY(-2px) scale(1.12);
 }
 
 .go-up.floating-actions .floating-action:focus {
@@ -1644,5 +1652,921 @@ body.night .nav-card-scroll.has-inner-scroll::after {
 
   .nav-card-scroll.has-inner-scroll > .row {
     padding-bottom: 0;
+  }
+}
+
+/* ============================================================================
+   固定侧栏 + 单分类面板模式
+   body 带 pm-mode 时启用：左侧悬浮导航 + 右侧整高悬浮内容区（顶栏 / 搜索条 / 滚动区）
+   ============================================================================ */
+/* 文档根也要锁死：上面有 html{overflow-x:hidden}，此时 html 的 overflow-y 会被算成 auto，
+   body 的 overflow:hidden 不再向视口传播。结果就是挂在 body 上的绝对定位元素（bootstrap tooltip）
+   一旦超出视口底部，文档高度就变大、右侧冒出页面滚动条，整页横向位移十几像素 —— 表现为鼠标划过
+   卡片时页面突然抖一下。这里让 html 直接 overflow:hidden，彻底断掉文档滚动。 */
+html.pm-mode,
+html:has(body.pm-mode) {
+  overflow: hidden !important;
+  height: 100%;
+}
+
+body.pm-mode {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+body.pm-mode .page-container {
+  display: block !important;
+  width: 100% !important;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ---------- 右侧主区域：悬浮卡片 + 独立滚动 ---------- */
+body.pm-mode .main-content {
+  position: fixed !important;
+  left: 260px !important;
+  right: 14px !important;
+  top: 14px !important;
+  bottom: 14px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f7f9fc;
+  border-radius: 22px;
+  box-shadow: 0 20px 46px rgba(12, 28, 48, 0.18), 0 2px 10px rgba(12, 28, 48, 0.1);
+  z-index: 50;
+}
+
+/* 原顶栏（内容已注释）在面板模式下不再占位 */
+body.pm-mode .main-content > .navbar.user-info-navbar {
+  display: none !important;
+}
+
+/* 分类标题行：搜索条下方的当前分类名 + 站点数 */
+body.pm-mode .pm-topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  height: 54px;
+  padding: 0 26px;
+  background: transparent;
+  border-bottom: 1px solid rgba(31, 159, 214, 0.12);
+}
+
+/* 未开启搜索时，标题行就是首行，补回顶部留白 */
+body.pm-mode .main-content > .pm-topbar:first-of-type {
+  height: 66px;
+  padding-top: 6px;
+}
+
+body.pm-mode .pm-title {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #24303f;
+  white-space: nowrap;
+}
+
+body.pm-mode .pm-title > i {
+  color: #1f9fd6;
+  font-size: 19px;
+  line-height: 1;
+}
+
+body.pm-mode .pm-title .pm-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.pm-mode .pm-title .pm-count:empty {
+  display: none;
+}
+
+body.pm-mode .pm-title .pm-count {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4c7f97;
+  background: rgba(104, 216, 255, 0.14);
+  border: 1px solid rgba(104, 216, 255, 0.32);
+  border-radius: 999px;
+  padding: 2px 9px;
+  line-height: 1.5;
+}
+
+/* 搜索条：位于面板最上方，独立一条，不随内容滚动
+   行内 = 左占位 / 搜索框 / 深浅切换按钮，左右占位等宽保证搜索框真正居中 */
+body.pm-mode .pm-searchbar {
+  flex: 0 0 auto;
+  position: relative;
+  /* 必须高于滚动区里的吸顶二级导航（z-index 8），否则搜索引擎下拉会被分类 chips 盖住 */
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 26px 14px;
+  background: #f7f9fc;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+body.pm-mode .pm-searchbar::before {
+  content: "";
+  flex: 0 0 44px;
+  width: 44px;
+}
+
+body.pm-mode .pm-searchbar .sousuo {
+  float: none !important;
+  flex: 0 1 var(--pm-search-width, 717px);
+  width: auto !important;
+  max-width: var(--pm-search-width, 717px) !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: block;
+}
+
+/* 深浅模式切换：圆按钮贴在搜索条右端 */
+body.pm-mode .pm-theme-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(125, 150, 170, 0.32);
+  border-radius: 50%;
+  background: rgba(226, 235, 243, 0.92);
+  color: #4b5c68;
+  text-decoration: none;
+  transition:
+    transform 0.32s ease,
+    color 0.32s ease,
+    border-color 0.32s ease,
+    background-color 0.32s ease,
+    box-shadow 0.32s ease;
+}
+
+body.pm-mode .pm-theme-toggle i {
+  color: inherit;
+  line-height: 1;
+  font-size: 17px;
+  transition: transform 0.32s ease;
+}
+
+body.pm-mode .pm-theme-toggle:hover,
+body.pm-mode .pm-theme-toggle:focus-visible {
+  outline: none;
+  border-color: rgba(104, 216, 255, 0.9);
+  background: rgba(236, 249, 255, 0.98);
+  color: #1f9fd6;
+  box-shadow:
+    0 0 0 6px rgba(104, 216, 255, 0.14),
+    0 0 22px rgba(104, 216, 255, 0.42);
+  transform: translateY(-2px);
+}
+
+body.pm-mode .pm-theme-toggle:hover i {
+  transform: rotate(-12deg) scale(1.08);
+}
+
+body.pm-mode.night .pm-theme-toggle {
+  border-color: rgba(125, 211, 252, 0.24);
+  background: rgba(56, 63, 71, 0.92);
+  color: #d7e3ee;
+}
+
+body.pm-mode.night .pm-theme-toggle:hover,
+body.pm-mode.night .pm-theme-toggle:focus-visible {
+  border-color: rgba(125, 211, 252, 0.88);
+  background: rgba(67, 78, 90, 0.98);
+  color: #7dd3fc;
+  box-shadow:
+    0 0 0 6px rgba(125, 211, 252, 0.13),
+    0 0 24px rgba(125, 211, 252, 0.4);
+}
+
+body.pm-mode .pm-searchbar .sousuo .search {
+  margin: 0 auto !important;
+  transition: all 0.3s cubic-bezier(0, 0.3, 0.5, 1);
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 搜索框尺寸：高度 / 字号 / 圆角（宽度见上面的 --pm-search-width）
+   选择器带 input#txt：主题里 `input#txt`（id 选择器）设了 border-radius，类选择器压不过它 */
+body.pm-mode .pm-searchbar .sousuo input#txt {
+  height: var(--pm-search-height, 50px);
+  line-height: var(--pm-search-height, 50px);
+  font-size: var(--pm-search-font, 16px);
+  border-radius: var(--pm-search-radius, 10px);
+}
+
+/* 占位文字默认是 1.4rem，跟着搜索框字号一起变 */
+body.pm-mode .pm-searchbar .sousuo input#txt::placeholder {
+  font-size: var(--pm-search-font, 16px);
+}
+
+/* 右侧放大镜与左侧图标跟着输入框高度走，否则调高后会偏上 */
+body.pm-mode .pm-searchbar .sousuo .search-btn {
+  line-height: calc(var(--pm-search-height, 50px) - 2px);
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-icon {
+  top: calc((var(--pm-search-height, 50px) - 40px) / 2);
+}
+
+/* 搜索引擎下拉面板的位置：水平对齐 + 微调、与搜索框的垂直间距，宽度按搜索框百分比 */
+body.pm-mode .pm-searchbar .sousuo .search-engine {
+  top: calc(var(--pm-search-height, 50px) + var(--pm-engine-gap, 10px));
+  left: var(--pm-engine-left, 0px);
+  right: var(--pm-engine-right, auto);
+  width: var(--pm-eng-panel-w, 50%);
+  margin-left: var(--pm-engine-dx, 0px);
+  transform: translateX(var(--pm-engine-shift, 0px));
+  padding: 14px 14px 6px;
+}
+
+/* 搜索引擎条目：用网格排版，每个条目的位置由「列数 / 行列间距 / 条目高度 / 内容对齐」决定。
+   主题原来是 float:30% + 浏览器默认的 ul 列表标记，所以每个名字前面都顶着一个灰色小圆点，
+   这里 list-style 清掉标记，padding-left 归零，换成 gap 控制的间距。 */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list {
+  display: grid;
+  grid-template-columns: repeat(var(--pm-eng-cols, 3), minmax(0, 1fr));
+  column-gap: var(--pm-eng-col-gap, 10px);
+  row-gap: var(--pm-eng-row-gap, 10px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li {
+  display: flex;
+  align-items: center;
+  justify-content: var(--pm-eng-item-align, flex-start);
+  gap: var(--pm-eng-icon-gap, 5px);
+  float: none;
+  width: auto;
+  height: var(--pm-eng-item-h, 30px);
+  margin: 0;
+  padding: 0 4px;
+  font-size: var(--pm-eng-font, 14px);
+  line-height: 1.2;
+  background: transparent;
+  border-radius: 8px;
+  list-style: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* 个别浏览器即使 list-style:none 也会画 marker，再显式清一次 */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li::marker {
+  content: '';
+}
+
+/* 条目悬停：沿用原来的浅灰底，圆角跟着网格走（主题里的 30px 药丸会被上面的规则压掉） */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li:hover,
+body.pm-mode.night .pm-searchbar .sousuo .search-engine-list li:hover {
+  background: #d2d3d4;
+  border-radius: 8px;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo .search-engine-list li:hover {
+  background: #5a5e64;
+}
+
+/* 图标是雪碧图按 25px 切好的，尺寸写死才不会切到隔壁图标（调条目高度只会留白） */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li span {
+  float: none;
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  margin: 0;
+  border-radius: 6px;
+}
+
+/* 内容滚动区 */
+body.pm-mode .pm-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 20px 32px 26px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(31, 159, 214, 0.45) transparent;
+  background: transparent;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-thumb {
+  background: rgba(31, 159, 214, 0.28);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(31, 159, 214, 0.55);
+  background-clip: content-box;
+}
+
+/* 分类面板：同一时间只显示一个 */
+body.pm-mode .nav-category {
+  display: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pm-mode .nav-category.pm-active {
+  display: block !important;
+  padding-top: 18px !important;
+}
+
+body.pm-mode .nav-category > h4.text-gray {
+  display: none !important;
+}
+
+/* 卡片逐个入场 */
+@keyframes pmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+  animation: pmCardIn 0.44s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* 悬停卡片不再抬起（z-index 必须低于吸顶二级导航的 8，
+   否则滚到第一行时 hover 的卡片会盖住 chips；tooltip 已挂到 body，无需靠它避让） */
+
+/* 站点描述气泡：脱离卡片层叠上下文与滚动裁剪，始终浮在最上层。
+   position:fixed 很关键 —— 气泡挂在 body 上，用 absolute 时只要它超出视口底部就会顶大文档高度，
+   文档级滚动条一闪，整页跟着横移（鼠标划过底部卡片时的抖动）。fixed 不参与滚动区域计算。 */
+body.pm-mode .tooltip {
+  position: fixed !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
+body.pm-mode .tooltip .tooltip-inner {
+  max-width: 280px;
+  padding: 7px 11px;
+  font-size: 12.5px;
+  line-height: 1.62;
+  text-align: left;
+  white-space: normal;
+  border-radius: 8px;
+  word-break: break-word;
+}
+
+body.pm-mode.night .tooltip .tooltip-inner {
+  background: #26303d;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(125, 211, 252, 0.16);
+}
+
+/* 栅格左右对齐，避免最右列被挤出容器 */
+body.pm-mode .pm-scroll .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 面板模式下取消卡片区内部滚动（避免双层滚动条） */
+body.pm-mode .nav-card-scroll,
+body.pm-mode .nav-card-scroll.has-inner-scroll {
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.pm-mode .nav-card-scroll.has-inner-scroll::before,
+body.pm-mode .nav-card-scroll.has-inner-scroll::after {
+  display: none !important;
+}
+
+/* 分组分类的二级导航：吸顶 */
+body.pm-mode .sub-category-nav {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  margin: 0 0 4px !important;
+  padding: 12px 0 12px !important;
+  background: #f7f9fc;
+  box-shadow: 0 14px 14px -14px rgba(15, 40, 70, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+body.pm-mode .sub-category-panels {
+  margin-top: 14px !important;
+}
+
+/* ---------- 左侧悬浮导航（圆角浮岛） ---------- */
+body.pm-mode .sidebar-menu.fixed {
+  position: fixed !important;
+  width: 232px !important;
+  left: 14px !important;
+  top: 14px !important;
+  bottom: 14px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 46px rgba(12, 28, 48, 0.26), 0 2px 10px rgba(12, 28, 48, 0.16);
+  z-index: 120;
+}
+
+body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body.pm-mode .sidebar-menu .logo-env {
+  flex: 0 0 auto;
+  padding: 20px 18px 16px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px;
+}
+
+body.pm-mode .sidebar-menu .logo-env .font_logo {
+  max-width: 172px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+body.pm-mode #main-menu.main-menu {
+  position: relative;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 16px 20px !important;
+  margin: 0 !important;
+  scrollbar-width: none;
+}
+
+body.pm-mode #main-menu.main-menu::-webkit-scrollbar {
+  width: 0;
+}
+
+body.pm-mode .sidebar-menu .main-menu li {
+  position: relative;
+}
+
+body.pm-mode .sidebar-menu .main-menu a {
+  padding: var(--pm-nav-item-pad, 11px) 12px;
+  gap: var(--pm-nav-gap, 12px);
+  border-radius: 12px;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+/* 图标列宽度单独控制：放大图标后不挤压标题（值来自后台「外观设置」） */
+body.pm-mode .sidebar-menu .main-menu a > i {
+  flex: 0 0 var(--pm-nav-icon-width, 28px);
+  width: var(--pm-nav-icon-width, 28px);
+  min-width: var(--pm-nav-icon-width, 28px);
+  font-size: var(--pm-nav-icon-size, 18px);
+}
+
+body.pm-mode .sidebar-menu .main-menu a:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(2px);
+}
+
+body.pm-mode .sidebar-menu .main-menu li.is-current > a {
+  background: linear-gradient(90deg, rgba(104, 216, 255, 0.26), rgba(104, 216, 255, 0.04)) !important;
+  box-shadow: inset 0 0 0 1px rgba(139, 227, 255, 0.14);
+}
+
+body.pm-mode .sidebar-menu .main-menu li.is-current > a i,
+body.pm-mode .sidebar-menu .main-menu li.is-current > a span {
+  color: #8be3ff !important;
+}
+
+body.pm-mode span.title {
+  font-size: var(--pm-nav-font-size, 17px);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #c3ccda;
+  transition: color 0.25s ease;
+}
+
+/* 选中指示条（跟随滑动） */
+body.pm-mode .pm-indicator {
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 4px;
+  height: 24px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #8be3ff, #2f9bff);
+  box-shadow: 0 0 12px rgba(104, 216, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1),
+    height 0.34s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.25s ease;
+  z-index: 3;
+}
+
+/* ---------- 夜间模式 ---------- */
+body.pm-mode.night .pm-topbar {
+  background: transparent;
+  border-bottom-color: rgba(125, 211, 252, 0.12);
+}
+
+body.pm-mode.night .pm-searchbar {
+  background: #16181d;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+body.pm-mode.night .pm-title {
+  color: #e8eef6;
+}
+
+body.pm-mode.night .pm-title .pm-count {
+  color: #9edcf7;
+  background: rgba(125, 211, 252, 0.14);
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+body.pm-mode.night .main-content {
+  background: #16181d;
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.55);
+}
+
+body.pm-mode.night .sub-category-nav {
+  background: #16181d;
+  box-shadow: 0 14px 14px -14px rgba(0, 0, 0, 0.6);
+}
+
+/* 面板模式：页脚整体不要（深浅切换已移到右上角，返回顶部已去掉） */
+body.pm-mode footer.main-footer {
+  display: none !important;
+}
+
+body.pm-mode footer.main-footer.sticky.footer-type-1,
+body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
+  display: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------- 窄屏：侧栏收起为图标条 ---------- */
+@media screen and (max-width: 1100px) {
+  body.pm-mode .sidebar-menu.fixed,
+  body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+    width: 76px !important;
+  }
+
+  body.pm-mode .sidebar-menu.fixed {
+    left: 10px;
+    top: 10px !important;
+    bottom: 10px !important;
+  }
+
+  body.pm-mode .main-content {
+    left: 96px !important;
+    right: 10px !important;
+    top: 10px !important;
+    bottom: 10px !important;
+  }
+
+  body.pm-mode .pm-searchbar {
+    padding: 18px 18px 10px;
+  }
+
+  body.pm-mode .sidebar-menu .font_logo {
+    display: none;
+  }
+
+  body.pm-mode .sidebar-menu span.title {
+    display: none !important;
+  }
+
+  /* 图标条只有 76px，文字隐藏后图标居中，并给放大后的图标留够宽度 */
+  body.pm-mode #main-menu.main-menu {
+    padding: 12px 8px 20px !important;
+  }
+
+  body.pm-mode .sidebar-menu .main-menu a {
+    padding: var(--pm-nav-item-pad, 11px) 6px;
+    justify-content: center;
+  }
+
+  /* 图标条比完整侧栏大 1px（宽 4px），76px 里看着更实 */
+  body.pm-mode .sidebar-menu .main-menu a > i {
+    flex: 0 0 calc(var(--pm-nav-icon-width, 28px) + 4px);
+    width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    min-width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    font-size: calc(var(--pm-nav-icon-size, 18px) + 1px);
+  }
+
+  body.pm-mode .pm-topbar {
+    padding: 0 18px;
+    gap: 12px;
+  }
+}
+
+/* ---------- 手机：退出浮岛，回到文档流（分类切换逻辑不变） ---------- */
+@media screen and (max-width: 767px) {
+  /* 手机上内容回到文档流，滚动交还给文档本身，这里要把根元素重新放开 */
+  html.pm-mode,
+  html:has(body.pm-mode) {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  body.pm-mode {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  body.pm-mode .page-container {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.pm-mode .main-content {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+    overflow: visible;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 82px 0 0 !important;
+  }
+
+  body.pm-mode .pm-topbar {
+    height: auto;
+    padding: 0 16px 10px;
+    gap: 12px;
+    animation: none;
+  }
+
+  body.pm-mode .pm-title {
+    font-size: 17px;
+  }
+
+  body.pm-mode .pm-searchbar {
+    padding: 16px 16px 8px;
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    animation: none;
+  }
+
+  body.pm-mode .pm-scroll {
+    overflow: visible;
+    padding: 0 10px 30px;
+  }
+
+  /* 手机上文档本身能滚，气泡要跟着文档走，fixed 会让它脱开手指位置 */
+  body.pm-mode .tooltip {
+    position: absolute !important;
+  }
+
+  body.pm-mode .nav-category.pm-active {
+    padding-top: 12px !important;
+  }
+
+  body.pm-mode .sub-category-nav {
+    position: static;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+    animation: none;
+  }
+}
+
+/* 手机端：侧栏恢复为顶部条（原移动布局），仅内容区走文档流 */
+@media screen and (max-width: 767px) {
+  body.pm-mode .sidebar-menu.fixed {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 10000;
+  }
+
+  body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    border-radius: 0;
+    display: block;
+    overflow: visible;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env {
+    height: 64px;
+    padding: 8px 16px !important;
+    border-bottom: none;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+    width: 38px;
+    height: 38px;
+    margin-right: 8px;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .font_logo {
+    display: block;
+    max-width: calc(100vw - 80px);
+    font-size: 1.45rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.pm-mode #main-menu.main-menu {
+    flex: none;
+    max-height: calc(100vh - 64px);
+    padding: 12px 16px 20px !important;
+  }
+
+  /* 手机上侧栏是顶部条，展开后的下拉菜单需要盖住内容区（含搜索条）；
+     搜索条只保留定位（供搜索引擎下拉定位），但去掉 z-index 以免形成层叠上下文，
+     这样切换按钮（fixed）才能跑到侧栏之上 */
+  body.pm-mode .pm-searchbar {
+    z-index: auto;
+  }
+
+  /* 覆盖 ≤1100 的「图标条隐藏标题」，手机上菜单是完整列表，标题要显示 */
+  body.pm-mode .sidebar-menu span.title {
+    display: inline !important;
+    font-size: calc(var(--pm-nav-font-size, 17px) - 1px);
+  }
+}
+
+/* 面板模式：手机端顶部条有 82px 高，切换按钮挂到它右侧（不再挤占搜索框） */
+@media screen and (max-width: 767px) {
+  /* 按钮固定在顶部条右侧，需要盖住侧栏（z-index 10000）；搜索条本身不再提层级，
+     这样侧栏展开态的下拉菜单才能压住内容区 */
+  body.pm-mode .pm-theme-toggle {
+    position: fixed;
+    top: 21px;
+    right: 16px;
+    z-index: 10001;
+    width: 40px;
+    height: 40px;
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.14);
+    color: #e8eef6;
+    box-shadow: none;
+  }
+
+  body.pm-mode .pm-theme-toggle i {
+    font-size: 16px;
+  }
+
+  /* 手机上按钮是 fixed 挂在顶部条，不再是行内元素，左侧等宽占位要去掉 */
+  body.pm-mode .pm-searchbar::before {
+    display: none;
+  }
+
+  /* 搜索条不再有层叠上下文，搜索引擎下拉要自己抬一层，否则被下方卡片盖住 */
+  body.pm-mode .pm-searchbar .search-engine {
+    z-index: 20;
+  }
+
+  body.pm-mode .pm-theme-toggle:hover,
+  body.pm-mode .pm-theme-toggle:focus-visible,
+  body.pm-mode.night .pm-theme-toggle:hover,
+  body.pm-mode.night .pm-theme-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    transform: none;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+
+  body.pm-mode.night .pm-theme-toggle {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.14);
+    color: #e8eef6;
+  }
+}
+
+/* 搜索引擎下拉：夜间箭头跟随面板底色，避免深色面板上顶一个白三角 */
+body.night .sousuo .search-engine ul::before {
+  border-bottom-color: #424242;
+}
+
+/* 搜索引擎下拉：手机端改成整宽三列，否则 50% 宽会被挤成两列细长条 */
+@media screen and (max-width: 767px) {
+  .sousuo .search-engine {
+    width: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    margin-left: 0 !important;
+    /* 手机上整宽铺满，后台设置的「对齐 / 微调」在这里不适用 */
+    transform: none !important;
+    padding: 12px 10px 6px 12px !important;
+    max-height: 62vh;
+    overflow-y: auto;
+  }
+
+  .sousuo .search-engine-head {
+    margin-bottom: 6px;
+    padding-right: 0;
+  }
+
+  .sousuo strong.search-engine-tit {
+    float: none;
+    display: block;
+    font-size: 12px;
+  }
+
+  .sousuo .search-engine-tool {
+    display: none;
+  }
+
+  .sousuo ul.search-engine-list.search-engine-list_zmki_ul {
+    padding-left: 0 !important;
+  }
+
+  /* 手机 / 窄屏：列数改成按最小宽度自动填充，手机约 3 列、平板约 5 列，
+     后台设的 4~5 列在窄屏上不会被挤扁；条目高度 / 字号 / 间距 / 对齐仍按设置走 */
+  body.pm-mode .pm-searchbar .sousuo .search-engine-list {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(88px, 22vw, 120px), 1fr));
+  }
+
+  body.pm-mode .pm-searchbar .sousuo .search-engine-list li {
+    padding: 0 4px;
   }
 }
