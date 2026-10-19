@@ -573,41 +573,29 @@ function switchNightMode() {
     var night = document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1") || '0';
     if (night == '0') {
         document.body.classList.add('night');
-        document.documentElement.classList.add('night');
         document.cookie = "night=1;path=/"
         console.log(' ');
     } else {
         document.body.classList.remove('night');
-        document.documentElement.classList.remove('night');
         document.cookie = "night=0;path=/"
         console.log(' ');
     }
-    // 记下这是用户手动选的，避免刷新后被按时间自动切回去
-    document.cookie = "night_manual=1;path=/"
     syncNightModeButton();
 }
 
 function syncNightModeButton() {
-    /* 页面里可能同时存在面板右上角的切换按钮和页脚浮动按钮，全部同步 */
-    var buttons = document.querySelectorAll('.floating-action-theme');
+    var button = document.querySelector('.floating-action-theme');
+    var icon = button ? button.querySelector('i') : null;
     var isNight = document.body.classList.contains('night');
 
-    if (!buttons.length) {
+    if (!button || !icon) {
         return;
     }
 
-    Array.prototype.forEach.call(buttons, function (button) {
-        var icon = button.querySelector('i');
-
-        if (!icon) {
-            return;
-        }
-
-        icon.classList.toggle('fa-sun', isNight);
-        icon.classList.toggle('fa-moon', !isNight);
-        button.setAttribute('aria-label', isNight ? '切换浅色模式' : '切换深色模式');
-        button.setAttribute('title', isNight ? '切换浅色模式' : '切换深色模式');
-    });
+    icon.classList.toggle('fa-sun', isNight);
+    icon.classList.toggle('fa-moon', !isNight);
+    button.setAttribute('aria-label', isNight ? '切换浅色模式' : '切换深色模式');
+    button.setAttribute('title', isNight ? '切换浅色模式' : '切换深色模式');
 }
 
 if (document.readyState === 'loading') {

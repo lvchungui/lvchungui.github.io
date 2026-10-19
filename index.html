@@ -51,60 +51,13 @@
   
   <link rel="stylesheet" type="text/css" href="/css/custom.css"> <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2204525_jxth1d6fs6o.css"> <link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/long/font/regular.css" media="all" onload="this.media='all'" />
   
-  
-  <style id="pm-appearance">
-    :root {
-      --pm-nav-font-size: 17px;
-      --pm-nav-icon-size: 18px;
-      --pm-nav-icon-width: 28px;
-      --pm-nav-gap: 12px;
-      --pm-nav-item-pad: 11px;
-      --pm-search-width: 717px;
-      --pm-search-height: 50px;
-      --pm-search-font: 16px;
-      --pm-search-radius: 10px;
-      --pm-engine-gap: 10px;
-      --pm-engine-left: 0px;
-      --pm-engine-right: auto;
-      --pm-engine-shift: 0px;
-      --pm-engine-dx: 0px;
-      --pm-eng-panel-w: 50%;
-      --pm-eng-cols: 3;
-      --pm-eng-col-gap: 10px;
-      --pm-eng-row-gap: 10px;
-      --pm-eng-item-h: 30px;
-      --pm-eng-font: 14px;
-      --pm-eng-icon-gap: 5px;
-      --pm-eng-item-align: flex-start;
-    }
-  </style>
-  <!-- 深浅模式：在首屏绘制前就把 night 类挂到 <html> 上，避免刷新时先闪一下浅色 -->
-  <script>
-    (function () {
-      try {
-        var match = document.cookie.match(/(?:^|;\s*)night=([^;]*)/);
-        var value = match ? match[1] : '';
-        var hour = new Date().getHours();
-        var night = value === '1' || (value === '' && (hour >= 18 || hour < 6));
-        if (night) {
-          document.documentElement.classList.add('night');
-        }
-      } catch (error) {}
-    })();
-  </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
 
 </head>
 
 
 
-
-
-
-<body class="page-body pm-mode">
-<!-- 紧跟 body：把首屏前算出的深浅模式同步到 body，避免内容先按浅色绘制；
-     同时给 <html> 打上 pm-mode，让文档根也锁死 overflow，防止气泡等元素顶出页面滚动条 -->
-<script>document.documentElement.classList.add('pm-mode'); if (document.documentElement.classList.contains('night')) { document.body.classList.add('night'); }</script>
+<body class="page-body">
 <div class="page-container">
 <div class="sidebar-menu toggle-others fixed">
   <div class="sidebar-menu-inner">
@@ -125,13 +78,6 @@
         <a href="#常用工具" class="smooth">
             <i class="fas fa-tools"></i>
             <span class="title">常用工具</span>
-          </a>
-      </li>
-      
-      <li>
-        <a href="#人工智能" class="smooth">
-            <i class="fas fa-robot"></i>
-            <span class="title">人工智能</span>
           </a>
       </li>
       
@@ -228,10 +174,7 @@
     </ul> -->
     <!--  -->
     </nav>
-
-  
-  <!-- 搜索条：最上方一条，不随内容滚动 -->
-  <div class="pm-searchbar">
+    
     <section class="sousuo">
       <div class="search">
         <div class="search-box">
@@ -252,27 +195,10 @@
           <ul class="search-engine-list search-engine-list_zmki_ul">
           </ul>
         </div>
-      </div>
     </section>
-    <!-- 深浅模式切换：搜索条右端（面板右上角） -->
-    <a href="#" class="pm-theme-toggle floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
-      <i class="fas fa-moon"></i>
-    </a>
-  </div>
-  <script>search()</script>
+    <script>search()</script>
   
-
-  <!-- 分类标题行：当前分类名 + 站点数（搜索条下方） -->
-  <div class="pm-topbar">
-    <div class="pm-title">
-      <i class="fas fa-tools"></i>
-      <span class="pm-name">常用工具</span>
-      <em class="pm-count"></em>
-    </div>
-  </div>
-
-  <!-- 内容滚动区 -->
-  <div class="pm-scroll">
+  
   
     
     
@@ -282,10 +208,9 @@
     
 
 
-
-<section class="nav-category pm-active" data-category="常用工具">
+<section class="nav-category" data-category="常用工具">
   <h4 class="text-gray"><i class="fas fa-tools" style="margin-right: 7px;" id="常用工具"></i>常用工具</h4>
-  <div class="nav-card-scroll" data-item-count="17">
+  <div class="nav-card-scroll" data-item-count="22">
     <div class="row">
       
       <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="我的博客" data-search-description="自己搭建的博客，欢迎大家访问我的博客！" data-search-url="https://lcg521.cn">
@@ -336,17 +261,17 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="B站" data-search-description="哔哩哔哩（bilibili.com)是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主…" data-search-url="https://www.bilibili.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bilibili.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="哔哩哔哩（bilibili.com)是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主…">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="B战" data-search-description="国内知名的视频弹幕网站" data-search-url="https://www.bilibili.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bilibili.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="国内知名的视频弹幕网站">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/哔哩哔哩 (゜-゜)つロ 干杯~.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/bilibili.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>B站</strong>
+                <strong>B战</strong>
               </a>
-              <p class="overflowClip_2">哔哩哔哩（bilibili.com)是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主…</p>
+              <p class="overflowClip_2">国内知名的视频弹幕网站</p>
             </div>
           </div>
         </div>
@@ -368,17 +293,97 @@
         </div>
       </div>
       
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="API中转站" data-search-description="API中转站" data-search-url="https://loveapi.top/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://loveapi.top/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="API中转站">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/API中转站.png" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>API中转站</strong>
+              </a>
+              <p class="overflowClip_2">API中转站</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="AI模型测试平台" data-search-description="AI模型测试平台" data-search-url="https://www.apitest.work/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.apitest.work/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="AI模型测试平台">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/AI模型测试平台.svg" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>AI模型测试平台</strong>
+              </a>
+              <p class="overflowClip_2">AI模型测试平台</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="软仓" data-search-description="软仓" data-search-url="https://www.ruancang.net/">
         <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.ruancang.net/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="软仓">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/软仓.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/软仓.svg" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>软仓</strong>
               </a>
               <p class="overflowClip_2">软仓</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="Chatgpt" data-search-description="ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）" data-search-url="https://chatgpt.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://chatgpt.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/chatgpt.png" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>Chatgpt</strong>
+              </a>
+              <p class="overflowClip_2">ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="豆包AI" data-search-description="抖音旗下AI助手-豆包AI，具备AI对话交流、AI搜索、PDF问答、ai图像生成、写作辅助、音乐生成、阅读总结、解题答疑和学术探索等多种功能" data-search-url="https://www.doubao.com/chat/?channel=csqixiang&amp;source=hw_db_csqixiang&amp;type=daoh&amp;theme=ai">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.doubao.com/chat/?channel=csqixiang&amp;source=hw_db_csqixiang&amp;type=daoh&amp;theme=ai', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="抖音旗下AI助手-豆包AI，具备AI对话交流、AI搜索、PDF问答、ai图像生成、写作辅助、音乐生成、阅读总结、解题答疑和学术探索等多种功能">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/豆包.png" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>豆包AI</strong>
+              </a>
+              <p class="overflowClip_2">抖音旗下AI助手-豆包AI，具备AI对话交流、AI搜索、PDF问答、ai图像生成、写作辅助、音乐生成、阅读总结、解题答疑和学术探索等多种功能</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="DeepSeek" data-search-description="DeepSeek是幻方量化旗下的人工智能公司深度求索自主研发的开源大模型和AI智能助手" data-search-url="https://www.deepseek.com/?ref=ainav.cn">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.deepseek.com/?ref=ainav.cn', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="DeepSeek是幻方量化旗下的人工智能公司深度求索自主研发的开源大模型和AI智能助手">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/deepseek.png" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>DeepSeek</strong>
+              </a>
+              <p class="overflowClip_2">DeepSeek是幻方量化旗下的人工智能公司深度求索自主研发的开源大模型和AI智能助手</p>
             </div>
           </div>
         </div>
@@ -416,17 +421,17 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="有道翻译" data-search-description="有道翻译提供即时免费的中文、英语、日语、韩语、法语、德语、俄语、西班牙语、葡萄牙语、越南语、印尼语、意大利语、荷兰语…" data-search-url="https://fanyi.youdao.com/index.html#/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://fanyi.youdao.com/index.html#/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="有道翻译提供即时免费的中文、英语、日语、韩语、法语、德语、俄语、西班牙语、葡萄牙语、越南语、印尼语、意大利语、荷兰语…">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="有道翻译" data-search-description="国内知名的在线翻译工具" data-search-url="https://fanyi.youdao.com/index.html#/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://fanyi.youdao.com/index.html#/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="国内知名的在线翻译工具">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/有道翻译.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/有道.ico" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>有道翻译</strong>
               </a>
-              <p class="overflowClip_2">有道翻译提供即时免费的中文、英语、日语、韩语、法语、德语、俄语、西班牙语、葡萄牙语、越南语、印尼语、意大利语、荷兰语…</p>
+              <p class="overflowClip_2">国内知名的在线翻译工具</p>
             </div>
           </div>
         </div>
@@ -496,65 +501,65 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="ProcessOn" data-search-description="ProcessOn是一款专业在线作图工具和知识分享社区，支持AI一键生成思维导图和流程图。可绘制甘特图、ER图、UML…" data-search-url="https://www.processon.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.processon.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="ProcessOn是一款专业在线作图工具和知识分享社区，支持AI一键生成思维导图和流程图。可绘制甘特图、ER图、UML…">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="processon" data-search-description="免费在线流程图思维导图" data-search-url="https://www.processon.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.processon.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="免费在线流程图思维导图">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/ProcessOn思维导图流程图-在线画思维导图流程图.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/processon.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>ProcessOn</strong>
+                <strong>processon</strong>
               </a>
-              <p class="overflowClip_2">ProcessOn是一款专业在线作图工具和知识分享社区，支持AI一键生成思维导图和流程图。可绘制甘特图、ER图、UML…</p>
+              <p class="overflowClip_2">免费在线流程图思维导图</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="AI导航网" data-search-description="AI导航网，收录了国内外1000+AI工具，该导航收录了AI绘画、AI对话聊天、AI视频制作、AI音乐生成…" data-search-url="http://www.ainav.cn/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('http://www.ainav.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="AI导航网，收录了国内外1000+AI工具，该导航收录了AI绘画、AI对话聊天、AI视频制作、AI音乐生成…">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="AI导航网" data-search-description="AI人工智能导航网站，互联网中资源最全的ai人工智能网，搜集并整理人工智能工具的网站，让您能够快速找到适合的工具" data-search-url="http://www.ainav.cn/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('http://www.ainav.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="AI人工智能导航网站，互联网中资源最全的ai人工智能网，搜集并整理人工智能工具的网站，让您能够快速找到适合的工具">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/AI导航网官网 - 国内外1000+AI工具,发现好用AI,为你导航未来.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/AI导航网.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>AI导航网</strong>
               </a>
-              <p class="overflowClip_2">AI导航网，收录了国内外1000+AI工具，该导航收录了AI绘画、AI对话聊天、AI视频制作、AI音乐生成…</p>
+              <p class="overflowClip_2">AI人工智能导航网站，互联网中资源最全的ai人工智能网，搜集并整理人工智能工具的网站，让您能够快速找到适合的工具</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="在线GIF生成器" data-search-description="可以在线制作GIF图，将多张静态图片合成一张动态的图片" data-search-url="https://www.matools.com/gif">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.matools.com/gif', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="可以在线制作GIF图，将多张静态图片合成一张动态的图片">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="在线GIF生成器" data-search-description="在线生成GIF" data-search-url="https://www.matools.com/gif">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.matools.com/gif', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="在线生成GIF">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/在线GIF生成器.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/GIF生成器.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>在线GIF生成器</strong>
               </a>
-              <p class="overflowClip_2">可以在线制作GIF图，将多张静态图片合成一张动态的图片</p>
+              <p class="overflowClip_2">在线生成GIF</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="河马4399极品存档商店" data-search-description="方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2…" data-search-url="https://www.4399fx.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.4399fx.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2…">
+      <div class="col-sm-3 site-card-col" data-search-category="常用工具" data-search-name="4399存档商店" data-search-description="河马4399极品存档商店 - 方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2,武将风云录1,2,3,国王的勇士4,5,6,三国小镇,造梦江湖2,降妖传,机甲小子,封神太子2的游戏购买,造梦西游3极品号!" data-search-url="https://www.4399fx.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.4399fx.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="河马4399极品存档商店 - 方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2,武将风云录1,2,3,国王的勇士4,5,6,三国小镇,造梦江湖2,降妖传,机甲小子,封神太子2的游戏购买,造梦西游3极品号!">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/河马4399极品存档商店.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/4399存档商店.ico" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>河马4399极品存档商店</strong>
+                <strong>4399存档商店</strong>
               </a>
-              <p class="overflowClip_2">方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2…</p>
+              <p class="overflowClip_2">河马4399极品存档商店 - 方便,快捷,安全 ,现在支持造梦西游1,2,3,爆枪英雄1,2,勇士的信仰,西游战记3,西游大战僵尸1,2,武将风云录1,2,3,国王的勇士4,5,6,三国小镇,造梦江湖2,降妖传,机甲小子,封神太子2的游戏购买,造梦西游3极品号!</p>
             </div>
           </div>
         </div>
@@ -574,200 +579,27 @@
     
 
 
-<<<<<<< HEAD
-
-<section class="nav-category" data-category="人工智能">
-  <h4 class="text-gray"><i class="fas fa-robot" style="margin-right: 7px;" id="人工智能"></i>人工智能</h4>
-  <div class="nav-card-scroll" data-item-count="10">
-    <div class="row">
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="Chatgpt" data-search-description="ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）" data-search-url="https://chatgpt.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://chatgpt.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/chatgpt.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>Chatgpt</strong>
-              </a>
-              <p class="overflowClip_2">ChatGPT 是人工智能研究实验室 OpenAl 发布的聊天机器模型（需要科学上网）</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="豆包" data-search-description="Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…" data-search-url="https://www.doubao.com/chat/?channel=csqixiang&amp;source=hw_db_csqixiang&amp;type=daoh&amp;theme=ai">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.doubao.com/chat/?channel=csqixiang&amp;source=hw_db_csqixiang&amp;type=daoh&amp;theme=ai', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/豆包-2.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>豆包</strong>
-              </a>
-              <p class="overflowClip_2">Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="DeepSeek" data-search-description="深度求索（DeepSeek），探索未至之境。专注于研究世界领先的通用人工智能底层模型与技术…" data-search-url="https://www.deepseek.com/?ref=ainav.cn">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.deepseek.com/?ref=ainav.cn', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="深度求索（DeepSeek），探索未至之境。专注于研究世界领先的通用人工智能底层模型与技术…">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/DeepSeek.ico" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>DeepSeek</strong>
-              </a>
-              <p class="overflowClip_2">深度求索（DeepSeek），探索未至之境。专注于研究世界领先的通用人工智能底层模型与技术…</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="Codex" data-search-description="ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。" data-search-url="https://openai.com/zh-Hans-CN/codex/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://openai.com/zh-Hans-CN/codex/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/Codex.ico" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>Codex</strong>
-              </a>
-              <p class="overflowClip_2">ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="WorkBuddy" data-search-description="WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。" data-search-url="https://www.workbuddy.cn/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.workbuddy.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/WorkBuddy.svg" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>WorkBuddy</strong>
-              </a>
-              <p class="overflowClip_2">WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="Cockpit-tools" data-search-description="🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools" data-search-url="https://github.com/jlcodes99/cockpit-tools">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://github.com/jlcodes99/cockpit-tools', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/Cockpit-tools.svg" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>Cockpit-tools</strong>
-              </a>
-              <p class="overflowClip_2">🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="CCSwitch" data-search-description="统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。" data-search-url="https://ccswitch.lovable.app/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://ccswitch.lovable.app/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/CCSwitch.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>CCSwitch</strong>
-              </a>
-              <p class="overflowClip_2">统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="豆包语音" data-search-description="欢迎登录火山引擎，火山引擎是字节跳动旗下的云服务平台。" data-search-url="https://console.volcengine.com/speech/new/overview?ResourceID=volc.seedicl.default&amp;projectName=default">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://console.volcengine.com/speech/new/overview?ResourceID=volc.seedicl.default&amp;projectName=default', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="欢迎登录火山引擎，火山引擎是字节跳动旗下的云服务平台。">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/豆包语音.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>豆包语音</strong>
-              </a>
-              <p class="overflowClip_2">欢迎登录火山引擎，火山引擎是字节跳动旗下的云服务平台。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="API中转站" data-search-description="API中转站" data-search-url="https://loveapi.top/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://loveapi.top/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="API中转站">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/API中转站.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>API中转站</strong>
-              </a>
-              <p class="overflowClip_2">API中转站</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="人工智能" data-search-name="AI模型测试平台" data-search-description="AI模型测试平台" data-search-url="https://www.apitest.work/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.apitest.work/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="AI模型测试平台">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/AI模型测试平台.svg" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>AI模型测试平台</strong>
-              </a>
-              <p class="overflowClip_2">AI模型测试平台</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  <br />
-</section>
-
-    
-    
-    
-    
-    
-    
-    
-
-
-
 <section class="nav-category" data-category="工作专区">
   <h4 class="text-gray"><i class="fas fa-folder" style="margin-right: 7px;" id="工作专区"></i>工作专区</h4>
-  <div class="nav-card-scroll" data-item-count="3">
+  <div class="nav-card-scroll" data-item-count="4">
     <div class="row">
       
-=======
-<section class="nav-category" data-category="工作专区">
-  <h4 class="text-gray"><i class="fas fa-folder" style="margin-right: 7px;" id="工作专区"></i>工作专区</h4>
-  <div class="nav-card-scroll" data-item-count="3">
-    <div class="row">
+      <div class="col-sm-3 site-card-col" data-search-category="工作专区" data-search-name="VPN" data-search-description="VPN 就是把你的电脑接入医院内部局域网，建立加密隧道，让你本机可以访问堡垒机地址" data-search-url="https://112.51.96.120:54433">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://112.51.96.120:54433', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="VPN 就是把你的电脑接入医院内部局域网，建立加密隧道，让你本机可以访问堡垒机地址">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/VPN.svg" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>VPN</strong>
+              </a>
+              <p class="overflowClip_2">VPN 就是把你的电脑接入医院内部局域网，建立加密隧道，让你本机可以访问堡垒机地址</p>
+            </div>
+          </div>
+        </div>
+      </div>
       
->>>>>>> b6c8c9bc245e4190354d5df97467e52e0c8bd2d5
       <div class="col-sm-3 site-card-col" data-search-category="工作专区" data-search-name="飞书" data-search-description="飞书是字节跳动旗下 AI 工作平台，提供一站式协同办公、组织管理、业务提效工具和深入企业场景的 AI 能力，让 AI 真能用、真落地。" data-search-url="https://www.feishu.cn/">
         <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.feishu.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="飞书是字节跳动旗下 AI 工作平台，提供一站式协同办公、组织管理、业务提效工具和深入企业场景的 AI 能力，让 AI 真能用、真落地。">
           <div class="xe-comment-entry">
@@ -828,7 +660,6 @@
     
     
     
-
 
 
 <section class="nav-category" data-category="摸鱼专区">
@@ -994,23 +825,86 @@
     
 
 
-
 <section class="nav-category" data-category="桌面必备">
   <h4 class="text-gray"><i class="fas fa-desktop" style="margin-right: 7px;" id="桌面必备"></i>桌面必备</h4>
-  <div class="nav-card-scroll" data-item-count="25">
+  <div class="nav-card-scroll" data-item-count="27">
     <div class="row">
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="QQ" data-search-description="腾讯QQ，全新版本QQ9上线了！ QQ9，不仅是轻松聊天，更是兴趣社区的聚集地。欢迎下载体验最新版本QQ，体验最新功能…" data-search-url="https://im.qq.com/index/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://im.qq.com/index/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="腾讯QQ，全新版本QQ9上线了！ QQ9，不仅是轻松聊天，更是兴趣社区的聚集地。欢迎下载体验最新版本QQ，体验最新功能…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Codex" data-search-description="ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。" data-search-url="https://openai.com/zh-Hans-CN/codex/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://openai.com/zh-Hans-CN/codex/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/QQ-1.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/Codex.ico" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>Codex</strong>
+              </a>
+              <p class="overflowClip_2">ChatGPT 中的 Codex 借助 AI 编程智能体，协助工程团队加速开发工作。跨并行工作流完成 Pull Request、代码重构、代码审查、自动化等各项任务。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="WorkBuddy" data-search-description="WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。" data-search-url="https://www.workbuddy.cn/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.workbuddy.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/WorkBuddy.svg" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>WorkBuddy</strong>
+              </a>
+              <p class="overflowClip_2">WorkBuddy 是腾讯云代码助手推出的 AI Agent 办公工具，自主规划并交付多模态复杂任务结果，支持多 Agents 并行工作，极致提效。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Cockpit-tools" data-search-description="🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools" data-search-url="https://github.com/jlcodes99/cockpit-tools">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://github.com/jlcodes99/cockpit-tools', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/Cockpit-tools.svg" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>Cockpit-tools</strong>
+              </a>
+              <p class="overflowClip_2">🚀 通用 AI IDE 账号管理工具：支持 Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy，多账号切换、配额监控、自动唤醒与多开实例管理。 🚀 Universal AI IDE account manager for Antigravity / Codex / GitHub Copilot / Windsurf / Kiro / Cursor / Gemini-cli / CodeBuddy, with multi-account switching, quota monitoring, wake-up automation, and multi-insta - jlcodes99/cockpit-tools</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="CCSwitch" data-search-description="统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。" data-search-url="https://ccswitch.lovable.app/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://ccswitch.lovable.app/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/CCSwitch.png" class="lozad img-circle" width="42" height="42">
+            </a>
+            <div class="xe-comment">
+              <a href="#" class="xe-user-name overflowClip_1">
+                <strong>CCSwitch</strong>
+              </a>
+              <p class="overflowClip_2">统一管理 Claude Code、Codex 和 Gemini CLI 配置。内置代理服务器，支持多 Provider 自动故障转移。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="QQ" data-search-description="腾讯QQ支持在线聊天、视频通话、点对点断点续传文件、共享文件" data-search-url="https://im.qq.com/index">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://im.qq.com/index', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="腾讯QQ支持在线聊天、视频通话、点对点断点续传文件、共享文件">
+          <div class="xe-comment-entry">
+            <a class="xe-user-img">
+              <img data-src="/images/QQ.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>QQ</strong>
               </a>
-              <p class="overflowClip_2">腾讯QQ，全新版本QQ9上线了！ QQ9，不仅是轻松聊天，更是兴趣社区的聚集地。欢迎下载体验最新版本QQ，体验最新功能…</p>
+              <p class="overflowClip_2">腾讯QQ支持在线聊天、视频通话、点对点断点续传文件、共享文件</p>
             </div>
           </div>
         </div>
@@ -1032,65 +926,49 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="本地工具箱" data-search-description="Download ToolKnit Desktop v3.0.0: 68 Windows tools in 12 categories, 46 CLI/MCP capabilities, local-first processing, PDF-to-Markdown and Clipboard History." data-search-url="https://toolknit.com/exe.html">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://toolknit.com/exe.html', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Download ToolKnit Desktop v3.0.0: 68 Windows tools in 12 categories, 46 CLI/MCP capabilities, local-first processing, PDF-to-Markdown and Clipboard History.">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="豆包" data-search-description="电脑桌面上的全能助手，让AI从“问答助手”进化成“干活搭子”，直接在本地电脑上帮你整理文件，让你“分身有术”，高效办公" data-search-url="https://www.doubao.com/download/desktop?ug_apk_token=RHbKR&amp;account_id=3463994731&amp;ad_platform_id=360_search_lead&amp;a_keywordid=68403353469&amp;ug_ad_level_3_id=12634595400&amp;ug_ad_level_2_id=2684188078&amp;ug_ad_level_1_id=3519148424&amp;ug_device=pc&amp;ug_semver=v1.0.0&amp;qhclickid=3d25b1492969c9ce">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.doubao.com/download/desktop?ug_apk_token=RHbKR&amp;account_id=3463994731&amp;ad_platform_id=360_search_lead&amp;a_keywordid=68403353469&amp;ug_ad_level_3_id=12634595400&amp;ug_ad_level_2_id=2684188078&amp;ug_ad_level_1_id=3519148424&amp;ug_device=pc&amp;ug_semver=v1.0.0&amp;qhclickid=3d25b1492969c9ce', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="电脑桌面上的全能助手，让AI从“问答助手”进化成“干活搭子”，直接在本地电脑上帮你整理文件，让你“分身有术”，高效办公">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/本地工具箱.svg" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>本地工具箱</strong>
-              </a>
-              <p class="overflowClip_2">Download ToolKnit Desktop v3.0.0: 68 Windows tools in 12 categories, 46 CLI/MCP capabilities, local-first processing, PDF-to-Markdown and Clipboard History.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="豆包" data-search-description="Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…" data-search-url="https://www.doubao.com/download/desktop?ug_apk_token=RHbKR&amp;account_id=3463994731&amp;ad_platform_id=360_search_lead&amp;a_keywordid=68403353469&amp;ug_ad_level_3_id=12634595400&amp;ug_ad_level_2_id=2684188078&amp;ug_ad_level_1_id=3519148424&amp;ug_device=pc&amp;ug_semver=v1.0.0&amp;qhclickid=3d25b1492969c9ce">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.doubao.com/download/desktop?ug_apk_token=RHbKR&amp;account_id=3463994731&amp;ad_platform_id=360_search_lead&amp;a_keywordid=68403353469&amp;ug_ad_level_3_id=12634595400&amp;ug_ad_level_2_id=2684188078&amp;ug_ad_level_1_id=3519148424&amp;ug_device=pc&amp;ug_semver=v1.0.0&amp;qhclickid=3d25b1492969c9ce', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/豆包-1.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/豆包.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>豆包</strong>
               </a>
-              <p class="overflowClip_2">Seedance 2.0 视频生成模型现已全面接入豆包，现在登录即可免费使用！豆包 是你的 AI 聊天智能对话问答助手…</p>
+              <p class="overflowClip_2">电脑桌面上的全能助手，让AI从“问答助手”进化成“干活搭子”，直接在本地电脑上帮你整理文件，让你“分身有术”，高效办公</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="百度网盘" data-search-description="百度网盘是一款国民级产品，已连续9年为超过7亿用户提供稳定、安全的个人云存储服务，已实现电脑、手机…" data-search-url="https://pan.baidu.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://pan.baidu.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="百度网盘是一款国民级产品，已连续9年为超过7亿用户提供稳定、安全的个人云存储服务，已实现电脑、手机…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="百度云网盘" data-search-description="百度网盘为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端" data-search-url="https://pan.baidu.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://pan.baidu.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="百度网盘为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/百度网盘.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/百度云网盘.ico" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>百度网盘</strong>
+                <strong>百度云网盘</strong>
               </a>
-              <p class="overflowClip_2">百度网盘是一款国民级产品，已连续9年为超过7亿用户提供稳定、安全的个人云存储服务，已实现电脑、手机…</p>
+              <p class="overflowClip_2">百度网盘为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="火绒安全" data-search-description="火绒安全致力于在终端安全领域，为用户提供专业的产品和专注的服务，并持续对外赋能反病毒引擎等自主研发技术…" data-search-url="https://www.huorong.cn/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.huorong.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="火绒安全致力于在终端安全领域，为用户提供专业的产品和专注的服务，并持续对外赋能反病毒引擎等自主研发技术…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="火绒" data-search-description="专业尽职，极致低调，只为巩固安全防线！" data-search-url="https://www.huorong.cn/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.huorong.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="专业尽职，极致低调，只为巩固安全防线！">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/火绒安全.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/火绒.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>火绒安全</strong>
+                <strong>火绒</strong>
               </a>
-              <p class="overflowClip_2">火绒安全致力于在终端安全领域，为用户提供专业的产品和专注的服务，并持续对外赋能反病毒引擎等自主研发技术…</p>
+              <p class="overflowClip_2">专业尽职，极致低调，只为巩固安全防线！</p>
             </div>
           </div>
         </div>
@@ -1128,65 +1006,65 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Bandizip" data-search-description="免费压缩解压软件 Bandizip！支持 ZIP、RAR、7Z、ALZ、EGG 等格式，快速压缩与解压…" data-search-url="https://www.bandisoft.com/bandizip/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bandisoft.com/bandizip/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="免费压缩解压软件 Bandizip！支持 ZIP、RAR、7Z、ALZ、EGG 等格式，快速压缩与解压…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Bandzip" data-search-description="Bandizip 是一个强大的多功能压缩文件管理工具，可提供很快的解压缩速度和其他各种实用功能" data-search-url="https://www.bandisoft.com/bandizip/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bandisoft.com/bandizip/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Bandizip 是一个强大的多功能压缩文件管理工具，可提供很快的解压缩速度和其他各种实用功能">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/Bandizip.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/bandzip.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>Bandizip</strong>
+                <strong>Bandzip</strong>
               </a>
-              <p class="overflowClip_2">免费压缩解压软件 Bandizip！支持 ZIP、RAR、7Z、ALZ、EGG 等格式，快速压缩与解压…</p>
+              <p class="overflowClip_2">Bandizip 是一个强大的多功能压缩文件管理工具，可提供很快的解压缩速度和其他各种实用功能</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="WPS" data-search-description="WPS Office-支持多人在线编辑多种文档格式" data-search-url="https://platform.wps.cn/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://platform.wps.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="WPS Office-支持多人在线编辑多种文档格式">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="WPS" data-search-description="WPS Office一站式办公服务平台，具有可兼容Word、Excel、PPT三大办公组件的不同格式，支持PDF文档的编辑与格式转换集成思维导图、流程图、表单等功能" data-search-url="https://platform.wps.cn/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://platform.wps.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="WPS Office一站式办公服务平台，具有可兼容Word、Excel、PPT三大办公组件的不同格式，支持PDF文档的编辑与格式转换集成思维导图、流程图、表单等功能">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/WPS-1.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/WPS.ico" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>WPS</strong>
               </a>
-              <p class="overflowClip_2">WPS Office-支持多人在线编辑多种文档格式</p>
+              <p class="overflowClip_2">WPS Office一站式办公服务平台，具有可兼容Word、Excel、PPT三大办公组件的不同格式，支持PDF文档的编辑与格式转换集成思维导图、流程图、表单等功能</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="VScode" data-search-description="Visual Studio Code is a free, open source AI code editor…" data-search-url="https://code.visualstudio.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://code.visualstudio.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Visual Studio Code is a free, open source AI code editor…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="VScode" data-search-description="一款由微软开发且跨平台的免费源代码编辑器,可选择Windows、Linux、macOS的不同系统对应安装" data-search-url="https://code.visualstudio.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://code.visualstudio.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="一款由微软开发且跨平台的免费源代码编辑器,可选择Windows、Linux、macOS的不同系统对应安装">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/VScode-1.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/VSCODE.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>VScode</strong>
               </a>
-              <p class="overflowClip_2">Visual Studio Code is a free, open source AI code editor…</p>
+              <p class="overflowClip_2">一款由微软开发且跨平台的免费源代码编辑器,可选择Windows、Linux、macOS的不同系统对应安装</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="免费文件转换器 Filee" data-search-description="拖放即可离线转换图片、PDF、视频、音频、Word、Excel、电子书和压缩包，支持 Windows，另有 macOS…" data-search-url="https://filee.sh/zh-cn/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://filee.sh/zh-cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="拖放即可离线转换图片、PDF、视频、音频、Word、Excel、电子书和压缩包，支持 Windows，另有 macOS…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="抖音" data-search-description="抖音电脑客户端，发现好内容畅快看" data-search-url="https://www.douyin.com/downloadpage/pc">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.douyin.com/downloadpage/pc', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="抖音电脑客户端，发现好内容畅快看">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/免费文件转换器 Filee.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/抖音.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>免费文件转换器 Filee</strong>
+                <strong>抖音</strong>
               </a>
-              <p class="overflowClip_2">拖放即可离线转换图片、PDF、视频、音频、Word、Excel、电子书和压缩包，支持 Windows，另有 macOS…</p>
+              <p class="overflowClip_2">抖音电脑客户端，发现好内容畅快看</p>
             </div>
           </div>
         </div>
@@ -1240,17 +1118,17 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Flash中心" data-search-description="Flash Player - 一款轻量级浏览器插件,让你在网页上享受更广泛的多媒体体验,更新、更安全…" data-search-url="https://www.flash.cn/download-wins">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.flash.cn/download-wins', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Flash Player - 一款轻量级浏览器插件,让你在网页上享受更广泛的多媒体体验,更新、更安全…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="flash中心" data-search-description="flash中心带给用户更易操作的体验，支持浏览Flash网页，Flash修复、Flash系统设置，体验Flash游戏等功能" data-search-url="https://www.flash.cn/download-wins">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.flash.cn/download-wins', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="flash中心带给用户更易操作的体验，支持浏览Flash网页，Flash修复、Flash系统设置，体验Flash游戏等功能">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/Flash中心.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/flash.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
-                <strong>Flash中心</strong>
+                <strong>flash中心</strong>
               </a>
-              <p class="overflowClip_2">Flash Player - 一款轻量级浏览器插件,让你在网页上享受更广泛的多媒体体验,更新、更安全…</p>
+              <p class="overflowClip_2">flash中心带给用户更易操作的体验，支持浏览Flash网页，Flash修复、Flash系统设置，体验Flash游戏等功能</p>
             </div>
           </div>
         </div>
@@ -1272,65 +1150,49 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="抖音" data-search-description="抖音电脑客户端，发现好内容畅快看" data-search-url="https://www.douyin.com/downloadpage/pc">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.douyin.com/downloadpage/pc', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="抖音电脑客户端，发现好内容畅快看">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Quicker" data-search-description="Quicker，Windows效率神器。快速触发 + 自动化" data-search-url="https://getquicker.net/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://getquicker.net/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Quicker，Windows效率神器。快速触发 + 自动化">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/抖音-1.png" class="lozad img-circle" width="42" height="42">
-            </a>
-            <div class="xe-comment">
-              <a href="#" class="xe-user-name overflowClip_1">
-                <strong>抖音</strong>
-              </a>
-              <p class="overflowClip_2">抖音电脑客户端，发现好内容畅快看</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="Quicker" data-search-description="Quicker，Windows效率工具。快速触发 + 自动化。" data-search-url="https://getquicker.net/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://getquicker.net/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Quicker，Windows效率工具。快速触发 + 自动化。">
-          <div class="xe-comment-entry">
-            <a class="xe-user-img">
-              <img data-src="/images/Quicker-1.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/quicker.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>Quicker</strong>
               </a>
-              <p class="overflowClip_2">Quicker，Windows效率工具。快速触发 + 自动化。</p>
+              <p class="overflowClip_2">Quicker，Windows效率神器。快速触发 + 自动化</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="不坑盒子" data-search-description="不坑盒子是一款深受34万用户喜爱的全能Office插件，兼容Microsoft Office与WPS。提供一键公文排版…" data-search-url="https://www.bukenghezi.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bukenghezi.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="不坑盒子是一款深受34万用户喜爱的全能Office插件，兼容Microsoft Office与WPS。提供一键公文排版…">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="不坑盒子" data-search-description="Word 效率插件" data-search-url="https://www.44886.com/thread-95066.htm">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.44886.com/thread-95066.htm', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Word 效率插件">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/不坑盒子-1.png" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/不坑盒子.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>不坑盒子</strong>
               </a>
-              <p class="overflowClip_2">不坑盒子是一款深受34万用户喜爱的全能Office插件，兼容Microsoft Office与WPS。提供一键公文排版…</p>
+              <p class="overflowClip_2">Word 效率插件</p>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="小恐龙公文排版助手" data-search-description="小恐龙公文排版助手 for Word/WPS" data-search-url="https://gw.xkonglong.com/#/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://gw.xkonglong.com/#/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="小恐龙公文排版助手 for Word/WPS">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="小恐龙公文排版助手" data-search-description="Word 效率插件" data-search-url="https://gw.xkonglong.com/#/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://gw.xkonglong.com/#/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Word 效率插件">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/小恐龙公文排版助手.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/小恐龙公文排版助手.png" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>小恐龙公文排版助手</strong>
               </a>
-              <p class="overflowClip_2">小恐龙公文排版助手 for Word/WPS</p>
+              <p class="overflowClip_2">Word 效率插件</p>
             </div>
           </div>
         </div>
@@ -1368,8 +1230,8 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="OneKeyTools" data-search-description="OneKeyTools官网，提供OK插件免费下载、教程、交流" data-search-url="http://oktools.xyz/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('http://oktools.xyz/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="OneKeyTools官网，提供OK插件免费下载、教程、交流">
+      <div class="col-sm-3 site-card-col" data-search-category="桌面必备" data-search-name="OneKeyTools" data-search-description="PPT 效率插件" data-search-url="http://oktools.xyz/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('http://oktools.xyz/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="PPT 效率插件">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
               <img data-src="/images/onekey.png" class="lozad img-circle" width="42" height="42">
@@ -1378,7 +1240,7 @@
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>OneKeyTools</strong>
               </a>
-              <p class="overflowClip_2">OneKeyTools官网，提供OK插件免费下载、教程、交流</p>
+              <p class="overflowClip_2">PPT 效率插件</p>
             </div>
           </div>
         </div>
@@ -1414,23 +1276,22 @@
     
 
 
-
 <section class="nav-category" data-category="科研专区">
   <h4 class="text-gray"><i class="fas fa-flask" style="margin-right: 7px;" id="科研专区"></i>科研专区</h4>
   <div class="nav-card-scroll" data-item-count="6">
     <div class="row">
       
-      <div class="col-sm-3 site-card-col" data-search-category="科研专区" data-search-name="中国知网" data-search-description="中国知网知识发现网络平台—面向海内外读者提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴…" data-search-url="https://www.cnki.net/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.cnki.net/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="中国知网知识发现网络平台—面向海内外读者提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴…">
+      <div class="col-sm-3 site-card-col" data-search-category="科研专区" data-search-name="中国知网" data-search-description="提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴、工具书等各类资源" data-search-url="https://www.cnki.net/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.cnki.net/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴、工具书等各类资源">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/中国知网-1.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/知网.jpg" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>中国知网</strong>
               </a>
-              <p class="overflowClip_2">中国知网知识发现网络平台—面向海内外读者提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴…</p>
+              <p class="overflowClip_2">提供中国学术文献、外文文献、学位论文、报纸、会议、年鉴、工具书等各类资源</p>
             </div>
           </div>
         </div>
@@ -1452,17 +1313,17 @@
         </div>
       </div>
       
-      <div class="col-sm-3 site-card-col" data-search-category="科研专区" data-search-name="X-MOL学术平台" data-search-description="Top期刊论文图文内容每日更新，海内外课题组信息，行业新闻文摘，化学类网址导航，化学软件和数据库导航，及更多其他内容" data-search-url="https://www.x-mol.com/">
-        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.x-mol.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Top期刊论文图文内容每日更新，海内外课题组信息，行业新闻文摘，化学类网址导航，化学软件和数据库导航，及更多其他内容">
+      <div class="col-sm-3 site-card-col" data-search-category="科研专区" data-search-name="X-MOL学术平台" data-search-description="X-MOL学术平台，顶级期刊论文图文内容每日更新" data-search-url="https://www.x-mol.com/">
+        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.x-mol.com/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="X-MOL学术平台，顶级期刊论文图文内容每日更新">
           <div class="xe-comment-entry">
             <a class="xe-user-img">
-              <img data-src="/images/X-MOL学术平台-1.ico" class="lozad img-circle" width="42" height="42">
+              <img data-src="/images/x-mol.ico" class="lozad img-circle" width="42" height="42">
             </a>
             <div class="xe-comment">
               <a href="#" class="xe-user-name overflowClip_1">
                 <strong>X-MOL学术平台</strong>
               </a>
-              <p class="overflowClip_2">Top期刊论文图文内容每日更新，海内外课题组信息，行业新闻文摘，化学类网址导航，化学软件和数据库导航，及更多其他内容</p>
+              <p class="overflowClip_2">X-MOL学术平台，顶级期刊论文图文内容每日更新</p>
             </div>
           </div>
         </div>
@@ -1528,7 +1389,6 @@
     
     
     
-
 
 
 <section class="nav-category" data-category="校园专区">
@@ -1628,7 +1488,6 @@
     
     
     
-
 
 
 <section class="nav-category" data-category="学习笔记">
@@ -3396,8 +3255,8 @@
                 </div>
               </div>
               
-              <div class="col-sm-3 site-card-col" data-search-category="童年回忆" data-search-sub-category="动画片" data-search-name="小牛向前冲" data-search-description="小时候看的动画片，童年回忆！" data-search-url="https://www.bilibili.com/video/BV1QEC4BTEvB/?spm_id_from=333.337.search-card.all.click">
-                <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bilibili.com/video/BV1QEC4BTEvB/?spm_id_from=333.337.search-card.all.click', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="小时候看的动画片，童年回忆！">
+              <div class="col-sm-3 site-card-col" data-search-category="童年回忆" data-search-sub-category="动画片" data-search-name="小牛向前冲" data-search-description="小时候看的动画片，童年回忆！" data-search-url="bilibili.com/video/BV1QEC4BTEvB/?spm_id_from=333.337.search-card.all.click">
+                <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('bilibili.com/video/BV1QEC4BTEvB/?spm_id_from=333.337.search-card.all.click', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="小时候看的动画片，童年回忆！">
                   <div class="xe-comment-entry">
                     <a class="xe-user-img">
                       <img data-src="/images/小牛向前冲.png" class="lozad img-circle" width="42" height="42">
@@ -3889,8 +3748,8 @@
                 </div>
               </div>
               
-              <div class="col-sm-3 site-card-col" data-search-category="童年回忆" data-search-sub-category="动漫" data-search-name="暗杀教室" data-search-description="小时候看的动漫，童年回忆！" data-search-url="https://www.bilibili.com/video/BV1YjGMzoEoe?spm_id_from=333.788.recommend_more_video.0&amp;trackid=web_related_0.router-related-2479604-fc7wt.1783478301231.723&amp;vd_source=d5ff11e2ae5e4eb0bd35a0f4f893a97e">
-                <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.bilibili.com/video/BV1YjGMzoEoe?spm_id_from=333.788.recommend_more_video.0&amp;trackid=web_related_0.router-related-2479604-fc7wt.1783478301231.723&amp;vd_source=d5ff11e2ae5e4eb0bd35a0f4f893a97e', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="小时候看的动漫，童年回忆！">
+              <div class="col-sm-3 site-card-col" data-search-category="童年回忆" data-search-sub-category="动漫" data-search-name="暗杀教室" data-search-description="小时候看的动漫，童年回忆！" data-search-url="hhttps://www.bilibili.com/video/BV1YjGMzoEoe?spm_id_from=333.788.recommend_more_video.0&amp;trackid=web_related_0.router-related-2479604-fc7wt.1783478301231.723&amp;vd_source=d5ff11e2ae5e4eb0bd35a0f4f893a97e">
+                <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('hhttps://www.bilibili.com/video/BV1YjGMzoEoe?spm_id_from=333.788.recommend_more_video.0&amp;trackid=web_related_0.router-related-2479604-fc7wt.1783478301231.723&amp;vd_source=d5ff11e2ae5e4eb0bd35a0f4f893a97e', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="小时候看的动漫，童年回忆！">
                   <div class="xe-comment-entry">
                     <a class="xe-user-img">
                       <img data-src="/images/暗杀教室.jpg" class="lozad img-circle" width="42" height="42">
@@ -4723,9 +4582,7 @@
     </section>
     
     
-  
-  </div>
-
+    
     
 <script src="/js/footer.js"></script>
 
@@ -4747,6 +4604,9 @@
     <div class="go-up floating-actions" aria-label="页面快捷操作">
       <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
         <i class="fas fa-sun"></i>
+      </a>
+      <a href="#" class="floating-action floating-action-top" rel="go-top" onclick="this.blur();" aria-label="返回顶部" title="返回顶部">
+        <i class="fas fa-angle-up"></i>
       </a>
       <!-- <a href="#" data-toggle="sidebar">
         <i class="fas fa-bars"></i>
