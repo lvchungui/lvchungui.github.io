@@ -146,7 +146,7 @@ strong.search-engine-tit {
   display: inline-block;
   width: 25px;
   height: 15px;
-  background: url("https://npm.elemecdn.com/hassan-assets/navi/off_on.png")
+  background: url("/images/off_on.png")
     no-repeat 0px 0px;
   cursor: pointer;
   vertical-align: middle;
@@ -690,27 +690,26 @@ body.night .user-info-navbar .user-info-menu > li > a:hover {
 }
 
 /* 鼠标图标 -----------------------------------------------------------------------开始
+   已选用「系统默认光标」，本段保持停用（custom.js 亦不加载 cursor 图）。
+   如需恢复自定义指针，把下面两组规则取消注释即可，图片已本地化到 /images/。
 body {
-  cursor: url(https://npm.elemecdn.com/hassan-assets/img/cursor.png), default !important;
-} */
+  cursor: url(/images/cursor.png), default !important;
+}
 
-/*i标签，a标签，按钮，头部的导航栏，网址卡片，底栏链接*/
-/* i:hover,
+i:hover,
 a:hover,
 button:hover,
 #nav .site-page:hover,
 .xe-widget.xe-conversations.box2.label-info {
-  cursor: url(https://npm.elemecdn.com/hassan-assets/img/cursor_puppy.png),
-    pointer !important;
-} */
+  cursor: url(/images/cursor_puppy.png), pointer !important;
+}
 
-/*页脚a标签，分页器，搜索框*/
-/* #footer-wrap a:hover,
+#footer-wrap a:hover,
 #pagination .page-number:hover,
 input#txt {
   cursor: pointer !important;
-} */
-/* 鼠标图标 -----------------------------------------------------------------------结束 */
+}
+   鼠标图标 -----------------------------------------------------------------------结束 */
 
 /* 滚动条 */
 /* ::-webkit-scrollbar {
