@@ -259,6 +259,12 @@
       <i class="fas fa-moon"></i>
     </a>
   </div>
+  <script>
+    /* 搜索引擎列表：数据来自 source/_data/search-engines.yml
+       （后台「外观设置 → 搜索引擎」可拖动排序、增删），顺序即下拉面板里的排列。
+       这里注入成全局数组，header.js 的 search() 会优先读它，读不到才用内置列表兜底。 */
+    window.__NAV_ENGINES__ = [{"name":"百度","url":"https://www.baidu.com/s?wd=","type":"external","icon":"-80px 0px","big":"0px 0px"},{"name":"站内","url":"site://nav","type":"site","image":"/img/logo.png"},{"name":"GitHub","url":"https://github.com/search?utf8=✓&q=","type":"external","icon":"-80px -175px","big":"0px -280px"},{"name":"谷歌","url":"https://www.google.com/search?q=","type":"external","icon":"-105px 0px","big":"-40px 0px"},{"name":"必应","url":"https://cn.bing.com/search?q=","type":"external","icon":"-80px -25px","big":"0px -40px"},{"name":"好搜","url":"https://www.so.com/s?q=","type":"external","icon":"-105px -25px","big":"-40px -40px"},{"name":"搜狗","url":"https://www.sogou.com/web?query=","type":"external","icon":"-80px -50px","big":"0px -80px"},{"name":"淘宝","url":"https://s.taobao.com/search?q=","type":"external","icon":"-105px -50px","big":"-40px -80px"},{"name":"京东","url":"http://search.jd.com/Search?keyword=","type":"external","icon":"-80px -75px","big":"0px -120px"},{"name":"天猫","url":"https://list.tmall.com/search_product.htm?q=","type":"external","icon":"-105px -75px","big":"-40px -120px"},{"name":"知乎","url":"https://www.zhihu.com/search?type=content&q=","type":"external","icon":"-105px -100px","big":"-40px -160px"},{"name":"微博","url":"https://s.weibo.com/weibo/","type":"external","icon":"-80px -125px","big":"0px -200px"},{"name":"B站","url":"http://search.bilibili.com/all?keyword=","type":"external","icon":"-105px -125px","big":"-40px -200px"},{"name":"豆瓣","url":"https://www.douban.com/search?source=suggest&q=","type":"external","icon":"-80px -150px","big":"0px -240px"},{"name":"优酷","url":"https://so.youku.com/search_video/q_","type":"external","icon":"-105px -150px","big":"-40px -240px"}];
+  </script>
   <script>search()</script>
   
 

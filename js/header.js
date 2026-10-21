@@ -109,6 +109,55 @@ function search() {
     }
     localStorage.removeItem("searchData");
 
+    /* 引擎列表优先用页面注入的那份（source/_data/search-engines.yml，后台可排序 / 增删），
+       没有注入时才用上面硬编码的内置列表兜底。
+       注入项字段：name / url / type / icon（25px 雪碧图偏移）/ big（40px 雪碧图偏移）/ image（图片地址）。
+       换算成内部用的两个字段：img = 列表图标样式，position = 搜索框左侧大图标。 */
+    applyInjectedEngines();
+
+    function applyInjectedEngines() {
+        var injected = window.__NAV_ENGINES__;
+        if (!Array.isArray(injected) || !injected.length) {
+            return;
+        }
+
+        var list = [];
+        for (var k = 0; k < injected.length; k++) {
+            var item = injected[k] || {};
+            var name = String(item.name || "").trim();
+            var url = String(item.url || "").trim();
+            if (!name || !url) {
+                continue;
+            }
+
+            var image = String(item.image || "").trim();
+            var isImage = /^https?:\/\//i.test(image) || image.indexOf("/") === 0;
+
+            list.push({
+                name: name,
+                url: url,
+                type: String(item.type || "external") === "site" ? "site" : "external",
+                position: isImage ? image : String(item.big || "0px 0px"),
+                img: isImage ? image : "url('/images/search_icon.png') " + String(item.icon || "0px 0px")
+            });
+        }
+
+        if (!list.length) {
+            return;
+        }
+
+        searchData.data = list;
+
+        // 默认搜索引擎取第一个「外部」引擎：站内搜索被挪到第一位时也不该变成默认项
+        for (var m = 0; m < list.length; m++) {
+            if (list[m].type !== "site") {
+                searchData.thisSearch = list[m].url;
+                searchData.thisSearchIcon = list[m].position;
+                break;
+            }
+        }
+    }
+
     ensureSiteSearchEngine();
 
     function ensureSiteSearchEngine() {

@@ -642,3 +642,61 @@ document.title = '北极熊说它怕冷的个人导航';
     boot();
   }
 })();
+
+/* ============================================================================
+   灵动卡片 · 右侧主区交互（正式落地，2026-10-21）
+   只增强 .pm-scroll 内的卡片，不触碰左侧栏。
+   配套样式在同目录 custom.css 末尾「灵动卡片 · 右侧主区」那一段。
+   演示用的右下浮标控制面板已移除（深浅切换用搜索条右端的 .pm-theme-toggle）。
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  function boot() {
+    var body = document.body;
+    if (!body || !body.classList.contains('pm-mode')) return;
+
+    var scrollEl = document.querySelector('.pm-scroll');
+    if (!scrollEl) return;
+
+    var CARD = '.xe-widget.xe-conversations.box2.label-info';
+
+    /* ---------------- 1. 给每张卡片补一个右上角箭头 ---------------- */
+    var GO =
+      '<span class="ld-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';
+
+    function decorate() {
+      var cards = scrollEl.querySelectorAll('.site-card-col > ' + CARD);
+      for (var i = 0; i < cards.length; i++) {
+        if (!cards[i].querySelector('.ld-go')) {
+          cards[i].insertAdjacentHTML('beforeend', GO);
+        }
+      }
+    }
+    decorate();
+
+    /* ---------------- 2. 指针高光 / 点击涟漪：已按需求移除 ----------------
+       原来这里监听 pointermove 写 --ld-mx/--ld-my、pointerdown 插 .ld-ripple 水波，
+       两套都已去掉，卡片悬停只保留 CSS 的上浮 + 流光边框。
+       搜索框的流光环后来也按需求移除，所以现在这个脚本只做一件事：补右上角箭头。 */
+
+    /* ---------------- 3. 搜索框流光环：已关闭（2026-10-21 按需求移除） ----------------
+       原来这里用 SVG 给 .search-box 插一圈描边做流光，现已删除，不再生成任何节点。
+       配套样式（搜索框环那一整套）也在 custom.css 里一并删掉了。 */
+
+    /* ---------------- 4. 分类切换后补装饰（内容未变，仅防御） ---------------- */
+    var menu = document.getElementById('main-menu');
+    if (menu) {
+      menu.addEventListener('click', function () {
+        setTimeout(decorate, 60);
+      }, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();

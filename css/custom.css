@@ -2569,3 +2569,581 @@ body.night .sousuo .search-engine ul::before {
     padding: 0 4px;
   }
 }
+
+
+/* ============================================================================
+   灵动卡片 · 右侧主区（正式落地，2026-10-21）
+   只作用于 body.pm-mode 下的 .main-content 内部；左侧 .sidebar-menu 一行不碰。
+   深浅两套令牌由 body.pm-mode / body.pm-mode.night 切换。
+
+   与演示页的差别：演示控制面板（右下浮标）整体去掉，所有效果默认开启。
+   下面出现 ld-no-flow / ld-no-aura 两个 body 上的类，
+   是没有入口的可选开关 —— 正式页不挂，留着方便临时关某一项
+   （控制台 body.classList.add('ld-no-flow') 即可）。
+   指针跟随高光与点击涟漪已按需求移除，对应令牌 --ld-rip 一并删除。
+   搜索框的流光边框也已按需求移除，只保留悬停 / 聚焦时的外圈光晕。
+   落地前原文件备份在 .workbuddy/参考/落地前备份-20261021/。
+   ========================================================================== */
+
+body.pm-mode {
+  --ld-g1: #38bdf8;
+  --ld-g2: #6366f1;
+  --ld-rad: 18px;
+  --ld-rad-lg: 22px;
+
+  --ld-card-bg: #ffffff;
+  --ld-card-bd: rgba(18, 20, 28, 0.06);
+  --ld-card-bd-h: rgba(56, 189, 248, 0.42);
+  --ld-card-sd: 0 1px 2px rgba(20, 24, 48, 0.05), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+  --ld-card-sd-h: 0 4px 10px rgba(20, 24, 48, 0.05), 0 28px 52px -26px rgba(20, 24, 48, 0.38);
+
+  --ld-ink: #141821;
+  --ld-ink-dim: #7c8598;
+  --ld-icon-bg: #f3f5fa;
+  --ld-icon-bd: rgba(20, 24, 48, 0.09);
+  --ld-hl: rgba(120, 170, 255, 0.15);
+  --ld-go-bg: #f2f5fb;
+
+  --ld-panel-bg: radial-gradient(1100px 560px at 8% -12%, rgba(120, 160, 255, 0.20), transparent 62%),
+    radial-gradient(920px 520px at 94% 2%, rgba(255, 172, 200, 0.16), transparent 64%),
+    radial-gradient(820px 620px at 44% 112%, rgba(146, 238, 214, 0.16), transparent 62%), #eef1f8;
+  --ld-search-bg: rgba(255, 255, 255, 0.92);
+  --ld-search-sd: 0 1px 2px rgba(20, 24, 48, 0.04), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+  --ld-search-sd-h: 0 2px 6px rgba(20, 24, 48, 0.05), 0 26px 54px -24px rgba(56, 130, 246, 0.5);
+  --ld-aura1: rgba(120, 170, 255, 0.28);
+  --ld-aura2: rgba(255, 170, 205, 0.22);
+
+  /* 流光边框 */
+  --ld-flow-1: #38bdf8;
+  --ld-flow-2: #818cf8;
+  --ld-flow-3: #f0abfc;
+  --ld-flow-4: #22d3ee;
+  --ld-flow-base: rgba(56, 189, 248, 0.22);
+  --ld-flow-glow: rgba(56, 189, 248, 0.42);
+}
+
+body.pm-mode.night {
+  --ld-card-bg: #1c212c;
+  --ld-card-bd: rgba(255, 255, 255, 0.075);
+  --ld-card-bd-h: rgba(139, 227, 255, 0.34);
+  --ld-card-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+  --ld-card-sd-h: 0 6px 14px rgba(0, 0, 0, 0.4), 0 30px 56px -28px rgba(0, 0, 0, 0.85);
+
+  --ld-ink: #e6edf7;
+  --ld-ink-dim: #8b96a8;
+  --ld-icon-bg: #222736;
+  --ld-icon-bd: rgba(255, 255, 255, 0.08);
+  --ld-hl: rgba(150, 200, 255, 0.14);
+  --ld-go-bg: #232838;
+
+  --ld-panel-bg: radial-gradient(1200px 600px at 8% -14%, rgba(56, 189, 248, 0.12), transparent 62%),
+    radial-gradient(900px 520px at 96% 0%, rgba(124, 92, 255, 0.13), transparent 64%),
+    radial-gradient(820px 640px at 40% 116%, rgba(34, 197, 148, 0.06), transparent 60%), #16181d;
+  --ld-search-bg: rgba(32, 37, 50, 0.86);
+  --ld-search-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 26px -18px rgba(0, 0, 0, 0.8);
+  --ld-search-sd-h: 0 2px 6px rgba(0, 0, 0, 0.4), 0 26px 54px -26px rgba(56, 189, 248, 0.5);
+  --ld-aura1: rgba(56, 189, 248, 0.16);
+  --ld-aura2: rgba(124, 92, 255, 0.16);
+
+  --ld-flow-1: #7dd3fc;
+  --ld-flow-2: #a78bfa;
+  --ld-flow-3: #f5d0fe;
+  --ld-flow-4: #67e8f9;
+  --ld-flow-base: rgba(125, 211, 252, 0.24);
+  --ld-flow-glow: rgba(56, 189, 248, 0.38);
+}
+
+/* ---------------- 主面板底板：柔性渐变 ---------------- */
+body.pm-mode .main-content {
+  background: var(--ld-panel-bg) !important;
+  box-shadow: 0 24px 60px rgba(12, 28, 48, 0.16), 0 2px 10px rgba(12, 28, 48, 0.08) !important;
+}
+
+body.pm-mode.night .main-content {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 缓慢漂移的两团柔光（可开关：body.ld-no-aura 关掉） */
+body.pm-mode .main-content::before {
+  content: "";
+  position: absolute;
+  /* 左右必须 0：负 inset 会让柔光超出面板，在手机上撑出横向滚动 */
+  inset: -18% 0 auto 0;
+  height: 76%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(closest-side, var(--ld-aura1), transparent 72%) 18% 30% / 52% 100% no-repeat,
+    radial-gradient(closest-side, var(--ld-aura2), transparent 72%) 82% 12% / 46% 96% no-repeat;
+  filter: blur(26px);
+  animation: ldAura 26s ease-in-out infinite alternate;
+  opacity: 0.9;
+}
+
+body.pm-mode.ld-no-aura .main-content::before {
+  display: none;
+}
+
+/* 只动 background-position：
+   原来用 transform（translate 5% + scale 1.08）会让伪元素的盒子往右探出 ~23px，
+   手机上主区满宽 → 整页被撑出横向滚动（实测 scrollWidth 390 -> 413）。
+   绝对定位元素不受父级 overflow / clip-path 约束（clip-path 只裁绘制、不裁滚动溢出），
+   所以从源头让盒子别动最稳。 */
+@keyframes ldAura {
+  0% {
+    background-position: 12% 26%, 88% 10%;
+  }
+  50% {
+    background-position: 21% 36%, 79% 18%;
+  }
+  100% {
+    background-position: 27% 30%, 72% 12%;
+  }
+}
+
+/* 内容压在柔光之上 */
+body.pm-mode .pm-topbar,
+body.pm-mode .pm-scroll {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+body.pm-mode .pm-searchbar {
+  background: transparent !important;
+}
+
+/* ---------------- 搜索条：更圆润的浮起卡片 ---------------- */
+body.pm-mode .pm-searchbar .sousuo .search-box,
+body.pm-mode .pm-searchbar .sousuo .search {
+  border-radius: var(--ld-rad) !important;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box {
+  background: var(--ld-search-bg) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--ld-search-sd) !important;
+  border: 1px solid var(--ld-card-bd) !important;
+  transition: box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
+  transform: translateY(-1px);
+  box-shadow: var(--ld-search-sd-h) !important;
+  border-color: var(--ld-card-bd-h) !important;
+}
+
+body.pm-mode .pm-searchbar .sousuo input#txt {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo input#txt {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--ld-ink) !important;
+}
+
+/* ---------- 搜索框悬停 / 聚焦：蓝边 + 光晕 ----------
+   蓝边（2026-10-21 晚按需求恢复）：就是主题原本 `.search:hover input#txt` 里那两层 ——
+     border-color: #68d8ff  +  box-shadow: 0 0 0 1px rgba(104,216,255,.75)（这层是硬边）
+   区别只是挂在外层 .search-box 上，而不是里面的 input#txt：
+   input 的圆角是 10px、外层卡片是 18px、且 input 正好缩进 1px，
+   蓝边挂在 input 上时四个角会和卡片轮廓错开（当初就是因为这个被去掉的）。
+   挂外层则是一圈完整的 18px 圆角蓝边，内外不会再出现两层框。
+   光晕三层数值仍是主题原版的（深色另有 16/34px 版本）。 */
+body.pm-mode .pm-searchbar .sousuo .search-box:hover,
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
+  border-color: #68d8ff !important;
+  box-shadow:
+    0 0 0 1px rgba(104, 216, 255, 0.75),
+    0 0 14px rgba(104, 216, 255, 0.55),
+    0 0 28px rgba(104, 216, 255, 0.35) !important;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo .search-box:hover,
+body.pm-mode.night .pm-searchbar .sousuo .search-box:focus-within {
+  border-color: #7dd3fc !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.85),
+    0 0 16px rgba(125, 211, 252, 0.65),
+    0 0 34px rgba(125, 211, 252, 0.45) !important;
+}
+
+/* ---------- 内层 input 保持无框无阴影 ----------
+   主题原始 `.search:hover input#txt` 会给 input 自己上一圈蓝边 + 光晕，
+   和上面外层的蓝边叠起来就是「框里套框」。这里把 input 的边框和阴影都按住。 */
+body.pm-mode .pm-searchbar .sousuo .search-box:hover input#txt,
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within input#txt,
+body.pm-mode .pm-searchbar .sousuo .search:hover input#txt,
+body.pm-mode .pm-searchbar .sousuo .search:focus-within input#txt {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ---------------- 分类标题行 ---------------- */
+body.pm-mode .pm-topbar {
+  border-bottom: 1px solid var(--ld-card-bd) !important;
+}
+
+body.pm-mode .pm-title {
+  font-size: 21px;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+  color: var(--ld-ink);
+}
+
+body.pm-mode .pm-title > i {
+  color: var(--ld-g1);
+  filter: drop-shadow(0 3px 8px rgba(56, 189, 248, 0.4));
+}
+
+body.pm-mode .pm-title .pm-count {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ld-ink-dim);
+  background: var(--ld-icon-bg);
+  border: 1px solid var(--ld-card-bd);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+/* ---------------- 网格：改成自适应列宽 ---------------- */
+body.pm-mode .nav-card-scroll > .row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 15px;
+  margin: 0 !important;
+}
+
+/* bootstrap clearfix 在 grid 里会变成占位格 */
+body.pm-mode .nav-card-scroll > .row::before,
+body.pm-mode .nav-card-scroll > .row::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.pm-mode .nav-card-scroll > .row > .site-card-col {
+  width: auto !important;
+  float: none !important;
+  flex: none !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ---------------- 卡片本体 ---------------- */
+body.pm-mode .xe-widget.xe-conversations.box2.label-info {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 16px 18px !important;
+  border-radius: var(--ld-rad) !important;
+  border: 1px solid var(--ld-card-bd) !important;
+  background: var(--ld-card-bg) !important;
+  box-shadow: var(--ld-card-sd);
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateY(0);
+  transition: box-shadow 0.42s ease, border-color 0.32s ease,
+    transform 0.35s ease;
+}
+
+/* 悬停：与原始站点 custom.css 的 .xe-widget.xe-conversations:hover 完全一致 —— 纯上浮，无倾斜 */
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+  transform: translateY(-10px);
+}
+
+/* 指针跟随柔光（::after + --ld-mx/--ld-my）已按需求移除：
+   卡片悬停只保留上浮 + 流光边框，不再有跟着指针跑的高光斑。 */
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+  /* 流光开启时边框交给流光层，否则两条线会叠成 2.6px 的粗边 */
+  border-color: transparent !important;
+  box-shadow: var(--ld-card-sd-h), 0 14px 36px -20px var(--ld-flow-glow),
+    inset 0 0 22px -12px var(--ld-flow-glow);
+}
+
+/* 关掉流光时恢复一根干净的青色描边 */
+body.pm-mode.ld-no-flow .xe-widget.xe-conversations.box2.label-info:hover {
+  border-color: var(--ld-card-bd-h) !important;
+  box-shadow: var(--ld-card-sd-h);
+}
+
+/* ---------------- 悬停流光边框 ---------------- */
+@property --ld-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  /* 描边粗细 */
+  padding: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.36s ease;
+  /* 底层一层淡色打底保证光带之间不断开，上层两道光弧绕圈 */
+  background: conic-gradient(
+      from var(--ld-ang, 0deg),
+      transparent 0deg,
+      var(--ld-flow-1) 30deg,
+      var(--ld-flow-2) 58deg,
+      var(--ld-flow-3) 88deg,
+      transparent 126deg,
+      transparent 206deg,
+      var(--ld-flow-4) 244deg,
+      var(--ld-flow-2) 276deg,
+      transparent 316deg,
+      transparent 360deg
+    ),
+    linear-gradient(var(--ld-flow-base), var(--ld-flow-base));
+  /* 只保留 2px 的边框环，中间整块挖空 */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: ldFlow 4.4s linear infinite paused;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+body.pm-mode.ld-no-flow .xe-widget.xe-conversations.box2.label-info::before {
+  display: none !important;
+}
+
+@keyframes ldFlow {
+  to {
+    --ld-ang: 360deg;
+  }
+}
+
+/* 内层布局：图标 + 文字，垂直居中，宽度吃满 */
+body.pm-mode .xe-widget.xe-conversations .xe-comment-entry {
+  display: flex !important;
+  align-items: center;
+  gap: 13px;
+  padding: 0 !important;
+  min-height: 46px;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  background: var(--ld-icon-bg);
+  box-shadow: inset 0 0 0 1px var(--ld-icon-bd);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img img,
+body.pm-mode .xe-widget.xe-conversations .xe-user-img img.img-circle {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border-radius: 13px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .xe-user-img {
+  transform: rotate(-4deg) scale(1.08);
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-comment {
+  position: static !important;
+  min-height: 62px;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0;
+  padding: 0 !important;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-name.overflowClip_1 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100% !important;
+  padding-right: 22px;
+  line-height: 1.4;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-name strong {
+  font-size: 15px !important;
+  font-weight: 640;
+  letter-spacing: -0.005em;
+  color: var(--ld-ink);
+}
+
+body.pm-mode.night .xe-widget.xe-conversations .xe-user-name strong {
+  color: var(--ld-ink) !important;
+}
+
+body.pm-mode .xe-widget.xe-conversations p.overflowClip_2 {
+  width: 100% !important;
+  margin: 4px 0 0 !important;
+  font-size: 12.5px !important;
+  line-height: 1.55;
+  color: var(--ld-ink-dim) !important;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.pm-mode.night .xe-widget.xe-conversations p.overflowClip_2 {
+  color: var(--ld-ink-dim) !important;
+}
+
+/* 右上角箭头 */
+.ld-go {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  z-index: 4;
+  background: var(--ld-go-bg);
+  color: var(--ld-ink-dim);
+  opacity: 0;
+  transform: translate(2px, -2px) scale(0.82);
+  transition: opacity 0.36s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s,
+    color 0.3s;
+  pointer-events: none;
+}
+
+.ld-go svg {
+  width: 12px;
+  height: 12px;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .ld-go {
+  opacity: 1;
+  transform: none;
+  background: linear-gradient(135deg, var(--ld-g1), var(--ld-g2));
+  color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(56, 189, 248, 0.9);
+}
+
+/* 点击涟漪（.ld-ripple / ldRip）已按需求移除：点击卡片不再有水波扩散。 */
+
+/* ---------------- 入场：弹性浮起 ---------------- */
+@keyframes pmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+  animation: pmCardIn 0.52s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+
+/* ---------------- 二级分类 chips：滑动白块 ---------------- */
+body.pm-mode .sub-category-nav {
+  background: rgba(238, 241, 248, 0.88) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ld-card-bd) !important;
+  box-shadow: none !important;
+  padding-bottom: 10px;
+}
+
+body.pm-mode .sub-category-link {
+  border-radius: 11px !important;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s;
+}
+
+body.pm-mode .sub-category-link.is-active {
+  background: var(--ld-card-bg) !important;
+  color: var(--ld-ink) !important;
+  box-shadow: 0 6px 16px -10px rgba(20, 24, 48, 0.55), inset 0 0 0 1px var(--ld-card-bd);
+  transform: translateY(-1px);
+}
+
+body.pm-mode.night .sub-category-nav {
+  background: rgba(22, 24, 29, 0.9) !important;
+}
+
+/* ---------------- 窄屏 ---------------- */
+@media screen and (max-width: 1100px) {
+  body.pm-mode .nav-card-scroll > .row {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 13px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  body.pm-mode .nav-card-scroll > .row {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+  /* 移动端图标保持 48px：缩小后白底图标会糊成一团 */
+  body.pm-mode .xe-widget.xe-conversations .xe-comment {
+    min-height: 58px;
+  }
+  body.pm-mode .pm-title {
+    font-size: 18px;
+  }
+  /* 原始站点在 ≤767 也关掉了卡片上浮 */
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover::before {
+    animation: none;
+  }
+
+  body.pm-mode .main-content::before {
+    animation: none !important;
+  }
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info,
+  .ld-go,
+  body.pm-mode .xe-widget.xe-conversations .xe-user-img {
+    transition-duration: 0.01ms !important;
+  }
+}
