@@ -330,9 +330,18 @@ document.title = '北极熊说它怕冷的个人导航';
       });
 
       var cards = Array.prototype.slice.call(target.querySelectorAll('.site-card-col'));
+<<<<<<< HEAD
 
       /* 入场动画由滚动观察器负责（custom.css 第 10 节 + 末尾 replayCards），
          原来这里写 animation-delay、重放 pm-anim 强制重启动画的两段都停用了。 */
+=======
+      cards.forEach(function (card, index) {
+        card.style.animationDelay = Math.min(index, 18) * 22 + 'ms';
+      });
+
+      scroll.classList.remove('pm-anim');
+      void scroll.offsetWidth;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
       scroll.classList.add('pm-anim');
 
       var heading = target.querySelector('h4');
@@ -359,6 +368,7 @@ document.title = '北极熊说它怕冷的个人导航';
         window.scrollTo(0, 0);
       }
 
+<<<<<<< HEAD
       /* 二级导航已经搬到标题条下面的副栏（uxEnhance 的 moveNavsToSubbar），
          section 里已经没有 .sub-category-link 了，按 data-parent-category 全局找。
          属性选择器遇特殊字符会抛，失败就退回遍历比较。 */
@@ -375,6 +385,9 @@ document.title = '北极熊说它怕冷的个人导航';
         }
       }
 
+=======
+      var firstSubLink = target.querySelector('.sub-category-link');
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
       if (firstSubLink && !target.querySelector('.sub-category-panel.is-active')) {
         firstSubLink.click();
       }
@@ -386,6 +399,7 @@ document.title = '北极熊说它怕冷的个人导航';
       try {
         history.replaceState(null, '', '#' + encodeURIComponent(name));
       } catch (error) {}
+<<<<<<< HEAD
 
       /* 通知「滚动显现」按当前位置重新算一次。
          刷新时 URL 带着 #分类，boot() 在首屏 rAF 之后才跑到这里，
@@ -394,6 +408,8 @@ document.title = '北极熊说它怕冷的个人导航';
       try {
         document.dispatchEvent(new CustomEvent('pm:category', { detail: { name: name } }));
       } catch (error) {}
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     }
 
     /* ---------- 绑定侧栏点击（capture 阶段，优先于旧的锚点逻辑） ---------- */
@@ -579,6 +595,7 @@ document.title = '北极熊说它怕冷的个人导航';
       }
     }, true);
 
+<<<<<<< HEAD
     /* 滚动 / 切换分类时收起气泡。
        气泡是 container:'body' + position:fixed，坐标是我们自己按卡片算一次就固定的，
        它**不会跟着卡片走**。一滚动卡片就换了位置，气泡却还钉在原处，
@@ -619,6 +636,8 @@ document.title = '北极熊说它怕冷的个人导航';
     window.addEventListener('scroll', hideTip, { passive: true });
     document.addEventListener('pm:category', hideTip);
 
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     if (window.jQuery) {
       window.jQuery(document).on('shown.bs.tooltip.pmclamp', clampTooltip);
     }
@@ -763,6 +782,7 @@ document.title = '北极熊说它怕冷的个人导航';
     boot();
   }
 })();
+<<<<<<< HEAD
 
 /* ============================================================================
    体验优化（2026-10-23 落地，源自 .workbuddy/参考/动效方案/体验优化/preview-ux.js）
@@ -1896,3 +1916,5 @@ document.title = '北极熊说它怕冷的个人导航';
     setTimeout(syncFades, 140);
   }, true);
 })();
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<<<<<<< HEAD
 <!-- 注意：这里必须复制成一个新对象再合并。原来写的是 Object.assign(theme, page)，
      会直接改动全局 theme —— about 页渲染完之后 theme.type 就永远停在 'about'，
      首页也跟着走 about 分支（不加载 lozad、多输出一个隐藏 textarea）。 -->
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 
 <head>
   <head>
@@ -24,9 +27,12 @@
 <link rel="stylesheet" href="/css/xenon-skins.min.css">
 <link rel="stylesheet" href="/css/nav.min.css">
 
+<<<<<<< HEAD
   <!-- 项目自定义样式：放在主题 CSS 之后逐条覆盖。
        版本号由 scripts/asset-version.js 按文件内容算 hash，不用再手改 ?v= -->
   <link rel="stylesheet" type="text/css" href="/css/custom.css?v=1b3d477c">
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   
 <script src="/js/jquery-1.11.1.min.js"></script>
 
@@ -55,6 +61,13 @@
   <meta name="twitter:description" content="">
   
   
+<<<<<<< HEAD
+<<<<<<<< HEAD:archives/2026/10/index.html
+========
+  <link rel="stylesheet" type="text/css" href="/css/custom.css"> <link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/long/font/regular.css" media="all" onload="this.media='all'" />
+  
+  
+>>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6:archives/2026/07/index.html
   <style id="pm-appearance">
     :root {
       --pm-nav-font-size: 17px;
@@ -95,12 +108,17 @@
       } catch (error) {}
     })();
   </script>
+=======
+  <link rel="stylesheet" type="text/css" href="/css/custom.css"> <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2204525_jxth1d6fs6o.css"> <link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/long/font/regular.css" media="all" onload="this.media='all'" />
+  
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 <meta name="generator" content="Hexo 5.3.0"></head>
 
 </head>
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -108,6 +126,9 @@
 <!-- 紧跟 body：把首屏前算出的深浅模式同步到 body，避免内容先按浅色绘制；
      同时给 <html> 打上 pm-mode，让文档根也锁死 overflow，防止气泡等元素顶出页面滚动条 -->
 <script>document.documentElement.classList.add('pm-mode'); if (document.documentElement.classList.contains('night')) { document.body.classList.add('night'); }</script>
+=======
+<body class="page-body">
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 <div class="page-container">
 <div class="sidebar-menu toggle-others fixed">
   <div class="sidebar-menu-inner">
@@ -231,6 +252,7 @@
     </ul> -->
     <!--  -->
     </nav>
+<<<<<<< HEAD
 
   
   <!-- 搜索条：最上方一条，不随内容滚动 -->
@@ -239,6 +261,13 @@
       <div class="search">
         <div class="search-box">
           <span class="search-icon" style="background: url(/images/search_icon.png) 0px 0px; opacity: 1;"></span>
+=======
+    
+    <section class="sousuo">
+      <div class="search">
+        <div class="search-box">
+          <span class="search-icon" style="background: url(https://npm.elemecdn.com/hassan-assets/navi/search_icon.png) 0px 0px; opacity: 1;"></span>
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
           <input type="text" id="txt" class="search-input" autocomplete="off" placeholder="请输入关键字">
           <button class="search-btn" id="search-btn"><i class="fa fa-search"></i></button>
         </div>
@@ -255,6 +284,7 @@
           <ul class="search-engine-list search-engine-list_zmki_ul">
           </ul>
         </div>
+<<<<<<< HEAD
       </div>
     </section>
     <!-- 深浅模式切换：搜索条右端（面板右上角） -->
@@ -285,6 +315,12 @@
   
   </div>
 
+=======
+    </section>
+    <script>search()</script>
+  
+  
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     
 <script src="/js/footer.js"></script>
 
@@ -295,12 +331,19 @@
       <p class="footer-copyright">Copyright &copy; 2022 - 2026&nbsp;&nbsp; 北极熊说它怕冷</p>
       <p class="footer-stats">
         
+<<<<<<< HEAD
         <span class="footer-busuanzi">
           <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
           <span class="footer-separator">|</span>
           <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
           <span class="footer-separator">|</span>
         </span>
+=======
+        <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
+        <span class="footer-separator">|</span>
+        <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+        <span class="footer-separator">|</span>
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
         
         <span>本站运行时间 <span id="site-runtime">计算中...</span></span>
       </p>
@@ -309,6 +352,12 @@
       <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
         <i class="fas fa-sun"></i>
       </a>
+<<<<<<< HEAD
+=======
+      <a href="#" class="floating-action floating-action-top" rel="go-top" onclick="this.blur();" aria-label="返回顶部" title="返回顶部">
+        <i class="fas fa-angle-up"></i>
+      </a>
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
       <!-- <a href="#" data-toggle="sidebar">
         <i class="fas fa-bars"></i>
       </a> -->
@@ -327,6 +376,7 @@
 <script src="/js/xenon-custom.min.js"></script>
 
 
+<<<<<<< HEAD
 <!-- 统计脚本已本地化（原来从 busuanzi.ibruce.info 的 CDN 拉）；
      计数接口仍在第三方，不通时 4 秒后整块收掉，避免留下「访问人数 | 访问量 |」的空白 -->
 <script async src="/js/busuanzi.pure.mini.js?v=a30fcd42"></script>
@@ -342,6 +392,9 @@
   }, 4000);
 })();
 </script>
+=======
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 
 <script>
 (function updateSiteRuntime() {
@@ -373,6 +426,7 @@
 })();
 </script>
 
+<<<<<<< HEAD
 <!-- 显式路径：原来写 js(setting.js.lozad)，实际上一直输出为空，
      lozad 全靠 custom.body 里那份兜着，删掉 custom.body 后就报 lozad is not defined -->
 <script src="/js/lozad.min.js"></script>
@@ -385,6 +439,14 @@
   <!-- lozad 由 footer.ejs 负责（about 页不加载），这里只挂自定义脚本，
        所以 custom.js 跑起来时 window.lozad 已经就位 -->
   <script src="/js/custom.js?v=d3324f92"></script>
+=======
+<textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arimo, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; word-spacing: 0px; text-indent: 0px; line-height: 18.5714px; width: 53px;" class="autosizejs" id="autosizejs"></textarea>
+
+
+  
+  <div class="bg"></div> <script src="/js/custom.js"></script> <script src="/js/lozad.min.js"></script>
+  
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 </body>
 
 </html>

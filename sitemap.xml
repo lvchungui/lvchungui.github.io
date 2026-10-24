@@ -18,7 +18,11 @@
 
   <url>
     <loc>https://lvchungui.github.io/</loc>
+<<<<<<< HEAD
     <lastmod>2026-10-24</lastmod>
+=======
+    <lastmod>2026-10-21</lastmod>
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

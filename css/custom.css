@@ -1781,12 +1781,15 @@ html:has(body.pm-mode) {
   overflow: hidden !important;
   height: 100%;
 }
+<<<<<<< HEAD
 /* ============================================================================
    面板模式外壳：搜索条、顶栏、侧栏、滚动区、chips 容器
    本项目自有布局（非覆盖）
    本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
    themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
    ============================================================================ */
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 
 body.pm-mode {
   overflow: hidden !important;
@@ -1802,6 +1805,7 @@ body.pm-mode .page-container {
   margin: 0 !important;
 }
 
+<<<<<<< HEAD
 /* ---------- 右侧主区域：悬浮卡片 + 独立滚动 ----------
    2026-10-24 方案 C 落地：通栏化 —— 紧贴侧栏、铺满屏幕四边，
    不再是四周留白的悬浮岛（圆角/投影一并去掉，见 60-card-surface 的阴影规则）。 */
@@ -1811,6 +1815,15 @@ body.pm-mode .main-content {
   right: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
+=======
+/* ---------- 右侧主区域：悬浮卡片 + 独立滚动 ---------- */
+body.pm-mode .main-content {
+  position: fixed !important;
+  left: 260px !important;
+  right: 14px !important;
+  top: 14px !important;
+  bottom: 14px !important;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   width: auto !important;
   height: auto !important;
   margin: 0 !important;
@@ -1819,8 +1832,13 @@ body.pm-mode .main-content {
   flex-direction: column;
   overflow: hidden;
   background: #f7f9fc;
+<<<<<<< HEAD
   border-radius: 0;
   box-shadow: none;
+=======
+  border-radius: 22px;
+  box-shadow: 0 20px 46px rgba(12, 28, 48, 0.18), 0 2px 10px rgba(12, 28, 48, 0.1);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   z-index: 50;
 }
 
@@ -2004,6 +2022,7 @@ body.pm-mode .pm-searchbar .sousuo input#txt::placeholder {
   font-size: var(--pm-search-font, 16px);
 }
 
+<<<<<<< HEAD
 /* 右侧放大镜按钮已按需求移除（2026-10-23）。
    按钮是 absolute 定位在输入框右端、不占布局宽度的，所以藏掉它不会让搜索框变形；
    回车提交由 header.js 的 keydown(13) 负责，`$("#search-btn").click()` 找不到元素也是空集合不报错。
@@ -2015,6 +2034,11 @@ body.pm-mode .pm-searchbar .sousuo .search-btn {
 /* 按钮原本压住输入框右端，去掉后补一点右内边距，长关键词不会顶到圆角上 */
 body.pm-mode .pm-searchbar .sousuo input#txt {
   padding-right: 18px;
+=======
+/* 右侧放大镜与左侧图标跟着输入框高度走，否则调高后会偏上 */
+body.pm-mode .pm-searchbar .sousuo .search-btn {
+  line-height: calc(var(--pm-search-height, 50px) - 2px);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 }
 
 body.pm-mode .pm-searchbar .sousuo .search-icon {
@@ -2090,6 +2114,7 @@ body.pm-mode .pm-searchbar .sousuo .search-engine-list li span {
   border-radius: 6px;
 }
 
+<<<<<<< HEAD
 /* ---------- 二级分类副栏：标题条与滚动区之间的一条固定层 ----------
    每个分组分类的 .sub-category-nav 会被 JS 搬到这里（custom.js 的 moveNavsToSubbar），
    原因是「卡片从二级分类下沿被切平」只能由滚动容器自己实现：
@@ -2124,12 +2149,18 @@ body.pm-mode .pm-subbar .sub-category-nav.ux-chips.is-current {
   display: flex;
 }
 
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 /* 内容滚动区 */
 body.pm-mode .pm-scroll {
   flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
+<<<<<<< HEAD
   padding: 0 var(--pm-pad-r) 32px var(--pm-pad-l);
+=======
+  padding: 0 20px 32px 26px;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: rgba(31, 159, 214, 0.45) transparent;
@@ -2187,8 +2218,14 @@ body.pm-mode .nav-category > h4.text-gray {
   }
 }
 
+<<<<<<< HEAD
 /* 卡片入场动画已改为「滚动进入 zoom-in」（见文件末尾第 10 节）。
    animation 的优先级高于 transition，会盖掉 opacity/transform 的过渡，所以原先这条 pmCardIn 停用。 */
+=======
+body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+  animation: pmCardIn 0.44s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 
 /* 悬停卡片不再抬起（z-index 必须低于吸顶二级导航的 8，
    否则滚到第一行时 hover 的卡片会盖住 chips；tooltip 已挂到 body，无需靠它避让） */
@@ -2255,6 +2292,7 @@ body.pm-mode .sub-category-panels {
   margin-top: 14px !important;
 }
 
+<<<<<<< HEAD
 /* ---------- 左侧导航（方案 C 落地：贴边全高，不再是圆角浮岛） ---------- */
 body.pm-mode .sidebar-menu.fixed {
   position: fixed !important;
@@ -2267,6 +2305,20 @@ body.pm-mode .sidebar-menu.fixed {
   border-radius: 0;
   overflow: hidden;
   box-shadow: none;
+=======
+/* ---------- 左侧悬浮导航（圆角浮岛） ---------- */
+body.pm-mode .sidebar-menu.fixed {
+  position: fixed !important;
+  width: 232px !important;
+  left: 14px !important;
+  top: 14px !important;
+  bottom: 14px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 46px rgba(12, 28, 48, 0.26), 0 2px 10px rgba(12, 28, 48, 0.16);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   z-index: 120;
 }
 
@@ -2276,7 +2328,11 @@ body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
   width: 100% !important;
   height: 100% !important;
   max-height: none !important;
+<<<<<<< HEAD
   border-radius: 0;
+=======
+  border-radius: 22px;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2405,7 +2461,11 @@ body.pm-mode.night .pm-title .pm-count {
 
 body.pm-mode.night .main-content {
   background: #16181d;
+<<<<<<< HEAD
   box-shadow: none;
+=======
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.55);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 }
 
 body.pm-mode.night .sub-category-nav {
@@ -2434,6 +2494,7 @@ body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
   }
 
   body.pm-mode .sidebar-menu.fixed {
+<<<<<<< HEAD
     left: 0;
     top: 0 !important;
     bottom: 0 !important;
@@ -2444,6 +2505,18 @@ body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
     right: 0 !important;
     top: 0 !important;
     bottom: 0 !important;
+=======
+    left: 10px;
+    top: 10px !important;
+    bottom: 10px !important;
+  }
+
+  body.pm-mode .main-content {
+    left: 96px !important;
+    right: 10px !important;
+    top: 10px !important;
+    bottom: 10px !important;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   }
 
   body.pm-mode .pm-searchbar {
@@ -2494,9 +2567,12 @@ body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
   body.pm-mode {
     overflow: auto !important;
     height: auto !important;
+<<<<<<< HEAD
     /* 手机上滚动区左右内边距收窄到 10px，导航带垫底的负偏移跟着收 */
     --pm-pad-l: 10px;
     --pm-pad-r: 10px;
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   }
 
   body.pm-mode .page-container {
@@ -2541,7 +2617,11 @@ body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
 
   body.pm-mode .pm-scroll {
     overflow: visible;
+<<<<<<< HEAD
     padding: 0 var(--pm-pad-r) 30px var(--pm-pad-l);
+=======
+    padding: 0 10px 30px;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   }
 
   /* 手机上文档本身能滚，气泡要跟着文档走，fixed 会让它脱开手指位置 */
@@ -2770,10 +2850,16 @@ body.pm-mode {
   --ld-hl: rgba(120, 170, 255, 0.15);
   --ld-go-bg: #f2f5fb;
 
+<<<<<<< HEAD
   /* 方案 C 落地（2026-10-24）：日间面板底板压平成纯色，
      由 .pm-mesh 三团彩色背景独立供色（原「左蓝右紫」渐变会压住 mesh，视觉不变）。
      夜间令牌在 60-card-surface.css，保持原渐变不动。 */
   --ld-panel-bg: #eef1f8;
+=======
+  --ld-panel-bg: radial-gradient(1100px 560px at 8% -12%, rgba(120, 160, 255, 0.20), transparent 62%),
+    radial-gradient(920px 520px at 94% 2%, rgba(255, 172, 200, 0.16), transparent 64%),
+    radial-gradient(820px 620px at 44% 112%, rgba(146, 238, 214, 0.16), transparent 62%), #eef1f8;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   --ld-search-bg: rgba(255, 255, 255, 0.92);
   --ld-search-sd: 0 1px 2px rgba(20, 24, 48, 0.04), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
   --ld-search-sd-h: 0 2px 6px rgba(20, 24, 48, 0.05), 0 26px 54px -24px rgba(56, 130, 246, 0.5);
@@ -2788,6 +2874,7 @@ body.pm-mode {
   --ld-flow-base: rgba(56, 189, 248, 0.22);
   --ld-flow-glow: rgba(56, 189, 248, 0.42);
 }
+<<<<<<< HEAD
 /* ============================================================================
    面板卡片视觉：ld-* 令牌、卡片、搜索框、流光边框
    本项目自有布局（非覆盖）
@@ -2801,13 +2888,24 @@ body.pm-mode.night {
      提到 .16；悬停高亮边 .34→.5；图标格描边同步提亮。 */
   --ld-card-bd: rgba(255, 255, 255, 0.16);
   --ld-card-bd-h: rgba(139, 227, 255, 0.5);
+=======
+
+body.pm-mode.night {
+  --ld-card-bg: #1c212c;
+  --ld-card-bd: rgba(255, 255, 255, 0.075);
+  --ld-card-bd-h: rgba(139, 227, 255, 0.34);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   --ld-card-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
   --ld-card-sd-h: 0 6px 14px rgba(0, 0, 0, 0.4), 0 30px 56px -28px rgba(0, 0, 0, 0.85);
 
   --ld-ink: #e6edf7;
   --ld-ink-dim: #8b96a8;
   --ld-icon-bg: #222736;
+<<<<<<< HEAD
   --ld-icon-bd: rgba(255, 255, 255, 0.15);
+=======
+  --ld-icon-bd: rgba(255, 255, 255, 0.08);
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
   --ld-hl: rgba(150, 200, 255, 0.14);
   --ld-go-bg: #232838;
 
@@ -2831,12 +2929,20 @@ body.pm-mode.night {
 /* ---------------- 主面板底板：柔性渐变 ---------------- */
 body.pm-mode .main-content {
   background: var(--ld-panel-bg) !important;
+<<<<<<< HEAD
   /* 通栏化后面板贴满屏幕，投影没有意义（50-panel 已把圆角归零） */
   box-shadow: none !important;
 }
 
 body.pm-mode.night .main-content {
   box-shadow: none !important;
+=======
+  box-shadow: 0 24px 60px rgba(12, 28, 48, 0.16), 0 2px 10px rgba(12, 28, 48, 0.08) !important;
+}
+
+body.pm-mode.night .main-content {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 }
 
 /* 缓慢漂移的两团柔光（可开关：body.ld-no-aura 关掉） */
@@ -2859,6 +2965,7 @@ body.pm-mode.ld-no-aura .main-content::before {
   display: none;
 }
 
+<<<<<<< HEAD
 /* 方案 C 落地（2026-10-24）：日间的柔光交给 .pm-mesh 三团彩色背景，
    原两团漂移光斑只在夜间保留（夜间没有 mesh）。 */
 body.pm-mode:not(.night) .main-content::before {
@@ -2866,6 +2973,8 @@ body.pm-mode:not(.night) .main-content::before {
   content: none;
 }
 
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 /* 只动 background-position：
    原来用 transform（translate 5% + scale 1.08）会让伪元素的盒子往右探出 ~23px，
    手机上主区满宽 → 整页被撑出横向滚动（实测 scrollWidth 390 -> 413）。
@@ -2928,6 +3037,7 @@ body.pm-mode.night .pm-searchbar .sousuo input#txt {
   color: var(--ld-ink) !important;
 }
 
+<<<<<<< HEAD
 /* ---------- 搜索框悬停 / 聚焦：只留光晕（2026-10-24 方案 C 落地改） ----------
    原来的「蓝边」= border-color 变蓝（#68d8ff）+ box-shadow 第 1 层 0 0 0 1px 硬边；
    现在搜索框有常亮的 .pm-ring 流光边框（见 70-ux.css），硬边/蓝边都去掉，
@@ -2942,14 +3052,35 @@ body.pm-mode .pm-searchbar .sousuo .search-box:hover,
 body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
   border-color: var(--ld-card-bd) !important;
   box-shadow:
+=======
+/* ---------- 搜索框悬停 / 聚焦：蓝边 + 光晕 ----------
+   蓝边（2026-10-21 晚按需求恢复）：就是主题原本 `.search:hover input#txt` 里那两层 ——
+     border-color: #68d8ff  +  box-shadow: 0 0 0 1px rgba(104,216,255,.75)（这层是硬边）
+   区别只是挂在外层 .search-box 上，而不是里面的 input#txt：
+   input 的圆角是 10px、外层卡片是 18px、且 input 正好缩进 1px，
+   蓝边挂在 input 上时四个角会和卡片轮廓错开（当初就是因为这个被去掉的）。
+   挂外层则是一圈完整的 18px 圆角蓝边，内外不会再出现两层框。
+   光晕三层数值仍是主题原版的（深色另有 16/34px 版本）。 */
+body.pm-mode .pm-searchbar .sousuo .search-box:hover,
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
+  border-color: #68d8ff !important;
+  box-shadow:
+    0 0 0 1px rgba(104, 216, 255, 0.75),
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     0 0 14px rgba(104, 216, 255, 0.55),
     0 0 28px rgba(104, 216, 255, 0.35) !important;
 }
 
 body.pm-mode.night .pm-searchbar .sousuo .search-box:hover,
 body.pm-mode.night .pm-searchbar .sousuo .search-box:focus-within {
+<<<<<<< HEAD
   border-color: var(--ld-card-bd) !important;
   box-shadow:
+=======
+  border-color: #7dd3fc !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.85),
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
     0 0 16px rgba(125, 211, 252, 0.65),
     0 0 34px rgba(125, 211, 252, 0.45) !important;
 }
@@ -3246,10 +3377,14 @@ body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .ld-go {
 
 /* 点击涟漪（.ld-ripple / ldRip）已按需求移除：点击卡片不再有水波扩散。 */
 
+<<<<<<< HEAD
 /* ---------------- 入场：已改为「滚动进入 zoom-in」 ----------------
    原来是 pmCardIn 入场动画（弹性浮起），2026-10-23 按用户要求换成和 lcg521.cn 一样的
    滚动出现/消失效果，见文件末尾第 10 节。@keyframes pmCardIn 保留着，回退时把第 10 节
    删掉、再把这里的 animation 规则改回来即可。 */
+=======
+/* ---------------- 入场：弹性浮起 ---------------- */
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 @keyframes pmCardIn {
   from {
     opacity: 0;
@@ -3262,8 +3397,12 @@ body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .ld-go {
 }
 
 body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+<<<<<<< HEAD
   /* 停用：入场改由滚动观察器控制（文件末尾第 10 节） */
   animation: none;
+=======
+  animation: pmCardIn 0.52s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
 }
 
 
@@ -3334,6 +3473,7 @@ body.pm-mode.night .sub-category-nav {
     transition-duration: 0.01ms !important;
   }
 }
+<<<<<<< HEAD
 
 /* ============================================================================
    九、体验优化落地（2026-10-23，源自 .workbuddy/参考/动效方案/体验优化/）
@@ -4374,3 +4514,5 @@ body.pm-mode .pm-searchbar .sousuo .search-box .pm-ring > b {
     display: none !important;
   }
 }
+=======
+>>>>>>> e74c55e976aff21c2b059c1a10dff046a07969f6
