@@ -1,0 +1,55 @@
+/* iconfont 本地版：原来走 //at.alicdn.com/t/font_2204525_jxth1d6fs6o.css，
+   字体文件已放进本目录（iconfont.woff2 / .woff / .ttf），断网或阿里 CDN 故障都不影响。
+   全站目前只用到 .icon-video，其余字形保留，以后换图标不必再拉外链。 */
+@font-face {
+  font-family: "iconfont";
+  src: url('iconfont.woff2') format('woff2'),
+       url('iconfont.woff') format('woff'),
+       url('iconfont.ttf') format('truetype');
+  font-display: swap;
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-overseas:before { content: "\e637"; }
+.icon-book:before { content: "\e6d1"; }
+.icon-notice:before { content: "\e6e6"; }
+.icon-gallery:before { content: "\e851"; }
+.icon-musicbox:before { content: "\e975"; }
+.icon-butterfly:before { content: "\e638"; }
+.icon-english:before { content: "\e61e"; }
+.icon-entertainment:before { content: "\e636"; }
+.icon-video:before { content: "\e617"; }
+.icon-Au:before { content: "\e7bd"; }
+.icon-zhihu:before { content: "\e64b"; }
+.icon-sina:before { content: "\e669"; }
+.icon-GitHub:before { content: "\ea0a"; }
+.icon-email:before { content: "\e681"; }
+.icon-QQMusic:before { content: "\eacb"; }
+.icon-netease:before { content: "\e608"; }
+.icon-quanminkge:before { content: "\e60f"; }
+.icon-comment:before { content: "\e60a"; }
+.icon-statistics:before { content: "\e670"; }
+.icon-code:before { content: "\e83b"; }
+.icon-blog:before { content: "\e72a"; }
+.icon-social:before { content: "\e662"; }
+.icon-navi:before { content: "\e665"; }
+.icon-circle:before { content: "\e6da"; }
+.icon-cherry:before { content: "\e7de"; }
+.icon-earth:before { content: "\e62e"; }
+.icon-study:before { content: "\e630"; }
+.icon-bilibili:before { content: "\e647"; }
+.icon-movie:before { content: "\e661"; }
+.icon-about:before { content: "\e60b"; }
+.icon-blogroll:before { content: "\e7aa"; }
+.icon-maple:before { content: "\e627"; }
+.icon-music:before { content: "\e604"; }
+.icon-home:before { content: "\e675"; }
+.icon-list:before { content: "\e60e"; }
+.icon-photo:before { content: "\e624"; }

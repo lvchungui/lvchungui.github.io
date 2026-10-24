@@ -13,7 +13,7 @@ function search() {
         "hotStatus": true,
         "data": [ {
             name: "百度",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px 0px",
+            img: "url('/images/search_icon.png') -80px 0px",
             position: "0px 0px",
             url: "https://www.baidu.com/s?wd=",
             type: "external"
@@ -25,79 +25,79 @@ function search() {
             type: "site"
         },{
             name: "谷歌",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png')  -105px 0px",
+            img: "url('/images/search_icon.png')  -105px 0px",
             position: "-40px 0px",
             url: "https://www.google.com/search?q=",
             type: "external"
         }, {
             name: "必应",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png')  -80px -25px",
+            img: "url('/images/search_icon.png')  -80px -25px",
             position: "0px -40px",
             url: "https://cn.bing.com/search?q=",
             type: "external"
         }, {
             name: "好搜",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -25px",
+            img: "url('/images/search_icon.png') -105px -25px",
             position: "-40px -40px",
             url: "https://www.so.com/s?q=",
             type: "external"
         }, {
             name: "搜狗",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px -50px",
+            img: "url('/images/search_icon.png') -80px -50px",
             position: "0px -80px",
             url: "https://www.sogou.com/web?query=",
             type: "external"
         }, {
             name: "淘宝",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -50px",
+            img: "url('/images/search_icon.png') -105px -50px",
             position: "-40px -80px",
             url: "https://s.taobao.com/search?q=",
             type: "external"
         }, {
             name: "京东",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px -75px",
+            img: "url('/images/search_icon.png') -80px -75px",
             position: "0px -120px",
             url: "http://search.jd.com/Search?keyword=",
             type: "external"
         }, {
             name: "天猫",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -75px",
+            img: "url('/images/search_icon.png') -105px -75px",
             position: "-40px -120px",
             url: "https://list.tmall.com/search_product.htm?q=",
             type: "external"
         }, {
             name: "知乎",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -100px",
+            img: "url('/images/search_icon.png') -105px -100px",
             position: "-40px -160px",
             url: "https://www.zhihu.com/search?type=content&q=",
             type: "external"
         }, {
             name: "微博",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px -125px",
+            img: "url('/images/search_icon.png') -80px -125px",
             position: "0px -200px",
             url: "https://s.weibo.com/weibo/",
             type: "external"
         }, {
             name: "B站",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -125px",
+            img: "url('/images/search_icon.png') -105px -125px",
             position: "-40px -200px",
             url: "http://search.bilibili.com/all?keyword=",
             type: "external"
         }, {
             name: "豆瓣",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px -150px",
+            img: "url('/images/search_icon.png') -80px -150px",
             position: "0px -240px",
             url: "https://www.douban.com/search?source=suggest&q=",
             type: "external"
         }, {
             name: "优酷",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -105px -150px",
+            img: "url('/images/search_icon.png') -105px -150px",
             position: "-40px -240px",
             url: "https://so.youku.com/search_video/q_",
             type: "external"
         }, {
             name: "GitHub",
-            img: "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png') -80px -175px",
+            img: "url('/images/search_icon.png') -80px -175px",
             position: "0px -280px",
             url: "https://github.com/search?utf8=✓&q=",
             type: "external"
@@ -108,6 +108,55 @@ function search() {
         searchData.hotStatus = localHotStatus === "true";
     }
     localStorage.removeItem("searchData");
+
+    /* 引擎列表优先用页面注入的那份（source/_data/search-engines.yml，后台可排序 / 增删），
+       没有注入时才用上面硬编码的内置列表兜底。
+       注入项字段：name / url / type / icon（25px 雪碧图偏移）/ big（40px 雪碧图偏移）/ image（图片地址）。
+       换算成内部用的两个字段：img = 列表图标样式，position = 搜索框左侧大图标。 */
+    applyInjectedEngines();
+
+    function applyInjectedEngines() {
+        var injected = window.__NAV_ENGINES__;
+        if (!Array.isArray(injected) || !injected.length) {
+            return;
+        }
+
+        var list = [];
+        for (var k = 0; k < injected.length; k++) {
+            var item = injected[k] || {};
+            var name = String(item.name || "").trim();
+            var url = String(item.url || "").trim();
+            if (!name || !url) {
+                continue;
+            }
+
+            var image = String(item.image || "").trim();
+            var isImage = /^https?:\/\//i.test(image) || image.indexOf("/") === 0;
+
+            list.push({
+                name: name,
+                url: url,
+                type: String(item.type || "external") === "site" ? "site" : "external",
+                position: isImage ? image : String(item.big || "0px 0px"),
+                img: isImage ? image : "url('/images/search_icon.png') " + String(item.icon || "0px 0px")
+            });
+        }
+
+        if (!list.length) {
+            return;
+        }
+
+        searchData.data = list;
+
+        // 默认搜索引擎取第一个「外部」引擎：站内搜索被挪到第一位时也不该变成默认项
+        for (var m = 0; m < list.length; m++) {
+            if (list[m].type !== "site") {
+                searchData.thisSearch = list[m].url;
+                searchData.thisSearchIcon = list[m].position;
+                break;
+            }
+        }
+    }
 
     ensureSiteSearchEngine();
 
@@ -512,7 +561,7 @@ function search() {
         }
 
         $(".search-icon").css({
-            "background-image": "url('https://npm.elemecdn.com/hassan-assets/navi/search_icon.png')",
+            "background-image": "url('/images/search_icon.png')",
             "background-position": icon,
             "background-size": "auto",
             "background-repeat": "no-repeat"
@@ -573,29 +622,41 @@ function switchNightMode() {
     var night = document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1") || '0';
     if (night == '0') {
         document.body.classList.add('night');
+        document.documentElement.classList.add('night');
         document.cookie = "night=1;path=/"
         console.log(' ');
     } else {
         document.body.classList.remove('night');
+        document.documentElement.classList.remove('night');
         document.cookie = "night=0;path=/"
         console.log(' ');
     }
+    // 记下这是用户手动选的，避免刷新后被按时间自动切回去
+    document.cookie = "night_manual=1;path=/"
     syncNightModeButton();
 }
 
 function syncNightModeButton() {
-    var button = document.querySelector('.floating-action-theme');
-    var icon = button ? button.querySelector('i') : null;
+    /* 页面里可能同时存在面板右上角的切换按钮和页脚浮动按钮，全部同步 */
+    var buttons = document.querySelectorAll('.floating-action-theme');
     var isNight = document.body.classList.contains('night');
 
-    if (!button || !icon) {
+    if (!buttons.length) {
         return;
     }
 
-    icon.classList.toggle('fa-sun', isNight);
-    icon.classList.toggle('fa-moon', !isNight);
-    button.setAttribute('aria-label', isNight ? '切换浅色模式' : '切换深色模式');
-    button.setAttribute('title', isNight ? '切换浅色模式' : '切换深色模式');
+    Array.prototype.forEach.call(buttons, function (button) {
+        var icon = button.querySelector('i');
+
+        if (!icon) {
+            return;
+        }
+
+        icon.classList.toggle('fa-sun', isNight);
+        icon.classList.toggle('fa-moon', !isNight);
+        button.setAttribute('aria-label', isNight ? '切换浅色模式' : '切换深色模式');
+        button.setAttribute('title', isNight ? '切换浅色模式' : '切换深色模式');
+    });
 }
 
 if (document.readyState === 'loading') {

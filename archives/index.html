@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!-- 注意：这里必须复制成一个新对象再合并。原来写的是 Object.assign(theme, page)，
+     会直接改动全局 theme —— about 页渲染完之后 theme.type 就永远停在 'about'，
+     首页也跟着走 about 分支（不加载 lozad、多输出一个隐藏 textarea）。 -->
 
 <head>
   <head>
@@ -21,6 +24,9 @@
 <link rel="stylesheet" href="/css/xenon-skins.min.css">
 <link rel="stylesheet" href="/css/nav.min.css">
 
+  <!-- 项目自定义样式：放在主题 CSS 之后逐条覆盖。
+       版本号由 scripts/asset-version.js 按文件内容算 hash，不用再手改 ?v= -->
+  <link rel="stylesheet" type="text/css" href="/css/custom.css?v=1b3d477c">
   
 <script src="/js/jquery-1.11.1.min.js"></script>
 
@@ -49,15 +55,59 @@
   <meta name="twitter:description" content="">
   
   
-  <link rel="stylesheet" type="text/css" href="/css/custom.css"> <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2204525_jxth1d6fs6o.css"> <link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/long/font/regular.css" media="all" onload="this.media='all'" />
-  
+  <style id="pm-appearance">
+    :root {
+      --pm-nav-font-size: 17px;
+      --pm-nav-icon-size: 18px;
+      --pm-nav-icon-width: 28px;
+      --pm-nav-gap: 12px;
+      --pm-nav-item-pad: 11px;
+      --pm-search-width: 717px;
+      --pm-search-height: 50px;
+      --pm-search-font: 16px;
+      --pm-search-radius: 10px;
+      --pm-engine-gap: 10px;
+      --pm-engine-left: 0px;
+      --pm-engine-right: auto;
+      --pm-engine-shift: 0px;
+      --pm-engine-dx: 0px;
+      --pm-eng-panel-w: 50%;
+      --pm-eng-cols: 3;
+      --pm-eng-col-gap: 10px;
+      --pm-eng-row-gap: 10px;
+      --pm-eng-item-h: 30px;
+      --pm-eng-font: 14px;
+      --pm-eng-icon-gap: 5px;
+      --pm-eng-item-align: flex-start;
+    }
+  </style>
+  <!-- 深浅模式：在首屏绘制前就把 night 类挂到 <html> 上，避免刷新时先闪一下浅色 -->
+  <script>
+    (function () {
+      try {
+        var match = document.cookie.match(/(?:^|;\s*)night=([^;]*)/);
+        var value = match ? match[1] : '';
+        var hour = new Date().getHours();
+        var night = value === '1' || (value === '' && (hour >= 18 || hour < 6));
+        if (night) {
+          document.documentElement.classList.add('night');
+        }
+      } catch (error) {}
+    })();
+  </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
 
 </head>
 
 
 
-<body class="page-body">
+
+
+
+<body class="page-body pm-mode">
+<!-- 紧跟 body：把首屏前算出的深浅模式同步到 body，避免内容先按浅色绘制；
+     同时给 <html> 打上 pm-mode，让文档根也锁死 overflow，防止气泡等元素顶出页面滚动条 -->
+<script>document.documentElement.classList.add('pm-mode'); if (document.documentElement.classList.contains('night')) { document.body.classList.add('night'); }</script>
 <div class="page-container">
 <div class="sidebar-menu toggle-others fixed">
   <div class="sidebar-menu-inner">
@@ -78,6 +128,13 @@
         <a href="#常用工具" class="smooth">
             <i class="fas fa-tools"></i>
             <span class="title">常用工具</span>
+          </a>
+      </li>
+      
+      <li>
+        <a href="#人工智能" class="smooth">
+            <i class="fas fa-robot"></i>
+            <span class="title">人工智能</span>
           </a>
       </li>
       
@@ -174,11 +231,14 @@
     </ul> -->
     <!--  -->
     </nav>
-    
+
+  
+  <!-- 搜索条：最上方一条，不随内容滚动 -->
+  <div class="pm-searchbar">
     <section class="sousuo">
       <div class="search">
         <div class="search-box">
-          <span class="search-icon" style="background: url(https://npm.elemecdn.com/hassan-assets/navi/search_icon.png) 0px 0px; opacity: 1;"></span>
+          <span class="search-icon" style="background: url(/images/search_icon.png) 0px 0px; opacity: 1;"></span>
           <input type="text" id="txt" class="search-input" autocomplete="off" placeholder="请输入关键字">
           <button class="search-btn" id="search-btn"><i class="fa fa-search"></i></button>
         </div>
@@ -195,10 +255,36 @@
           <ul class="search-engine-list search-engine-list_zmki_ul">
           </ul>
         </div>
+      </div>
     </section>
-    <script>search()</script>
+    <!-- 深浅模式切换：搜索条右端（面板右上角） -->
+    <a href="#" class="pm-theme-toggle floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
+      <i class="fas fa-moon"></i>
+    </a>
+  </div>
+  <script>
+    /* 搜索引擎列表：数据来自 source/_data/search-engines.yml
+       （后台「外观设置 → 搜索引擎」可拖动排序、增删），顺序即下拉面板里的排列。
+       这里注入成全局数组，header.js 的 search() 会优先读它，读不到才用内置列表兜底。 */
+    window.__NAV_ENGINES__ = [{"name":"百度","url":"https://www.baidu.com/s?wd=","type":"external","icon":"-80px 0px","big":"0px 0px"},{"name":"站内","url":"site://nav","type":"site","image":"/img/logo.png"},{"name":"GitHub","url":"https://github.com/search?utf8=✓&q=","type":"external","icon":"-80px -175px","big":"0px -280px"},{"name":"谷歌","url":"https://www.google.com/search?q=","type":"external","icon":"-105px 0px","big":"-40px 0px"},{"name":"必应","url":"https://cn.bing.com/search?q=","type":"external","icon":"-80px -25px","big":"0px -40px"},{"name":"好搜","url":"https://www.so.com/s?q=","type":"external","icon":"-105px -25px","big":"-40px -40px"},{"name":"搜狗","url":"https://www.sogou.com/web?query=","type":"external","icon":"-80px -50px","big":"0px -80px"},{"name":"淘宝","url":"https://s.taobao.com/search?q=","type":"external","icon":"-105px -50px","big":"-40px -80px"},{"name":"京东","url":"http://search.jd.com/Search?keyword=","type":"external","icon":"-80px -75px","big":"0px -120px"},{"name":"天猫","url":"https://list.tmall.com/search_product.htm?q=","type":"external","icon":"-105px -75px","big":"-40px -120px"},{"name":"知乎","url":"https://www.zhihu.com/search?type=content&q=","type":"external","icon":"-105px -100px","big":"-40px -160px"},{"name":"微博","url":"https://s.weibo.com/weibo/","type":"external","icon":"-80px -125px","big":"0px -200px"},{"name":"B站","url":"http://search.bilibili.com/all?keyword=","type":"external","icon":"-105px -125px","big":"-40px -200px"},{"name":"豆瓣","url":"https://www.douban.com/search?source=suggest&q=","type":"external","icon":"-80px -150px","big":"0px -240px"},{"name":"优酷","url":"https://so.youku.com/search_video/q_","type":"external","icon":"-105px -150px","big":"-40px -240px"}];
+  </script>
+  <script>search()</script>
   
+
+  <!-- 分类标题行：当前分类名 + 站点数（搜索条下方） -->
+  <div class="pm-topbar">
+    <div class="pm-title">
+      <i class="fas fa-tools"></i>
+      <span class="pm-name">常用工具</span>
+      <em class="pm-count"></em>
+    </div>
+  </div>
+
+  <!-- 内容滚动区 -->
+  <div class="pm-scroll">
   
+  </div>
+
     
 <script src="/js/footer.js"></script>
 
@@ -209,10 +295,12 @@
       <p class="footer-copyright">Copyright &copy; 2022 - 2026&nbsp;&nbsp; 北极熊说它怕冷</p>
       <p class="footer-stats">
         
-        <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
-        <span class="footer-separator">|</span>
-        <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
-        <span class="footer-separator">|</span>
+        <span class="footer-busuanzi">
+          <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
+          <span class="footer-separator">|</span>
+          <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+          <span class="footer-separator">|</span>
+        </span>
         
         <span>本站运行时间 <span id="site-runtime">计算中...</span></span>
       </p>
@@ -220,9 +308,6 @@
     <div class="go-up floating-actions" aria-label="页面快捷操作">
       <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
         <i class="fas fa-sun"></i>
-      </a>
-      <a href="#" class="floating-action floating-action-top" rel="go-top" onclick="this.blur();" aria-label="返回顶部" title="返回顶部">
-        <i class="fas fa-angle-up"></i>
       </a>
       <!-- <a href="#" data-toggle="sidebar">
         <i class="fas fa-bars"></i>
@@ -242,7 +327,21 @@
 <script src="/js/xenon-custom.min.js"></script>
 
 
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- 统计脚本已本地化（原来从 busuanzi.ibruce.info 的 CDN 拉）；
+     计数接口仍在第三方，不通时 4 秒后整块收掉，避免留下「访问人数 | 访问量 |」的空白 -->
+<script async src="/js/busuanzi.pure.mini.js?v=a30fcd42"></script>
+<script>
+(function () {
+  var box = document.querySelector('.footer-busuanzi');
+  if (!box) return;
+  window.setTimeout(function () {
+    var uv = document.getElementById('busuanzi_value_site_uv');
+    var pv = document.getElementById('busuanzi_value_site_pv');
+    var read = function (el) { return el && el.textContent ? el.textContent.trim() : ''; };
+    if (!read(uv) && !read(pv)) box.classList.add('is-off');
+  }, 4000);
+})();
+</script>
 
 <script>
 (function updateSiteRuntime() {
@@ -274,12 +373,18 @@
 })();
 </script>
 
-<textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arimo, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; word-spacing: 0px; text-indent: 0px; line-height: 18.5714px; width: 53px;" class="autosizejs" id="autosizejs"></textarea>
+<!-- 显式路径：原来写 js(setting.js.lozad)，实际上一直输出为空，
+     lozad 全靠 custom.body 里那份兜着，删掉 custom.body 后就报 lozad is not defined -->
+<script src="/js/lozad.min.js"></script>
 
 
-  
-  <div class="bg"></div> <script src="/js/custom.js"></script> <script src="/js/lozad.min.js"></script>
-  
+
+  <!-- 页面背景层：样式在 20-theme-cards.css 的 div.bg（目前是空规则，留给换背景图） -->
+  <div class="bg"></div>
+
+  <!-- lozad 由 footer.ejs 负责（about 页不加载），这里只挂自定义脚本，
+       所以 custom.js 跑起来时 window.lozad 已经就位 -->
+  <script src="/js/custom.js?v=d3324f92"></script>
 </body>
 
 </html>
