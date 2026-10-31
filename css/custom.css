@@ -1,0 +1,4729 @@
+/* ============================================================================
+   自动生成，请勿直接编辑本文件。
+   源文件：themes/webstack/css-src/*.css（按文件名顺序拼接）
+   改完源文件后执行 hexo generate（或后台「构建站点」）即可重新生成。
+   ============================================================================ */
+/* ============================================================================
+   设计令牌（Design Tokens）
+   这里是全站视觉的单一来源：字体、主色、圆角、阴影、动效、层级。
+   新写的规则请优先引用这里的变量；存量规则暂不批量替换 —— 那些颜色大多处在
+   body.pm-mode.night 的覆盖层里，等值替换虽然视觉不变，却会改变层叠来源，
+   收益不抵风险，后续改到哪条就顺手换成哪条。
+
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+:root {
+  /* ---------- 字体 ----------
+     以前用 s1.hdslb.com 的 HarmonyOS_Regular（B 站字体服务，52 个子集、约 2~3MB）。
+     为了去掉这个第三方依赖，改成系统字体栈：macOS/iOS 走苹方、Windows 走雅黑，
+     中文观感接近，且零请求。想换回 HarmonyOS 只需改这一行。 */
+  --pm-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --pm-font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Consolas, monospace;
+
+  /* ---------- 主色 ----------
+     --pm-accent 是浅色模式的主强调色（chips 选中、焦点环、链接高亮）；
+     --pm-accent-dark 是夜间模式的对应值。两者都由 70-ux.css 的 --ux-* 派生。 */
+  --pm-accent: #0b83b8;
+  --pm-accent-dark: #7dd3fc;
+  --pm-accent-soft: rgba(11, 131, 184, 0.12);
+  --pm-accent-soft-dark: rgba(125, 211, 252, 0.14);
+
+  /* 文本三级灰阶：正文 / 次要 / 提示 */
+  --pm-ink: #14171f;
+  --pm-ink-2: #5f6673;
+  --pm-ink-3: #8a919e;
+  --pm-ink-dark: #e6edf7;
+  --pm-ink-2-dark: #9aa7b6;
+
+  /* ---------- 滚动区左右内边距 ----------
+     .pm-scroll 用它们做左右留白，改一处全局动。
+     手机断点（≤767）另行覆盖为 10px。 */
+  --pm-pad-l: 26px;
+  --pm-pad-r: 20px;
+
+  /* ---------- 圆角 ---------- */
+  --pm-radius-card: 18px;   /* 导航卡片 */
+  --pm-radius-panel: 22px;  /* 主面板底板 */
+  --pm-radius-pill: 999px;  /* chips 滑块 */
+
+  /* ---------- 阴影 ---------- */
+  --pm-shadow-card: 0 1px 2px rgba(20, 24, 48, 0.05), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+  --pm-shadow-card-h: 0 4px 10px rgba(20, 24, 48, 0.05), 0 28px 52px -26px rgba(20, 24, 48, 0.38);
+
+  /* ---------- 动效 ----------
+     卡片缩放进场用 easeInOutSine（对齐 lcg521.cn 的 AOS zoom-in） */
+  --pm-ease-out: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  --pm-dur-card: 0.7s;
+  --pm-dur-ui: 0.22s;
+
+  /* ---------- 层级（z-index）----------
+     这几个值是踩过坑之后定下来的，改动前先确认不会盖住彼此：
+       .site-card-col        不加 z-index —— 一动就盖住吸顶 chips（chips 只有 8）
+       .pm-chips（吸顶）      8
+       .pm-scroll-hint        > 50 —— .main-content 自成层叠上下文（50），低了点不到
+       .pm-searchbar          30
+       .sidebar-menu（移动端）10000
+       .pm-theme-toggle（移动端）10001 */
+  --pm-z-chips: 8;
+  --pm-z-searchbar: 30;
+  --pm-z-content: 50;
+  --pm-z-hint: 51;
+  --pm-z-sidebar: 10000;
+  --pm-z-toggle: 10001;
+
+  /* ---------- 断点（供查阅，CSS 变量不能用于媒体查询）----------
+     > 1100  完整侧栏 232px
+     ≤ 1100  侧栏收成 76px 图标条
+     ≤ 767   侧栏变顶部条，内容回到文档流 */
+}
+/* ============================================================================
+   主题外壳：全局字体、导航栏、搜索框
+   覆盖 WebStack 主题原有外观
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+/* 全局字体 */
+/* font-weight / letter-spacing 保留在 * 上：原设计就是全站统一字重与 1px 字距，
+   去掉会让卡片标题的 <strong> 变粗、观感全变。这里只把字体换成令牌里的系统栈，
+   不再请求 s1.hdslb.com 的 HarmonyOS 字体（见 00-tokens.css 的 --pm-font-sans）。 */
+* {
+  font-family: var(--pm-font-sans);
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* 导航栏 */
+nav.navbar.user-info-navbar {
+  background: rgba(255, 255, 255) !important;
+  height: 66px;
+}
+.night nav.navbar.user-info-navbar {
+  background: rgba(0, 0, 0) !important;
+}
+.user-info-navbar .user-info-menu > li {
+  border-right: 0;
+  height: 66px;
+}
+.user-info-navbar .user-info-menu > li > a {
+  border-bottom: 0px;
+  top: -4px;
+}
+.user-info-navbar .user-info-menu > li a[data-toggle="sidebar"] {
+  padding-left: 20px;
+}
+.night .user-info-navbar .user-info-menu > li > a,
+.user-info-navbar .user-info-menu > li > a {
+  height: 66px !important;
+}
+.navbar {
+  position: fixed;
+  z-index: 1;
+}
+a.github-corner {
+  position: fixed;
+  right: 0;
+}
+.navbar.horizontal-menu.navbar-fixed-top {
+  background: rgba(255, 255, 255) !important;
+  height: 66px;
+}
+img.hidden-xs {
+  position: absolute;
+  left: 20px;
+  top: 13px;
+}
+
+/* GitHub 右上角 猫 */
+.night a.github-corner svg {
+  fill: #fff !important;
+  color: #151513 !important;
+}
+
+/* 搜索框 ------------------------------------------------------------ 开始 */
+input#txt {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 10px;
+  color: #000;
+}
+input#txt::placeholder {
+  font-size: 1.4rem;
+  color: #666;
+}
+.night input#txt::placeholder {
+  font-size: 1.4rem;
+  color: #888;
+}
+.night input#txt {
+  background: rgba(0, 0, 0, 0.7) !important;
+  color: white;
+}
+.sousuo {
+  padding: 88px 0;
+}
+div.search {
+  width: 96%;
+  /* 搜索框缩短 - 先快后慢 */
+  transition: all 0.3s cubic-bezier(0, 0.3, 0.5, 1);
+}
+div.search:hover {
+  width: 100%;
+  /* 搜索框拉长 - 先快后慢 */
+  transition: all 0.3s cubic-bezier(0, 0.3, 0.5, 1);
+}
+/* .search-input {
+  font-size: 18px !important;
+  color: #111 !important;
+  padding-left: 50px;
+}
+.night .search-input {
+  color: #fff !important;
+}
+.search-icon {
+  left: 5px;
+}
+.search-engine {
+  background: rgba(255, 255, 255, 1) !important;
+  cursor: pointer;
+}
+.night .search-engine {
+  background: rgba(0, 0, 0, 1) !important;
+  cursor: pointer;
+}
+ul.search-engine-list.search-engine-list_zmki_ul {
+  list-style: none;
+  padding-left: 26px;
+}
+.search-engine-list li {
+  background: transparent;
+  color: #222;
+  font-size: 17px;
+  transition: 0.3s;
+}
+.night .search-engine-list li {
+  color: #ddd;
+  background: transparent !important;
+  transition: 0.3s;
+} */
+
+.search-engine-list li:hover {
+  background: #D2D3D4;
+  border-radius: 30px;
+}
+.night .search-engine-list li:hover {
+  background: #666 !important;
+  border-radius: 30px;
+}
+
+/* .search-engine-tool {
+  font-size: 17px;
+  color: black;
+}
+.night .search-engine-tool {
+  color: white;
+}
+strong.search-engine-tit {
+  font-size: 18px;
+  color: black;
+}
+.night strong.search-engine-tit {
+  color: white;
+}
+.search-engine-tool > span {
+  float: right;
+  display: inline-block;
+  width: 25px;
+  height: 15px;
+  background: url("/images/off_on.png")
+    no-repeat 0px 0px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.search-engine {
+  width: 58% !important;
+}
+.search-engine-list::after {
+  height: 60px !important;
+  width: 100px !important;
+  top: -60px !important;
+} */
+/* 搜索图标 */
+.fa-search {
+  color: #888;
+  transition: .3s;
+}
+.fa-search:hover {
+  color: #111;
+}
+.night .fa-search:hover {
+  color: #ddd;
+}
+.fa-search:before {
+  font-size: 24px;
+}
+/* 搜索框 ------------------------------------------------------------ 结束 */
+
+/* 防止卡片内的提示文字（.xe-comment 绝对定位 + margin-left）在最右一列顶出视口，
+   触发浏览器底部的横向滚动条。Windows 上垂直滚动条占约 15px，会把可用宽度再压小，
+   这 3px 的溢出就会变成一条横跨整宽的深色细条。只裁横向溢出，不影响布局尺寸。 */
+html {
+  overflow-x: hidden;
+}
+
+/* 深浅模式：<html> 也在首屏前带上 night，先把画布底色压成深色，避免刷新闪白 */
+html.night {
+  background-color: #16181d;
+}
+
+/* 网址卡片 ---------------------------------------------------------- 开始*/
+.xe-widget.xe-conversations .xe-comment,
+.xe-widget.xe-conversations .overflowClip_1,
+.xe-widget.xe-conversations .overflowClip_2 {
+  width: calc(100% - 36px);
+}
+.xe-widget.xe-conversations {
+  border-radius: 12px;
+  border: 1px solid #cdd7f1;
+  background: white !important;
+  transition: .5s;
+}
+.xe-widget.xe-conversations img,
+.xe-widget.xe-conversations .overflowClip_1,
+.xe-widget.xe-conversations .overflowClip_2 {
+  transition: .3s;
+}
+/* ============================================================================
+   主题卡片：网址卡片、分类标题、网站背景、左侧栏
+   覆盖 WebStack 主题原有外观
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+.xe-widget.xe-conversations .xe-user-img {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  max-width: 42px;
+  max-height: 42px;
+  padding: 0 !important;
+  margin-right: 12px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.xe-widget.xe-conversations .xe-user-img img,
+.xe-widget.xe-conversations .xe-user-img img.img-circle {
+  display: block;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  object-fit: cover;
+  object-position: center;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+}
+/* .xe-widget.xe-conversations:hover img {
+  transform: scale(0);
+} */
+.xe-widget.xe-conversations:hover {
+  transform: translateY(-10px);
+}
+.xe-widget.xe-conversations:hover .overflowClip_1,
+.xe-widget.xe-conversations:hover .overflowClip_2 {
+  /* transform: translateX(-36px); */
+  /* width: calc(100% - 8px); */
+}
+.night .xe-widget.xe-conversations {
+  border-color: #4e525c;
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+body.night .box2:hover {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+/* 分类标题 */
+h4.text-gray {
+  font-size: 24px;
+  color: #000;
+  /* color: #fff;
+  text-shadow: -1px 0 #666, 0 1px #666, 1px 0 #666, 0 -1px #666;
+  margin: 20px 0 0 0;
+  text-align: center; */
+}
+.col-md-12 h4.text-gray {
+  color: #666;
+  text-align: left;
+}
+.night .col-md-12 h4.text-gray {
+  color: #fff;
+}
+strong {
+  font-size: 1.6rem;
+}
+p.overflowClip_2 {
+  font-size: 1.4rem;
+  color: #808080;
+}
+body.night .xe-comment p {
+  color: #aaa !important;
+}
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7,
+.col-xs-8,
+.col-sm-8,
+.col-md-8,
+.col-lg-8,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12 {
+  padding: 0 10px;
+}
+/* 标题图标 */
+.nav-category h4.text-gray > i:before {
+  font-size: 24px;
+}
+/* 标题 */
+body.night .xe-comment a {
+  color: white;
+}
+/* 网址卡片 ---------------------------------------------------------- 结束*/
+
+/* 网站背景 */
+div.bg {
+  /* position一定要加fixed，可以使图片固定在浏览器，bg-attachment没这好使 */
+  /* position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url("https://npm.elemecdn.com/hassan-assets/navi/TortoiseFairyHouse.jpg")
+    no-repeat center center;
+  background-size: cover; 填充 */
+}
+.night div.bg {
+  /* background: url("https://npm.elemecdn.com/hassan-assets/navi/TortoiseFairyHouse_dark.png")
+    no-repeat center center;
+  background-size: cover; 填充 */
+}
+
+/* 关于我页面 */
+body.page-body.boxed-container.vsc-initialized {
+  /* 禁止滚动 */
+  overflow: hidden;
+}
+.boxed-container div .main-content {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+.night.boxed-container div .main-content {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 左侧栏 ------------------------------------------------------------------开始 */
+.sidebar-menu .main-menu {
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+/* .sidebar-menu-inner.ps-container {
+  background: url(https://npm.elemecdn.com/hassan-assets/navi/LeftColumn.jpg) !important;
+  background-attachment: fixed;
+} */
+.sidebar-menu.collapsed .sidebar-menu-inner {
+  position: fixed;
+}
+.sidebar-menu .main-menu a {
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.3s;
+  border-radius: 12px;
+}
+.sidebar-menu .main-menu a > i {
+  display: inline-flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-width: 24px;
+  margin-right: 0;
+  text-align: center;
+  line-height: 1;
+}
+.sidebar-menu .main-menu a > .title {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sidebar-menu .main-menu a:hover {
+  background: #888;
+}
+.sidebar-menu .main-menu a:hover i,
+.sidebar-menu .main-menu a:hover span {
+  color: #fff;
+}
+span.title,
+span.tooltip-blue,
+span#busuanzi_container_site_pv,
+span#busuanzi_value_site_pv,
+span#busuanzi_container_site_uv,
+span#busuanzi_value_site_uv {
+  color: #ddd;
+  font-size: 17px;
+}
+.sidebar-menu .main-menu li.has-sub > a:before,
+.sidebar-menu i {
+  color: #ddd;
+}
+@media screen and (min-width: 768px) {
+  .sidebar-menu.collapsed .main-menu > li:hover > ul {
+    border-radius: 0 12px 12px 0;
+  }
+}
+
+/* 侧边栏滚动隔离 */
+.sidebar-menu.fixed,
+.sidebar-menu.fixed .sidebar-menu-inner {
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -ms-scroll-chaining: none;
+}
+
+.sidebar-menu.fixed .sidebar-menu-inner {
+  max-height: 100vh;
+}
+/* 左侧栏 ------------------------------------------------------------------结束 */
+
+/* 底栏 */
+footer.main-footer.sticky.footer-type-1 {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+.night footer.main-footer.sticky.footer-type-1 {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+.site-footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 56px;
+  padding: 8px 48px 8px 0;
+  color: #333;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+/* ============================================================================
+   主题周边：底栏、浮动按钮、logo、滚动条、二级导航、发光
+   覆盖 WebStack 主题原有外观
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+.site-footer-info p {
+  margin: 0;
+}
+
+.footer-copyright {
+  font-size: 14px;
+  color: #222;
+}
+
+.footer-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+.footer-stats span,
+.footer-stats span#busuanzi_container_site_pv,
+.footer-stats span#busuanzi_container_site_uv,
+.footer-stats span#busuanzi_value_site_pv,
+.footer-stats span#busuanzi_value_site_uv {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.footer-separator {
+  color: #c4c4c4 !important;
+}
+
+/* 统计接口（第三方）4 秒内没回数字时，footer.ejs 会给 .footer-busuanzi 加 is-off，
+   整块连分隔符一起收掉，只留「本站运行时间」。 */
+.footer-busuanzi.is-off {
+  display: none !important;
+}
+
+.night .site-footer-info,
+.night .footer-copyright,
+.night .footer-stats {
+  color: #e0e0e0;
+}
+
+.night .footer-separator {
+  color: #666 !important;
+}
+
+.footer-inner p {
+  text-align: center;
+  vertical-align: center;
+}
+
+/* icon图标 */
+i::before {
+  font-size: 17px;
+}
+/* 展开箭头 */
+.sidebar-menu .main-menu li.has-sub > a:before {
+  font-size: 17px;
+}
+/* 右下角浮动操作按钮 */
+.go-up.floating-actions {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 28px !important;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  height: auto;
+}
+
+.go-up.floating-actions .floating-action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  padding: 0 !important;
+  border: 1px solid rgba(125, 150, 170, 0.38);
+  border-radius: 50% !important;
+  background-color: rgba(226, 235, 243, 0.96) !important;
+  color: #4b5c68;
+  box-shadow: none;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform 0.32s ease,
+    color 0.32s ease,
+    border-color 0.32s ease,
+    background-color 0.32s ease,
+    box-shadow 0.32s ease;
+}
+
+.go-up.floating-actions .floating-action::before {
+  display: none;
+}
+
+.go-up.floating-actions .floating-action i {
+  position: relative;
+  z-index: 1;
+  color: inherit;
+  line-height: 1;
+  transition: transform 0.32s ease;
+}
+
+.go-up.floating-actions .floating-action i::before {
+  font-size: 20px;
+}
+
+.go-up.floating-actions .floating-action:hover {
+  border-color: rgba(104, 216, 255, 0.9);
+  background-color: rgba(236, 249, 255, 0.98) !important;
+  color: #1f9fd6;
+  box-shadow:
+    0 0 0 7px rgba(104, 216, 255, 0.16),
+    0 0 26px rgba(104, 216, 255, 0.48);
+  transform: translateY(-4px) scale(1.06);
+}
+
+.go-up.floating-actions .floating-action:hover i {
+  transform: scale(1.12) rotate(-8deg);
+}
+
+.go-up.floating-actions .floating-action:focus {
+  outline: none;
+}
+
+.go-up.floating-actions .floating-action:focus-visible {
+  outline: 2px solid rgba(104, 216, 255, 0.72);
+  outline-offset: 3px;
+}
+
+.night .go-up.floating-actions .floating-action,
+body.night .go-up.floating-actions .floating-action {
+  border-color: rgba(125, 211, 252, 0.24);
+  background-color: rgba(56, 63, 71, 0.96) !important;
+  color: #d7e3ee;
+  box-shadow: none;
+}
+
+.night .go-up.floating-actions .floating-action:hover,
+body.night .go-up.floating-actions .floating-action:hover {
+  border-color: rgba(125, 211, 252, 0.88);
+  background-color: rgba(67, 78, 90, 0.98) !important;
+  color: #7dd3fc;
+  box-shadow:
+    0 0 0 7px rgba(125, 211, 252, 0.15),
+    0 0 28px rgba(125, 211, 252, 0.44);
+}
+
+.night .go-up.floating-actions .floating-action:focus-visible,
+body.night .go-up.floating-actions .floating-action:focus-visible {
+  outline-color: rgba(125, 211, 252, 0.78);
+}
+
+body:not(.night) .go-up.floating-actions .floating-action-theme .fa-sun::before {
+  content: "\f186";
+}
+
+/* 底栏 */
+/* .footer-inner p {
+  font-size: 16px;
+  color: #666;
+}
+.night .footer-inner p {
+  color: #bbb;
+}
+blockquote p a,
+.footer-inner strong {
+  color: #6ac6bc;
+}
+.night blockquote p a,
+.night .footer-inner strong {
+  color: #62cec4;
+} */
+
+/* 左上角站点logo */
+.sidebar-menu .logo-env {
+  padding: 10px 16px 8px 13px;
+  border-bottom: none;
+}
+
+.sidebar-menu .logo-env .logo {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.sidebar-menu .logo-env .logo-expanded {
+  display: inline-flex;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-right: 10px;
+}
+
+.sidebar-menu .logo-env .logo-expanded img {
+  width: 42px !important;
+  height: 42px !important;
+  object-fit: contain;
+}
+
+.sidebar-menu .logo-env .font_logo {
+  display: block;
+  max-width: 156px;
+  overflow: hidden;
+  color: #fff;
+  font-size: 1.65rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* 左上角功能按钮 */
+body.night .user-info-navbar .user-info-menu > li > a,
+body.night .user-info-navbar .user-info-menu > li > a:hover {
+  border: none !important;
+}
+
+/* 鼠标图标 -----------------------------------------------------------------------开始
+   已选用「系统默认光标」，本段保持停用（custom.js 亦不加载 cursor 图）。
+   如需恢复自定义指针，把下面两组规则取消注释即可，图片已本地化到 /images/。
+body {
+  cursor: url(/images/cursor.png), default !important;
+}
+
+i:hover,
+a:hover,
+button:hover,
+#nav .site-page:hover,
+.xe-widget.xe-conversations.box2.label-info {
+  cursor: url(/images/cursor_puppy.png), pointer !important;
+}
+
+#footer-wrap a:hover,
+#pagination .page-number:hover,
+input#txt {
+  cursor: pointer !important;
+}
+   鼠标图标 -----------------------------------------------------------------------结束 */
+
+/* 滚动条 */
+/* ::-webkit-scrollbar {
+  width: 12px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: #d0f2ee;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #222;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.4) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.4) 75%,
+    transparent 75%,
+    transparent
+  );
+  border-radius: 5em;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+::-moz-selection {
+  color: #fff;
+  background-color: #1f1f1f;
+} */
+
+
+.bgc {
+  background-color: #F9F9F9;
+}
+
+@media screen and (min-width: 1280px) {
+  .col-sm-3 {
+    width: 20%;
+  }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1279px) {
+  .col-sm-3 {
+    width: 25%;
+  }
+}
+
+/* .logo-expanded {
+  width: 60px;
+  height: 60px;
+} */
+
+.fa-bars {
+  position: relative;
+  left: 0%;
+}
+
+.navbar {
+  position: fixed;
+}
+
+nav.navbar.user-info-navbar {
+  background: #F9F9F9 !important;
+  height: 20px;
+}
+
+.font_logo {
+  color: white;
+  /* 关于页 / 文章页这类非面板布局：跟后台「站点名称字号」等比放大（默认 19 → 32px） */
+  font-size: calc(var(--pm-brand-size, 19px) * 1.6842);
+}
+
+
+
+
+/* 当前分类高亮 */
+.nav-category {
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  padding: 12px 10px 2px;
+}
+
+.nav-category.is-active {
+  box-shadow: none;
+}
+
+.night .nav-category.is-active {
+  box-shadow: none;
+}
+
+/* 分类内容过多时启用内部滚动 */
+.nav-card-scroll {
+  position: relative;
+  margin-top: 10px;
+}
+
+.nav-card-scroll.has-inner-scroll {
+  max-height: min(52vh, 520px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  padding: 2px 8px 8px 2px;
+  margin-right: -8px;
+  border-radius: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(104, 216, 255, 0.75) rgba(205, 215, 241, 0.32);
+}
+
+.nav-card-scroll.has-inner-scroll::before,
+.nav-card-scroll.has-inner-scroll::after {
+  content: "";
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  display: block;
+  height: 14px;
+  pointer-events: none;
+}
+
+.nav-card-scroll.has-inner-scroll::before {
+  top: 0;
+  margin-bottom: -14px;
+  background: linear-gradient(to bottom, rgba(249, 249, 249, 0.95), rgba(249, 249, 249, 0));
+}
+
+.nav-card-scroll.has-inner-scroll::after {
+  bottom: 0;
+  margin-top: -14px;
+  background: linear-gradient(to top, rgba(249, 249, 249, 0.95), rgba(249, 249, 249, 0));
+}
+
+.nav-card-scroll.has-inner-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nav-card-scroll.has-inner-scroll::-webkit-scrollbar-track {
+  background: rgba(205, 215, 241, 0.32);
+  border-radius: 999px;
+}
+
+.nav-card-scroll.has-inner-scroll::-webkit-scrollbar-thumb {
+  background: rgba(104, 216, 255, 0.75);
+  border-radius: 999px;
+}
+
+.nav-card-scroll.has-inner-scroll::-webkit-scrollbar-thumb:hover {
+  background: #1f9fd6;
+}
+
+.night .nav-card-scroll.has-inner-scroll {
+  scrollbar-color: rgba(125, 211, 252, 0.78) rgba(78, 82, 92, 0.55);
+}
+
+.night .nav-card-scroll.has-inner-scroll::before {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0));
+}
+
+.night .nav-card-scroll.has-inner-scroll::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0));
+}
+
+.night .nav-card-scroll.has-inner-scroll::-webkit-scrollbar-track {
+  background: rgba(78, 82, 92, 0.55);
+}
+
+.night .nav-card-scroll.has-inner-scroll::-webkit-scrollbar-thumb {
+  background: rgba(125, 211, 252, 0.78);
+}
+
+/* 右侧二级导航 */
+.nav-parent-category {
+  padding-bottom: 16px;
+}
+
+.sub-category-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sub-category-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid #cdd7f1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #333;
+  line-height: 1.2;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.sub-category-link:hover,
+.sub-category-link.is-current {
+  border-color: #68d8ff;
+  background: rgba(104, 216, 255, 0.12);
+  color: #1f9fd6;
+  box-shadow:
+    0 0 0 1px rgba(104, 216, 255, 0.45),
+    0 0 14px rgba(104, 216, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.sub-category-link i,
+.sub-category-link span {
+  color: inherit;
+  font-size: 15px;
+}
+
+.sub-category-panels {
+  margin-top: 18px;
+}
+
+.sub-category-panel {
+  display: none;
+}
+
+.sub-category-panel.is-active {
+  display: block;
+}
+
+.night .sub-category-link {
+  border-color: #4e525c;
+  background: rgba(0, 0, 0, 0.42);
+  color: #ddd;
+}
+
+.night .sub-category-link:hover,
+.night .sub-category-link.is-current {
+  border-color: #7dd3fc;
+  background: rgba(125, 211, 252, 0.14);
+  color: #7dd3fc;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.5),
+    0 0 16px rgba(125, 211, 252, 0.34);
+}
+/* 搜索栏边框发光效果 */
+input#txt {
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+}
+
+.search:hover input#txt,
+.search:focus-within input#txt {
+  border-color: #68d8ff !important;
+  box-shadow:
+    0 0 0 1px rgba(104, 216, 255, 0.75),
+    0 0 14px rgba(104, 216, 255, 0.55),
+    0 0 28px rgba(104, 216, 255, 0.35) !important;
+}
+
+.search:hover .fa-search,
+.search:focus-within .fa-search {
+  color: #1f9fd6;
+}
+
+.night .search:hover input#txt,
+.night .search:focus-within input#txt {
+  border-color: #7dd3fc !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.85),
+    0 0 16px rgba(125, 211, 252, 0.65),
+    0 0 34px rgba(125, 211, 252, 0.45) !important;
+}
+
+.night .search:hover .fa-search,
+.night .search:focus-within .fa-search {
+  color: #7dd3fc;
+}
+
+/* 站内搜索结果 */
+.search-hot-text.site-search-results ul li {
+  position: relative;
+  min-height: 58px;
+  padding: 9px 14px 9px 46px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.search-hot-text.site-search-results ul li > span {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #68d8ff;
+  color: #fff;
+  text-align: center;
+  line-height: 22px;
+}
+
+.search-hot-text.site-search-results ul li > strong {
+  display: block;
+  margin: 0 0 2px;
+  color: #222;
+  font-size: 1.5rem;
+}
+
+.search-hot-text.site-search-results ul li > small {
+  display: block;
+  color: #1f9fd6;
+  font-size: 1.2rem;
+}
+
+.search-hot-text.site-search-results ul li > p {
+  margin: 3px 0 0;
+  color: #777;
+  font-size: 1.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-hot-text.site-search-results ul li.current,
+.search-hot-text.site-search-results ul li:hover {
+  background: rgba(104, 216, 255, 0.14);
+}
+
+.search-hot-text.site-search-results ul li.site-search-empty {
+  min-height: 42px;
+  padding: 12px 16px;
+  color: #777;
+  cursor: default;
+}
+
+.night .search-hot-text.site-search-results ul li > strong {
+  color: #f2f2f2;
+}
+
+.night .search-hot-text.site-search-results ul li > small {
+  color: #7dd3fc;
+}
+
+.night .search-hot-text.site-search-results ul li > p,
+.night .search-hot-text.site-search-results ul li.site-search-empty {
+  color: #aaa;
+}
+
+.site-search-hit {
+  border-color: #68d8ff !important;
+  box-shadow:
+    0 0 0 2px rgba(104, 216, 255, 0.78),
+    0 0 18px rgba(104, 216, 255, 0.65),
+    0 0 36px rgba(104, 216, 255, 0.38) !important;
+}
+
+.night .site-search-hit {
+  border-color: #7dd3fc !important;
+  box-shadow:
+    0 0 0 2px rgba(125, 211, 252, 0.88),
+    0 0 20px rgba(125, 211, 252, 0.72),
+    0 0 40px rgba(125, 211, 252, 0.45) !important;
+}
+/* 卡片边框发光效果 */
+.xe-widget.xe-conversations {
+  position: relative;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.xe-widget.xe-conversations:hover {
+  border-color: #68d8ff;
+  box-shadow:
+    0 0 0 1px rgba(104, 216, 255, 0.75),
+    0 0 14px rgba(104, 216, 255, 0.55),
+    0 0 28px rgba(104, 216, 255, 0.35);
+}
+
+.night .xe-widget.xe-conversations:hover {
+  border-color: #7dd3fc;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.85),
+    0 0 16px rgba(125, 211, 252, 0.65),
+    0 0 34px rgba(125, 211, 252, 0.45);
+}
+/* 响应式适配 -------------------------------------------------------------- 开始 */
+@media screen and (max-width: 1024px) {
+  .main-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .col-sm-3 {
+    width: 50%;
+    float: left;
+  }
+
+  div.search,
+  div.search:hover,
+  .search-box {
+    width: 100%;
+  }
+
+  .sousuo {
+    padding: 70px 0 45px;
+  }
+
+  .xe-widget.xe-conversations {
+    min-height: 88px;
+  }
+
+  .nav-card-scroll.has-inner-scroll {
+    max-height: min(56vh, 460px);
+  }
+}
+/* ============================================================================
+   主题响应式：断点适配、宽度调优、分类配色
+   覆盖 WebStack 主题原有外观
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+@media screen and (max-width: 767px) {
+  .sidebar-menu,
+  .sidebar-menu.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    width: 100%;
+  }
+
+  .sidebar-menu .sidebar-menu-inner {
+    position: relative;
+    width: 100%;
+  }
+
+  .sidebar-menu .main-menu {
+    max-height: calc(100vh - 64px);
+    margin: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-menu .logo-env {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 0;
+    height: 64px;
+    padding: 8px 16px;
+  }
+
+  .sidebar-menu .logo-env .logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .sidebar-menu .logo-env .logo a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .sidebar-menu .logo-env .logo-expanded {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    margin-right: 8px;
+  }
+
+  .sidebar-menu .logo-env .logo-expanded img {
+    width: 38px !important;
+    height: 38px !important;
+    object-fit: contain;
+  }
+
+  .sidebar-menu .logo-env .font_logo {
+    display: block;
+    max-width: calc(100vw - 80px);
+    overflow: hidden;
+    color: #fff;
+    font-size: min(24px, calc(var(--pm-brand-size, 19px) * 0.7632));
+    line-height: 1.2;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    color: #ddd;
+  }
+
+  .mobile-menu-toggle a i {
+    font-size: 26px;
+  }
+
+  .mobile-category-toggle {
+    position: fixed;
+    right: 14px;
+    bottom: 18px;
+    z-index: 9999;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 50%;
+    background-color: rgba(244, 248, 252, 0.92) !important;
+    color: #53606c;
+    box-shadow:
+      0 12px 30px rgba(31, 46, 62, 0.16),
+      0 0 0 0 rgba(104, 216, 255, 0.4);
+    text-decoration: none;
+    transition:
+      transform 0.32s ease,
+      color 0.32s ease,
+      border-color 0.32s ease,
+      background-color 0.32s ease,
+      box-shadow 0.32s ease;
+  }
+
+  .mobile-category-toggle i {
+    color: inherit;
+    font-size: 0;
+    line-height: 1;
+  }
+
+  .mobile-category-toggle i::before {
+    font-size: 18px;
+  }
+
+  .mobile-category-toggle:hover {
+    border-color: rgba(104, 216, 255, 0.9);
+    background-color: rgba(244, 248, 252, 0.98) !important;
+    color: #1f9fd6;
+    box-shadow:
+      0 16px 34px rgba(31, 159, 214, 0.24),
+      0 0 0 7px rgba(104, 216, 255, 0.16),
+      0 0 26px rgba(104, 216, 255, 0.48);
+    transform: translateY(-4px) scale(1.06);
+  }
+
+  .mobile-category-toggle:focus {
+    outline: none;
+  }
+
+  .mobile-category-toggle:focus-visible {
+    outline: 2px solid rgba(104, 216, 255, 0.72);
+    outline-offset: 3px;
+  }
+
+  body.night .mobile-category-toggle {
+    border-color: rgba(125, 211, 252, 0.24);
+    background-color: rgba(38, 43, 49, 0.94) !important;
+    color: #d7e3ee;
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.34),
+      0 0 0 0 rgba(125, 211, 252, 0.36);
+  }
+
+  body.night .mobile-category-toggle:hover {
+    border-color: rgba(125, 211, 252, 0.88);
+    background-color: rgba(38, 48, 58, 0.98) !important;
+    color: #7dd3fc;
+    box-shadow:
+      0 16px 34px rgba(0, 0, 0, 0.38),
+      0 0 0 7px rgba(125, 211, 252, 0.15),
+      0 0 28px rgba(125, 211, 252, 0.44);
+  }
+
+  footer.main-footer .go-up.floating-actions {
+    right: 14px !important;
+    bottom: 58px !important;
+    gap: 10px;
+  }
+
+  .go-up.floating-actions .floating-action {
+    width: 50px;
+    height: 50px;
+  }
+
+  .go-up.floating-actions .floating-action i::before {
+    font-size: 18px;
+  }
+
+  .main-content {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 82px;
+  }
+
+  .page-container .main-content {
+    padding-top: 82px;
+  }
+
+  .site-footer-info {
+    width: 100%;
+    min-height: 86px;
+    padding: 12px 12px 20px;
+    box-sizing: border-box;
+  }
+
+  .footer-copyright {
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  .footer-stats {
+    gap: 4px 8px;
+    max-width: 100%;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .col-sm-3 {
+    width: 100%;
+    float: none;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  nav.navbar.user-info-navbar {
+    min-height: 48px;
+  }
+
+  .sousuo {
+    padding: 22px 0 28px;
+  }
+
+  input#txt {
+    border-radius: 8px;
+  }
+
+  input#txt::placeholder,
+  .night input#txt::placeholder {
+    font-size: 1.3rem;
+  }
+
+  .xe-widget.xe-conversations {
+    margin-bottom: 12px;
+    min-height: auto;
+    padding: 14px 18px;
+    border-radius: 10px;
+  }
+
+  .xe-widget.xe-conversations:hover {
+    transform: none;
+  }
+
+  .xe-widget.xe-conversations .xe-comment,
+  .xe-widget.xe-conversations .overflowClip_1,
+  .xe-widget.xe-conversations .overflowClip_2 {
+    width: auto;
+  }
+
+  .xe-widget.xe-conversations img {
+    width: 42px !important;
+    height: 42px !important;
+    min-height: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50% !important;
+    object-fit: cover;
+    object-position: center;
+    box-sizing: border-box;
+  }
+
+  .xe-widget.xe-conversations .xe-comment-entry {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img {
+    display: inline-flex;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img img {
+    display: block;
+    flex: 0 0 42px;
+    width: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+  }
+
+  .xe-widget.xe-conversations .xe-user-img img.img-circle {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+    border-radius: 999px !important;
+  }
+
+  .xe-widget.xe-conversations .xe-comment {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  strong {
+    font-size: 1.5rem;
+  }
+
+  p.overflowClip_2 {
+    font-size: 1.3rem;
+  }
+
+  h4.text-gray {
+    font-size: 20px;
+    margin-top: 18px;
+  }
+
+  .sub-category-nav {
+    gap: 8px;
+  }
+
+  .sub-category-link {
+    min-height: 36px;
+    padding: 8px 12px;
+  }
+
+  .nav-card-scroll.has-inner-scroll {
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    margin-right: 0;
+  }
+
+  .nav-card-scroll.has-inner-scroll::before,
+  .nav-card-scroll.has-inner-scroll::after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .main-content {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 82px;
+  }
+
+  .xe-comment-entry {
+    padding: 10px;
+  }
+
+  h4.text-gray {
+    font-size: 18px;
+  }
+}
+/* 响应式适配 -------------------------------------------------------------- 结束 */
+
+/* Layout width tuning */
+@media screen and (min-width: 768px) {
+  .sidebar-menu,
+  .sidebar-menu.fixed,
+  .sidebar-menu.fixed .sidebar-menu-inner {
+    width: 240px;
+  }
+
+  .sidebar-menu .logo-env {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .sidebar-menu .main-menu {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .sidebar-menu .main-menu a {
+    padding-left: 14px;
+    padding-right: 12px;
+  }
+
+  .page-container .main-content {
+    padding-left: 22px;
+    padding-right: 26px;
+  }
+
+  .nav-category {
+    padding-left: 14px;
+    padding-right: 14px;
+    margin-bottom: 14px;
+  }
+
+  .nav-card-scroll {
+    margin-top: 12px;
+  }
+
+  .nav-card-scroll > .row {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+
+  .site-card-col {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 16px;
+  }
+
+  .xe-widget.xe-conversations {
+    margin-bottom: 0;
+    min-height: 92px;
+  }
+
+  footer.main-footer {
+    margin-left: -22px;
+    margin-right: -26px;
+    padding-left: 22px;
+    padding-right: 26px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .col-sm-3.site-card-col {
+    width: 16.66666667%;
+  }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1439px) {
+  .col-sm-3.site-card-col {
+    width: 20%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .sidebar-menu,
+  .sidebar-menu.fixed,
+  .sidebar-menu.fixed .sidebar-menu-inner {
+    width: 210px;
+  }
+
+  .page-container .main-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .nav-category {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  footer.main-footer {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Category panel colors */
+.nav-category {
+  background: #F9F9F9;
+  border: none;
+  box-shadow: none;
+}
+
+.nav-category.is-active {
+  background: #F9F9F9;
+  border: none;
+  box-shadow: none;
+}
+
+.night .nav-category,
+body.night .nav-category {
+  background: #2c2e2f;
+  border: none;
+  box-shadow: none;
+}
+
+.night .nav-category.is-active,
+body.night .nav-category.is-active {
+  background: #2c2e2f;
+  border: none;
+}
+
+.nav-card-scroll.has-inner-scroll::before {
+  background: linear-gradient(to bottom, rgba(252, 254, 255, 0.98), rgba(252, 254, 255, 0));
+}
+
+.nav-card-scroll.has-inner-scroll::after {
+  background: linear-gradient(to top, rgba(237, 246, 250, 0.98), rgba(237, 246, 250, 0));
+}
+
+.night .nav-card-scroll.has-inner-scroll::before,
+body.night .nav-card-scroll.has-inner-scroll::before {
+  background: linear-gradient(to bottom, rgba(18, 27, 36, 0.98), rgba(18, 27, 36, 0));
+}
+
+.night .nav-card-scroll.has-inner-scroll::after,
+body.night .nav-card-scroll.has-inner-scroll::after {
+  background: linear-gradient(to top, rgba(18, 27, 36, 0.98), rgba(18, 27, 36, 0));
+}
+
+/* Keep the last row clear of the sticky bottom fade inside scrollable categories. */
+.nav-card-scroll.has-inner-scroll {
+  padding-bottom: 24px;
+  scroll-padding-bottom: 24px;
+}
+
+.nav-card-scroll.has-inner-scroll > .row {
+  padding-bottom: 16px;
+}
+
+.nav-card-scroll.has-inner-scroll::before,
+.nav-card-scroll.has-inner-scroll::after {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  .nav-card-scroll.has-inner-scroll {
+    padding-bottom: 0;
+    scroll-padding-bottom: auto;
+  }
+
+  .nav-card-scroll.has-inner-scroll > .row {
+    padding-bottom: 0;
+  }
+}
+
+/* ============================================================================
+   固定侧栏 + 单分类面板模式
+   body 带 pm-mode 时启用：左侧悬浮导航 + 右侧整高悬浮内容区（顶栏 / 搜索条 / 滚动区）
+   ============================================================================ */
+/* 文档根也要锁死：上面有 html{overflow-x:hidden}，此时 html 的 overflow-y 会被算成 auto，
+   body 的 overflow:hidden 不再向视口传播。结果就是挂在 body 上的绝对定位元素（bootstrap tooltip）
+   一旦超出视口底部，文档高度就变大、右侧冒出页面滚动条，整页横向位移十几像素 —— 表现为鼠标划过
+   卡片时页面突然抖一下。这里让 html 直接 overflow:hidden，彻底断掉文档滚动。 */
+html.pm-mode,
+html:has(body.pm-mode) {
+  overflow: hidden !important;
+  height: 100%;
+}
+/* ============================================================================
+   面板模式外壳：搜索条、顶栏、侧栏、滚动区、chips 容器
+   本项目自有布局（非覆盖）
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+body.pm-mode {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+body.pm-mode .page-container {
+  display: block !important;
+  width: 100% !important;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ---------- 右侧主区域：悬浮卡片 + 独立滚动 ----------
+   2026-10-24 方案 C 落地：通栏化 —— 紧贴侧栏、铺满屏幕四边，
+   不再是四周留白的悬浮岛（圆角/投影一并去掉，见 60-card-surface 的阴影规则）。 */
+body.pm-mode .main-content {
+  position: fixed !important;
+  left: 232px !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f7f9fc;
+  border-radius: 0;
+  box-shadow: none;
+  z-index: 50;
+}
+
+/* 原顶栏（内容已注释）在面板模式下不再占位 */
+body.pm-mode .main-content > .navbar.user-info-navbar {
+  display: none !important;
+}
+
+/* 分类标题行：搜索条下方的当前分类名 + 站点数 */
+body.pm-mode .pm-topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  height: 54px;
+  padding: 0 26px;
+  background: transparent;
+  border-bottom: 1px solid rgba(31, 159, 214, 0.12);
+}
+
+/* 未开启搜索时，标题行就是首行，补回顶部留白 */
+body.pm-mode .main-content > .pm-topbar:first-of-type {
+  height: 66px;
+  padding-top: 6px;
+}
+
+body.pm-mode .pm-title {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #24303f;
+  white-space: nowrap;
+}
+
+body.pm-mode .pm-title > i {
+  color: #1f9fd6;
+  font-size: 19px;
+  line-height: 1;
+}
+
+body.pm-mode .pm-title .pm-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.pm-mode .pm-title .pm-count:empty {
+  display: none;
+}
+
+body.pm-mode .pm-title .pm-count {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4c7f97;
+  background: rgba(104, 216, 255, 0.14);
+  border: 1px solid rgba(104, 216, 255, 0.32);
+  border-radius: 999px;
+  padding: 2px 9px;
+  line-height: 1.5;
+}
+
+/* 搜索条：位于面板最上方，独立一条，不随内容滚动
+   行内 = 左占位 / 搜索框 / 深浅切换按钮，左右占位等宽保证搜索框真正居中 */
+body.pm-mode .pm-searchbar {
+  flex: 0 0 auto;
+  position: relative;
+  /* 必须高于滚动区里的吸顶二级导航（z-index 8），否则搜索引擎下拉会被分类 chips 盖住 */
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 26px 14px;
+  background: #f7f9fc;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+body.pm-mode .pm-searchbar::before {
+  content: "";
+  flex: 0 0 44px;
+  width: 44px;
+}
+
+body.pm-mode .pm-searchbar .sousuo {
+  float: none !important;
+  flex: 0 1 var(--pm-search-width, 717px);
+  width: auto !important;
+  max-width: var(--pm-search-width, 717px) !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: block;
+}
+
+/* 搜索条右侧两个圆钮：侧栏收起 + 深浅切换。
+   质感对齐搜索框与卡片——半透明白底、1px 细边、柔和落影、轻微毛玻璃；
+   悬停时用主色描边 + 一圈柔光，和搜索框聚焦是同一套语言。
+   颜色取「站点设置 → 样式」的主色派生变量，换主色这两个钮会一起变。 */
+body.pm-mode .pm-top-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+body.pm-mode .pm-theme-toggle,
+body.pm-mode .pm-sidebar-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--ld-card-bd, rgba(18, 20, 28, 0.07));
+  border-radius: 50%;
+  background: var(--ld-search-bg, rgba(255, 255, 255, 0.92));
+  color: var(--site-accent-deep, #0b83b8);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  backdrop-filter: blur(10px) saturate(1.15);
+  box-shadow:
+    0 1px 2px rgba(20, 24, 48, 0.05),
+    0 10px 22px -16px rgba(20, 24, 48, 0.3);
+  transition:
+    transform 0.32s cubic-bezier(0.2, 0.7, 0.3, 1),
+    color 0.28s ease,
+    border-color 0.28s ease,
+    background-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+body.pm-mode .pm-theme-toggle i,
+body.pm-mode .pm-sidebar-toggle i {
+  color: inherit;
+  line-height: 1;
+  font-size: 16px;
+  transition: transform 0.34s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+body.pm-mode .pm-theme-toggle:hover,
+body.pm-mode .pm-theme-toggle:focus-visible,
+body.pm-mode .pm-sidebar-toggle:hover,
+body.pm-mode .pm-sidebar-toggle:focus-visible {
+  outline: none;
+  border-color: var(--ld-card-bd-h, rgba(56, 189, 248, 0.42));
+  background: var(--ux-surface-solid, #fff);
+  color: var(--site-accent-deep, #0b83b8);
+  box-shadow:
+    0 0 0 4px var(--site-accent-wash-a, rgba(104, 216, 255, 0.28)),
+    0 0 18px var(--site-accent-glow, rgba(104, 216, 255, 0.55)),
+    0 10px 22px -16px rgba(20, 24, 48, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 月亮/太阳转一下，菜单图标只做轻微放大 */
+body.pm-mode .pm-theme-toggle:hover i {
+  transform: rotate(-14deg) scale(1.08);
+}
+
+body.pm-mode .pm-sidebar-toggle:hover i {
+  transform: scale(1.1);
+}
+
+body.pm-mode .pm-theme-toggle:active,
+body.pm-mode .pm-sidebar-toggle:active {
+  transform: translateY(0) scale(0.96);
+}
+
+body.pm-mode.night .pm-theme-toggle,
+body.pm-mode.night .pm-sidebar-toggle {
+  border-color: var(--ld-card-bd, rgba(255, 255, 255, 0.16));
+  background: var(--ld-search-bg, rgba(32, 37, 50, 0.86));
+  color: var(--ux-accent, #7dd3fc);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 12px 26px -18px rgba(0, 0, 0, 0.8);
+}
+
+body.pm-mode.night .pm-theme-toggle:hover,
+body.pm-mode.night .pm-theme-toggle:focus-visible,
+body.pm-mode.night .pm-sidebar-toggle:hover,
+body.pm-mode.night .pm-sidebar-toggle:focus-visible {
+  border-color: var(--site-accent-line, rgba(125, 211, 252, 0.26));
+  background: var(--ux-surface-solid, #212633);
+  color: var(--ux-accent, #7dd3fc);
+  box-shadow:
+    0 0 0 4px var(--site-accent-wash-a, rgba(125, 211, 252, 0.3)),
+    0 0 20px var(--site-accent-glow, rgba(125, 211, 252, 0.6)),
+    0 12px 26px -18px rgba(0, 0, 0, 0.8);
+}
+
+body.pm-mode .pm-searchbar .sousuo .search {
+  margin: 0 auto !important;
+  transition: all 0.3s cubic-bezier(0, 0.3, 0.5, 1);
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 搜索框尺寸：高度 / 字号 / 圆角（宽度见上面的 --pm-search-width）
+   选择器带 input#txt：主题里 `input#txt`（id 选择器）设了 border-radius，类选择器压不过它 */
+body.pm-mode .pm-searchbar .sousuo input#txt {
+  height: var(--pm-search-height, 50px);
+  line-height: var(--pm-search-height, 50px);
+  font-size: var(--pm-search-font, 16px);
+  border-radius: var(--pm-search-radius, 10px);
+}
+
+/* 占位文字默认是 1.4rem，跟着搜索框字号一起变 */
+body.pm-mode .pm-searchbar .sousuo input#txt::placeholder {
+  font-size: var(--pm-search-font, 16px);
+}
+
+/* 右侧放大镜按钮已按需求移除（2026-10-23）。
+   按钮是 absolute 定位在输入框右端、不占布局宽度的，所以藏掉它不会让搜索框变形；
+   回车提交由 header.js 的 keydown(13) 负责，`$("#search-btn").click()` 找不到元素也是空集合不报错。
+   想恢复：删掉下面这条 display:none 即可，DOM 仍在 layout/index.ejs 里。 */
+body.pm-mode .pm-searchbar .sousuo .search-btn {
+  display: none !important;
+}
+
+/* 按钮原本压住输入框右端，去掉后补一点右内边距，长关键词不会顶到圆角上 */
+body.pm-mode .pm-searchbar .sousuo input#txt {
+  padding-right: 18px;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-icon {
+  top: calc((var(--pm-search-height, 50px) - 40px) / 2);
+}
+
+/* 搜索引擎下拉面板的位置：水平对齐 + 微调、与搜索框的垂直间距，宽度按搜索框百分比 */
+body.pm-mode .pm-searchbar .sousuo .search-engine {
+  top: calc(var(--pm-search-height, 50px) + var(--pm-engine-gap, 10px));
+  left: var(--pm-engine-left, 0px);
+  right: var(--pm-engine-right, auto);
+  width: var(--pm-eng-panel-w, 50%);
+  margin-left: var(--pm-engine-dx, 0px);
+  transform: translateX(var(--pm-engine-shift, 0px));
+  padding: 14px 14px 6px;
+}
+
+/* 搜索引擎条目：用网格排版，每个条目的位置由「列数 / 行列间距 / 条目高度 / 内容对齐」决定。
+   主题原来是 float:30% + 浏览器默认的 ul 列表标记，所以每个名字前面都顶着一个灰色小圆点，
+   这里 list-style 清掉标记，padding-left 归零，换成 gap 控制的间距。 */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list {
+  display: grid;
+  grid-template-columns: repeat(var(--pm-eng-cols, 3), minmax(0, 1fr));
+  column-gap: var(--pm-eng-col-gap, 10px);
+  row-gap: var(--pm-eng-row-gap, 10px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li {
+  display: flex;
+  align-items: center;
+  justify-content: var(--pm-eng-item-align, flex-start);
+  gap: var(--pm-eng-icon-gap, 5px);
+  float: none;
+  width: auto;
+  height: var(--pm-eng-item-h, 30px);
+  margin: 0;
+  padding: 0 4px;
+  font-size: var(--pm-eng-font, 14px);
+  line-height: 1.2;
+  background: transparent;
+  border-radius: 8px;
+  list-style: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* 个别浏览器即使 list-style:none 也会画 marker，再显式清一次 */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li::marker {
+  content: '';
+}
+
+/* 条目悬停：沿用原来的浅灰底，圆角跟着网格走（主题里的 30px 药丸会被上面的规则压掉） */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li:hover,
+body.pm-mode.night .pm-searchbar .sousuo .search-engine-list li:hover {
+  background: #d2d3d4;
+  border-radius: 8px;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo .search-engine-list li:hover {
+  background: #5a5e64;
+}
+
+/* 图标是雪碧图按 25px 切好的，尺寸写死才不会切到隔壁图标（调条目高度只会留白） */
+body.pm-mode .pm-searchbar .sousuo .search-engine-list li span {
+  float: none;
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  margin: 0;
+  border-radius: 6px;
+}
+
+/* ---------- 二级分类副栏：标题条与滚动区之间的一条固定层 ----------
+   每个分组分类的 .sub-category-nav 会被 JS 搬到这里（custom.js 的 moveNavsToSubbar），
+   原因是「卡片从二级分类下沿被切平」只能由滚动容器自己实现：
+   滚动容器的可视区天然从它的顶边开始，越过顶边的内容被 overflow 裁掉，
+   于是副栏下沿就是一条物理的裁切线，不需要再画一层底色去盖。
+
+   反过来，只要把这排导航留在滚动区里（sticky 吸顶 + 手工配一条遮罩），
+   遮罩就必须自己配一份和面板一样的背景 —— 而面板是渐变 + 两团柔光，
+   配出来的颜色总会在轨道右侧露出一条灰色带。这条路已经走过两次，都失败了。
+
+   搬出来还有个副作用正好是想要的：导航从来没有「滚到顶才吸附」的过程，
+   它一直静止在标题条下面，不存在吸顶动画。 */
+body.pm-mode .pm-subbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  padding: 10px var(--pm-pad-r) 0 var(--pm-pad-l);
+}
+
+/* 没拿到任何二级导航（当前是普通分类）：整条不占位 */
+body.pm-mode .pm-subbar.is-empty {
+  display: none;
+}
+
+/* 同一时刻只放出当前分类的那一条（选择器要带上 .ux-chips，
+   否则会被 70-ux.css 里同权重的 display:flex 压过去） */
+body.pm-mode .pm-subbar .sub-category-nav.ux-chips {
+  display: none;
+}
+
+body.pm-mode .pm-subbar .sub-category-nav.ux-chips.is-current {
+  display: flex;
+}
+
+/* 内容滚动区 */
+body.pm-mode .pm-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 var(--pm-pad-r) 32px var(--pm-pad-l);
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(31, 159, 214, 0.45) transparent;
+  background: transparent;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-thumb {
+  background: rgba(31, 159, 214, 0.28);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+body.pm-mode .pm-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(31, 159, 214, 0.55);
+  background-clip: content-box;
+}
+
+/* 分类面板：同一时间只显示一个 */
+body.pm-mode .nav-category {
+  display: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pm-mode .nav-category.pm-active {
+  display: block !important;
+  padding-top: 18px !important;
+}
+
+body.pm-mode .nav-category > h4.text-gray {
+  display: none !important;
+}
+
+/* 卡片逐个入场 */
+@keyframes pmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 卡片入场动画已改为「滚动进入 zoom-in」（见文件末尾第 10 节）。
+   animation 的优先级高于 transition，会盖掉 opacity/transform 的过渡，所以原先这条 pmCardIn 停用。 */
+
+/* 悬停卡片不再抬起（z-index 必须低于吸顶二级导航的 8，
+   否则滚到第一行时 hover 的卡片会盖住 chips；tooltip 已挂到 body，无需靠它避让） */
+
+/* 站点描述气泡：脱离卡片层叠上下文与滚动裁剪，始终浮在最上层。
+   position:fixed 很关键 —— 气泡挂在 body 上，用 absolute 时只要它超出视口底部就会顶大文档高度，
+   文档级滚动条一闪，整页跟着横移（鼠标划过底部卡片时的抖动）。fixed 不参与滚动区域计算。 */
+body.pm-mode .tooltip {
+  position: fixed !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
+body.pm-mode .tooltip .tooltip-inner {
+  max-width: 280px;
+  padding: 7px 11px;
+  font-size: 12.5px;
+  line-height: 1.62;
+  text-align: left;
+  white-space: normal;
+  border-radius: 8px;
+  word-break: break-word;
+}
+
+body.pm-mode.night .tooltip .tooltip-inner {
+  background: #26303d;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(125, 211, 252, 0.16);
+}
+
+/* 栅格左右对齐，避免最右列被挤出容器 */
+body.pm-mode .pm-scroll .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 面板模式下取消卡片区内部滚动（避免双层滚动条） */
+body.pm-mode .nav-card-scroll,
+body.pm-mode .nav-card-scroll.has-inner-scroll {
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.pm-mode .nav-card-scroll.has-inner-scroll::before,
+body.pm-mode .nav-card-scroll.has-inner-scroll::after {
+  display: none !important;
+}
+
+/* 分组分类的二级导航：吸顶 */
+body.pm-mode .sub-category-nav {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  margin: 0 0 4px !important;
+  padding: 12px 0 12px !important;
+  background: #f7f9fc;
+  box-shadow: 0 14px 14px -14px rgba(15, 40, 70, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+body.pm-mode .sub-category-panels {
+  margin-top: 14px !important;
+}
+
+/* ---------- 左侧导航（方案 C 落地：贴边全高，不再是圆角浮岛） ---------- */
+body.pm-mode .sidebar-menu.fixed {
+  position: fixed !important;
+  width: 232px !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+  z-index: 120;
+}
+
+body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body.pm-mode .sidebar-menu .logo-env {
+  flex: 0 0 auto;
+  padding: 20px 18px 16px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px;
+}
+
+body.pm-mode .sidebar-menu .logo-env .font_logo {
+  /* 字号来自后台「站点设置 → 品牌 → 站点名称字号」（--pm-brand-size，默认 19px）。
+     display / 折行只在桌面（≥1101，侧栏是 232px 完整版）里加，见本段末尾的媒体查询；
+     写在这里会盖掉 ≤1100 的「图标条不显示标题」，平板会挤出一列斜切的乱字。 */
+  max-width: 150px;
+  font-size: var(--pm-brand-size, 19px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* 桌面完整侧栏：字号调大后一行放不下就折成两行（默认 19px 的短名字仍然只有一行），
+   两行还放不下才出省略号 —— 直接单行截断会把名字砍掉一半，比换行更难认。 */
+@media screen and (min-width: 1101px) {
+  body.pm-mode .sidebar-menu .logo-env .font_logo {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+    line-height: 1.16;
+  }
+}
+
+body.pm-mode #main-menu.main-menu {
+  position: relative;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 16px 20px !important;
+  margin: 0 !important;
+  scrollbar-width: none;
+}
+
+body.pm-mode #main-menu.main-menu::-webkit-scrollbar {
+  width: 0;
+}
+
+body.pm-mode .sidebar-menu .main-menu li {
+  position: relative;
+}
+
+body.pm-mode .sidebar-menu .main-menu a {
+  padding: var(--pm-nav-item-pad, 11px) 12px;
+  gap: var(--pm-nav-gap, 12px);
+  border-radius: 12px;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+/* 图标列宽度单独控制：放大图标后不挤压标题（值来自后台「外观设置」） */
+body.pm-mode .sidebar-menu .main-menu a > i {
+  flex: 0 0 var(--pm-nav-icon-width, 28px);
+  width: var(--pm-nav-icon-width, 28px);
+  min-width: var(--pm-nav-icon-width, 28px);
+  font-size: var(--pm-nav-icon-size, 18px);
+}
+
+body.pm-mode .sidebar-menu .main-menu a:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(2px);
+}
+
+/* 选中态配色跟着「站点设置 → 样式 → 主色」走：
+   --site-accent-* 由 head.ejs 按主色算出来，取不到时回落到原来的固定蓝 */
+body.pm-mode .sidebar-menu .main-menu li.is-current > a {
+  background: linear-gradient(
+    90deg,
+    var(--site-accent-wash-a, rgba(104, 216, 255, 0.26)),
+    var(--site-accent-wash-b, rgba(104, 216, 255, 0.04))
+  ) !important;
+  box-shadow: inset 0 0 0 1px var(--site-accent-line, rgba(139, 227, 255, 0.14));
+}
+
+body.pm-mode .sidebar-menu .main-menu li.is-current > a i,
+body.pm-mode .sidebar-menu .main-menu li.is-current > a span {
+  color: var(--site-accent-on-dark, #8be3ff) !important;
+}
+
+body.pm-mode span.title {
+  font-size: var(--pm-nav-font-size, 17px);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #c3ccda;
+  transition: color 0.25s ease;
+}
+
+/* 原来这里有根跟随选中项滑动的蓝色竖条（.pm-indicator）。选中项本身已经有
+   渐变底 + 1px 描边 + 亮色图标文字，分层够了；再叠一根贴左边缘的竖条会显得脏，
+   所以整条删掉（custom.js 里也不再创建这个元素）。 */
+
+/* ---------- 夜间模式 ---------- */
+body.pm-mode.night .pm-topbar {
+  background: transparent;
+  border-bottom-color: rgba(125, 211, 252, 0.12);
+}
+
+body.pm-mode.night .pm-searchbar {
+  background: #16181d;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+body.pm-mode.night .pm-title {
+  color: #e8eef6;
+}
+
+body.pm-mode.night .pm-title .pm-count {
+  color: #9edcf7;
+  background: rgba(125, 211, 252, 0.14);
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+body.pm-mode.night .main-content {
+  background: #16181d;
+  box-shadow: none;
+}
+
+body.pm-mode.night .sub-category-nav {
+  background: #16181d;
+  box-shadow: 0 14px 14px -14px rgba(0, 0, 0, 0.6);
+}
+
+/* 面板模式：页脚整体不要（深浅切换已移到右上角，返回顶部已去掉） */
+body.pm-mode footer.main-footer {
+  display: none !important;
+}
+
+body.pm-mode footer.main-footer.sticky.footer-type-1,
+body.pm-mode.night footer.main-footer.sticky.footer-type-1 {
+  display: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------- 窄屏：侧栏收起为图标条 ---------- */
+@media screen and (max-width: 1100px) {
+  body.pm-mode .sidebar-menu.fixed,
+  body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+    width: 76px !important;
+  }
+
+  body.pm-mode .sidebar-menu.fixed {
+    left: 0;
+    top: 0 !important;
+    bottom: 0 !important;
+  }
+
+  body.pm-mode .main-content {
+    left: 76px !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+  }
+
+  body.pm-mode .pm-searchbar {
+    padding: 18px 18px 10px;
+  }
+
+  body.pm-mode .sidebar-menu .font_logo {
+    display: none;
+  }
+
+  body.pm-mode .sidebar-menu span.title {
+    display: none !important;
+  }
+
+  /* 图标条只有 76px，文字隐藏后图标居中，并给放大后的图标留够宽度 */
+  body.pm-mode #main-menu.main-menu {
+    padding: 12px 8px 20px !important;
+  }
+
+  body.pm-mode .sidebar-menu .main-menu a {
+    padding: var(--pm-nav-item-pad, 11px) 6px;
+    justify-content: center;
+  }
+
+  /* 图标条比完整侧栏大 1px（宽 4px），76px 里看着更实 */
+  body.pm-mode .sidebar-menu .main-menu a > i {
+    flex: 0 0 calc(var(--pm-nav-icon-width, 28px) + 4px);
+    width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    min-width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    font-size: calc(var(--pm-nav-icon-size, 18px) + 1px);
+  }
+
+  body.pm-mode .pm-topbar {
+    padding: 0 18px;
+    gap: 12px;
+  }
+}
+
+/* ---------- 手机：退出浮岛，回到文档流（分类切换逻辑不变） ---------- */
+@media screen and (max-width: 767px) {
+  /* 手机上内容回到文档流，滚动交还给文档本身，这里要把根元素重新放开 */
+  html.pm-mode,
+  html:has(body.pm-mode) {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  body.pm-mode {
+    overflow: auto !important;
+    height: auto !important;
+    /* 手机上滚动区左右内边距收窄到 10px，导航带垫底的负偏移跟着收 */
+    --pm-pad-l: 10px;
+    --pm-pad-r: 10px;
+  }
+
+  body.pm-mode .page-container {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.pm-mode .main-content {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+    overflow: visible;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 82px 0 0 !important;
+  }
+
+  body.pm-mode .pm-topbar {
+    height: auto;
+    padding: 0 16px 10px;
+    gap: 12px;
+    animation: none;
+  }
+
+  body.pm-mode .pm-title {
+    font-size: 17px;
+  }
+
+  body.pm-mode .pm-searchbar {
+    padding: 16px 16px 8px;
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    animation: none;
+  }
+
+  body.pm-mode .pm-scroll {
+    overflow: visible;
+    padding: 0 var(--pm-pad-r) 30px var(--pm-pad-l);
+  }
+
+  /* 手机上文档本身能滚，气泡要跟着文档走，fixed 会让它脱开手指位置 */
+  body.pm-mode .tooltip {
+    position: absolute !important;
+  }
+
+  body.pm-mode .nav-category.pm-active {
+    padding-top: 12px !important;
+  }
+
+  body.pm-mode .sub-category-nav {
+    position: static;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+    animation: none;
+  }
+}
+
+/* 手机端：侧栏恢复为顶部条（原移动布局），仅内容区走文档流 */
+@media screen and (max-width: 767px) {
+  body.pm-mode .sidebar-menu.fixed {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 10000;
+  }
+
+  body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    border-radius: 0;
+    display: block;
+    overflow: visible;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env {
+    height: 64px;
+    padding: 8px 16px !important;
+    border-bottom: none;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+    width: 38px;
+    height: 38px;
+    margin-right: 8px;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  body.pm-mode .sidebar-menu .logo-env .font_logo {
+    display: block;
+    max-width: calc(100vw - 80px);
+    /* 手机顶部条只有 64px 高，字号跟着后台设置按 0.76 缩小，最多 24px 封顶 */
+    font-size: min(24px, calc(var(--pm-brand-size, 19px) * 0.7632));
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.pm-mode #main-menu.main-menu {
+    flex: none;
+    max-height: calc(100vh - 64px);
+    padding: 12px 16px 20px !important;
+  }
+
+  /* 手机上侧栏是顶部条，展开后的下拉菜单需要盖住内容区（含搜索条）；
+     搜索条只保留定位（供搜索引擎下拉定位），但去掉 z-index 以免形成层叠上下文，
+     这样切换按钮（fixed）才能跑到侧栏之上 */
+  body.pm-mode .pm-searchbar {
+    z-index: auto;
+  }
+
+  /* 覆盖 ≤1100 的「图标条隐藏标题」，手机上菜单是完整列表，标题要显示 */
+  body.pm-mode .sidebar-menu span.title {
+    display: inline !important;
+    font-size: calc(var(--pm-nav-font-size, 17px) - 1px);
+  }
+}
+
+/* 面板模式 · 手机 / 平板：两个圆钮统一成一组，固定在右上角
+   ----------------------------------------------------------------------------
+   桌面端它们排在搜索条右端（行内）。到了 ≤1100 的平板和手机，
+   搜索条变窄、按钮再挤进去会把搜索框压扁，所以整组提出来 fixed 到右上角：
+   同一个尺寸（40×40）、同一个间距（8px）、同一条基线（flex 居中对齐）。
+   手机端顶部条是深色的，底色换成半透明白，其余（圆角、描边、图标大小）完全一致。 */
+@media screen and (max-width: 1100px) {
+  body.pm-mode .pm-top-actions {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 10001;
+    gap: 8px;
+  }
+
+  body.pm-mode .pm-top-actions .pm-theme-toggle,
+  body.pm-mode .pm-top-actions .pm-sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  body.pm-mode .pm-top-actions .pm-theme-toggle i,
+  body.pm-mode .pm-top-actions .pm-sidebar-toggle i {
+    font-size: 16px;
+  }
+
+  /* 按钮离开行内后，搜索条左侧那个「等宽占位」就没用了（它是为了让搜索框居中） */
+  body.pm-mode .pm-searchbar::before {
+    display: none;
+  }
+
+  /* 让出按钮组的位置，搜索框不要钻到按钮底下（112 是按钮组宽度，再留 24 呼吸） */
+  body.pm-mode .pm-searchbar {
+    padding-right: 136px;
+  }
+
+  /* 搜索条不再有层叠上下文，搜索引擎下拉要自己抬一层，否则被下方卡片盖住 */
+  body.pm-mode .pm-searchbar .search-engine {
+    z-index: 20;
+  }
+}
+
+/* 手机端：顶部条（侧栏）是深色的，按钮换成白透底才看得清 */
+@media screen and (max-width: 767px) {
+  body.pm-mode .pm-top-actions {
+    top: 12px;
+    right: 14px;
+  }
+
+  body.pm-mode .pm-top-actions .pm-theme-toggle,
+  body.pm-mode .pm-top-actions .pm-sidebar-toggle {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.14);
+    color: #e8eef6;
+    box-shadow: none;
+    -webkit-backdrop-filter: blur(8px) saturate(1.1);
+    backdrop-filter: blur(8px) saturate(1.1);
+  }
+
+  body.pm-mode .pm-searchbar {
+    padding: 16px 16px 8px;
+  }
+
+  body.pm-mode .pm-top-actions .pm-theme-toggle:hover,
+  body.pm-mode .pm-top-actions .pm-theme-toggle:focus-visible,
+  body.pm-mode .pm-top-actions .pm-sidebar-toggle:hover,
+  body.pm-mode .pm-top-actions .pm-sidebar-toggle:focus-visible,
+  body.pm-mode.night .pm-top-actions .pm-theme-toggle:hover,
+  body.pm-mode.night .pm-top-actions .pm-theme-toggle:focus-visible,
+  body.pm-mode.night .pm-top-actions .pm-sidebar-toggle:hover,
+  body.pm-mode.night .pm-top-actions .pm-sidebar-toggle:focus-visible {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    transform: none;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* 搜索引擎下拉：夜间箭头跟随面板底色，避免深色面板上顶一个白三角 */
+body.night .sousuo .search-engine ul::before {
+  border-bottom-color: #424242;
+}
+
+/* 搜索引擎下拉：手机端改成整宽三列，否则 50% 宽会被挤成两列细长条 */
+@media screen and (max-width: 767px) {
+  .sousuo .search-engine {
+    width: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    margin-left: 0 !important;
+    /* 手机上整宽铺满，后台设置的「对齐 / 微调」在这里不适用 */
+    transform: none !important;
+    padding: 12px 10px 6px 12px !important;
+    max-height: 62vh;
+    overflow-y: auto;
+  }
+
+  .sousuo .search-engine-head {
+    margin-bottom: 6px;
+    padding-right: 0;
+  }
+
+  .sousuo strong.search-engine-tit {
+    float: none;
+    display: block;
+    font-size: 12px;
+  }
+
+  .sousuo .search-engine-tool {
+    display: none;
+  }
+
+  .sousuo ul.search-engine-list.search-engine-list_zmki_ul {
+    padding-left: 0 !important;
+  }
+
+  /* 手机 / 窄屏：列数改成按最小宽度自动填充，手机约 3 列、平板约 5 列，
+     后台设的 4~5 列在窄屏上不会被挤扁；条目高度 / 字号 / 间距 / 对齐仍按设置走 */
+  body.pm-mode .pm-searchbar .sousuo .search-engine-list {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(88px, 22vw, 120px), 1fr));
+  }
+
+  body.pm-mode .pm-searchbar .sousuo .search-engine-list li {
+    padding: 0 4px;
+  }
+}
+
+
+/* ============================================================================
+   灵动卡片 · 右侧主区（正式落地，2026-10-21）
+   只作用于 body.pm-mode 下的 .main-content 内部；左侧 .sidebar-menu 一行不碰。
+   深浅两套令牌由 body.pm-mode / body.pm-mode.night 切换。
+
+   与演示页的差别：演示控制面板（右下浮标）整体去掉，所有效果默认开启。
+   下面出现 ld-no-flow / ld-no-aura 两个 body 上的类，
+   是没有入口的可选开关 —— 正式页不挂，留着方便临时关某一项
+   （控制台 body.classList.add('ld-no-flow') 即可）。
+   指针跟随高光与点击涟漪已按需求移除，对应令牌 --ld-rip 一并删除。
+   搜索框的流光边框也已按需求移除，只保留悬停 / 聚焦时的外圈光晕。
+   落地前原文件备份在 .workbuddy/参考/落地前备份-20261021/。
+   ========================================================================== */
+
+body.pm-mode {
+  --ld-g1: #38bdf8;
+  --ld-g2: #6366f1;
+  --ld-rad: 18px;
+  --ld-rad-lg: 22px;
+
+  --ld-card-bg: #ffffff;
+  --ld-card-bd: rgba(18, 20, 28, 0.06);
+  --ld-card-bd-h: rgba(56, 189, 248, 0.42);
+  --ld-card-sd: 0 1px 2px rgba(20, 24, 48, 0.05), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+  --ld-card-sd-h: 0 4px 10px rgba(20, 24, 48, 0.05), 0 28px 52px -26px rgba(20, 24, 48, 0.38);
+
+  --ld-ink: #141821;
+  --ld-ink-dim: #7c8598;
+  --ld-icon-bg: #f3f5fa;
+  --ld-icon-bd: rgba(20, 24, 48, 0.09);
+  --ld-hl: rgba(120, 170, 255, 0.15);
+  --ld-go-bg: #f2f5fb;
+
+  /* 方案 C 落地（2026-10-24）：日间面板底板压平成纯色，
+     由 .pm-mesh 三团彩色背景独立供色（原「左蓝右紫」渐变会压住 mesh，视觉不变）。
+     夜间令牌在 60-card-surface.css，保持原渐变不动。 */
+  --ld-panel-bg: #eef1f8;
+  --ld-search-bg: rgba(255, 255, 255, 0.92);
+  --ld-search-sd: 0 1px 2px rgba(20, 24, 48, 0.04), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+  --ld-search-sd-h: 0 2px 6px rgba(20, 24, 48, 0.05), 0 26px 54px -24px rgba(56, 130, 246, 0.5);
+  --ld-aura1: rgba(120, 170, 255, 0.28);
+  --ld-aura2: rgba(255, 170, 205, 0.22);
+
+  /* 流光边框 */
+  --ld-flow-1: #38bdf8;
+  --ld-flow-2: #818cf8;
+  --ld-flow-3: #f0abfc;
+  --ld-flow-4: #22d3ee;
+  --ld-flow-base: rgba(56, 189, 248, 0.22);
+  --ld-flow-glow: rgba(56, 189, 248, 0.42);
+}
+/* ============================================================================
+   面板卡片视觉：ld-* 令牌、卡片、搜索框、流光边框
+   本项目自有布局（非覆盖）
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+body.pm-mode.night {
+  --ld-card-bg: #1c212c;
+  /* 2026-10-24：白色 .075 压在 #1c212c 上几乎不可辨（用户反馈「边框快看不见」），
+     提到 .16；悬停高亮边 .34→.5；图标格描边同步提亮。 */
+  --ld-card-bd: rgba(255, 255, 255, 0.16);
+  --ld-card-bd-h: rgba(139, 227, 255, 0.5);
+  --ld-card-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+  --ld-card-sd-h: 0 6px 14px rgba(0, 0, 0, 0.4), 0 30px 56px -28px rgba(0, 0, 0, 0.85);
+
+  --ld-ink: #e6edf7;
+  --ld-ink-dim: #8b96a8;
+  --ld-icon-bg: #222736;
+  --ld-icon-bd: rgba(255, 255, 255, 0.15);
+  --ld-hl: rgba(150, 200, 255, 0.14);
+  --ld-go-bg: #232838;
+
+  --ld-panel-bg: radial-gradient(1200px 600px at 8% -14%, rgba(56, 189, 248, 0.12), transparent 62%),
+    radial-gradient(900px 520px at 96% 0%, rgba(124, 92, 255, 0.13), transparent 64%),
+    radial-gradient(820px 640px at 40% 116%, rgba(34, 197, 148, 0.06), transparent 60%), #16181d;
+  --ld-search-bg: rgba(32, 37, 50, 0.86);
+  --ld-search-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 26px -18px rgba(0, 0, 0, 0.8);
+  --ld-search-sd-h: 0 2px 6px rgba(0, 0, 0, 0.4), 0 26px 54px -26px rgba(56, 189, 248, 0.5);
+  --ld-aura1: rgba(56, 189, 248, 0.16);
+  --ld-aura2: rgba(124, 92, 255, 0.16);
+
+  --ld-flow-1: #7dd3fc;
+  --ld-flow-2: #a78bfa;
+  --ld-flow-3: #f5d0fe;
+  --ld-flow-4: #67e8f9;
+  --ld-flow-base: rgba(125, 211, 252, 0.24);
+  --ld-flow-glow: rgba(56, 189, 248, 0.38);
+}
+
+/* ---------------- 主面板底板：柔性渐变 ---------------- */
+body.pm-mode .main-content {
+  background: var(--ld-panel-bg) !important;
+  /* 通栏化后面板贴满屏幕，投影没有意义（50-panel 已把圆角归零） */
+  box-shadow: none !important;
+}
+
+body.pm-mode.night .main-content {
+  box-shadow: none !important;
+}
+
+/* 缓慢漂移的两团柔光（可开关：body.ld-no-aura 关掉） */
+body.pm-mode .main-content::before {
+  content: "";
+  position: absolute;
+  /* 左右必须 0：负 inset 会让柔光超出面板，在手机上撑出横向滚动 */
+  inset: -18% 0 auto 0;
+  height: 76%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(closest-side, var(--ld-aura1), transparent 72%) 18% 30% / 52% 100% no-repeat,
+    radial-gradient(closest-side, var(--ld-aura2), transparent 72%) 82% 12% / 46% 96% no-repeat;
+  filter: blur(26px);
+  animation: ldAura 26s ease-in-out infinite alternate;
+  opacity: 0.9;
+}
+
+body.pm-mode.ld-no-aura .main-content::before {
+  display: none;
+}
+
+/* 方案 C 落地（2026-10-24）：日间的柔光交给 .pm-mesh 三团彩色背景，
+   原两团漂移光斑只在夜间保留（夜间没有 mesh）。 */
+body.pm-mode:not(.night) .main-content::before {
+  display: none;
+  content: none;
+}
+
+/* 只动 background-position：
+   原来用 transform（translate 5% + scale 1.08）会让伪元素的盒子往右探出 ~23px，
+   手机上主区满宽 → 整页被撑出横向滚动（实测 scrollWidth 390 -> 413）。
+   绝对定位元素不受父级 overflow / clip-path 约束（clip-path 只裁绘制、不裁滚动溢出），
+   所以从源头让盒子别动最稳。 */
+@keyframes ldAura {
+  0% {
+    background-position: 12% 26%, 88% 10%;
+  }
+  50% {
+    background-position: 21% 36%, 79% 18%;
+  }
+  100% {
+    background-position: 27% 30%, 72% 12%;
+  }
+}
+
+/* 内容压在柔光之上 */
+body.pm-mode .pm-topbar,
+body.pm-mode .pm-scroll {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+body.pm-mode .pm-searchbar {
+  background: transparent !important;
+}
+
+/* ---------------- 搜索条：更圆润的浮起卡片 ---------------- */
+body.pm-mode .pm-searchbar .sousuo .search-box,
+body.pm-mode .pm-searchbar .sousuo .search {
+  border-radius: var(--ld-rad) !important;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box {
+  background: var(--ld-search-bg) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--ld-search-sd) !important;
+  border: 1px solid var(--ld-card-bd) !important;
+  transition: box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s;
+}
+
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
+  transform: translateY(-1px);
+  box-shadow: var(--ld-search-sd-h) !important;
+  border-color: var(--ld-card-bd-h) !important;
+}
+
+body.pm-mode .pm-searchbar .sousuo input#txt {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo input#txt {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--ld-ink) !important;
+}
+
+/* ---------- 搜索框悬停 / 聚焦：只留光晕（2026-10-24 方案 C 落地改） ----------
+   原来的「蓝边」= border-color 变蓝（#68d8ff）+ box-shadow 第 1 层 0 0 0 1px 硬边；
+   现在搜索框有常亮的 .pm-ring 流光边框（见 70-ux.css），硬边/蓝边都去掉，
+   只保留两层模糊光晕（日 14/28px、夜 16/34px）。
+   光晕挂在外层 .search-box 而不是里面的 input#txt：
+   input 圆角 10px、外层 18px 且 input 缩进 1px，挂 input 上四角会和卡片轮廓错开。 */
+/* ---------- 搜索条悬停 / 聚焦：只留光晕（2026-10-24 方案 C 落地改） ----------
+   原来的「蓝边」= border-color 变蓝 + box-shadow 第 1 层 0 0 0 1px 硬边；
+   现在搜索框有常亮的 .pm-ring 流光边框（见 70-ux.css），硬边/蓝边都去掉，
+   只保留两层模糊光晕（日 14/28px、夜 16/34px）。 */
+body.pm-mode .pm-searchbar .sousuo .search-box:hover,
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within {
+  border-color: var(--ld-card-bd) !important;
+  box-shadow:
+    0 0 14px var(--site-accent-glow, rgba(104, 216, 255, 0.55)),
+    0 0 28px var(--site-accent-wash-a, rgba(104, 216, 255, 0.35)) !important;
+}
+
+body.pm-mode.night .pm-searchbar .sousuo .search-box:hover,
+body.pm-mode.night .pm-searchbar .sousuo .search-box:focus-within {
+  border-color: var(--ld-card-bd) !important;
+  box-shadow:
+    0 0 16px var(--site-accent-glow, rgba(125, 211, 252, 0.65)),
+    0 0 34px var(--site-accent-wash-a, rgba(125, 211, 252, 0.45)) !important;
+}
+
+/* ---------- 内层 input 保持无框无阴影 ----------
+   主题原始 `.search:hover input#txt` 会给 input 自己上一圈蓝边 + 光晕，
+   和上面外层的蓝边叠起来就是「框里套框」。这里把 input 的边框和阴影都按住。 */
+body.pm-mode .pm-searchbar .sousuo .search-box:hover input#txt,
+body.pm-mode .pm-searchbar .sousuo .search-box:focus-within input#txt,
+body.pm-mode .pm-searchbar .sousuo .search:hover input#txt,
+body.pm-mode .pm-searchbar .sousuo .search:focus-within input#txt {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ---------------- 分类标题行 ---------------- */
+body.pm-mode .pm-topbar {
+  border-bottom: 1px solid var(--ld-card-bd) !important;
+}
+
+body.pm-mode .pm-title {
+  font-size: 21px;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+  color: var(--ld-ink);
+}
+
+body.pm-mode .pm-title > i {
+  color: var(--ld-g1);
+  filter: drop-shadow(0 3px 8px rgba(56, 189, 248, 0.4));
+}
+
+body.pm-mode .pm-title .pm-count {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ld-ink-dim);
+  background: var(--ld-icon-bg);
+  border: 1px solid var(--ld-card-bd);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+/* ---------------- 网格：改成自适应列宽 ---------------- */
+body.pm-mode .nav-card-scroll > .row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 15px;
+  margin: 0 !important;
+}
+
+/* bootstrap clearfix 在 grid 里会变成占位格 */
+body.pm-mode .nav-card-scroll > .row::before,
+body.pm-mode .nav-card-scroll > .row::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.pm-mode .nav-card-scroll > .row > .site-card-col {
+  width: auto !important;
+  float: none !important;
+  flex: none !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ---------------- 卡片本体 ---------------- */
+body.pm-mode .xe-widget.xe-conversations.box2.label-info {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 16px 18px !important;
+  border-radius: var(--ld-rad) !important;
+  border: 1px solid var(--ld-card-bd) !important;
+  background: var(--ld-card-bg) !important;
+  box-shadow: var(--ld-card-sd);
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateY(0);
+  transition: box-shadow 0.42s ease, border-color 0.32s ease,
+    transform 0.35s ease;
+}
+
+/* 悬停：与原始站点 custom.css 的 .xe-widget.xe-conversations:hover 完全一致 —— 纯上浮，无倾斜 */
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+  transform: translateY(-10px);
+}
+
+/* 指针跟随柔光（::after + --ld-mx/--ld-my）已按需求移除：
+   卡片悬停只保留上浮 + 流光边框，不再有跟着指针跑的高光斑。 */
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+  /* 流光开启时边框交给流光层，否则两条线会叠成 2.6px 的粗边 */
+  border-color: transparent !important;
+  box-shadow: var(--ld-card-sd-h), 0 14px 36px -20px var(--ld-flow-glow),
+    inset 0 0 22px -12px var(--ld-flow-glow);
+}
+
+/* 关掉流光时恢复一根干净的青色描边 */
+body.pm-mode.ld-no-flow .xe-widget.xe-conversations.box2.label-info:hover {
+  border-color: var(--ld-card-bd-h) !important;
+  box-shadow: var(--ld-card-sd-h);
+}
+
+/* ---------------- 悬停流光边框 ---------------- */
+@property --ld-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  /* 描边粗细 */
+  padding: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.36s ease;
+  /* 底层一层淡色打底保证光带之间不断开，上层两道光弧绕圈 */
+  background: conic-gradient(
+      from var(--ld-ang, 0deg),
+      transparent 0deg,
+      var(--ld-flow-1) 30deg,
+      var(--ld-flow-2) 58deg,
+      var(--ld-flow-3) 88deg,
+      transparent 126deg,
+      transparent 206deg,
+      var(--ld-flow-4) 244deg,
+      var(--ld-flow-2) 276deg,
+      transparent 316deg,
+      transparent 360deg
+    ),
+    linear-gradient(var(--ld-flow-base), var(--ld-flow-base));
+  /* 只保留 2px 的边框环，中间整块挖空 */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: ldFlow 4.4s linear infinite paused;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+body.pm-mode.ld-no-flow .xe-widget.xe-conversations.box2.label-info::before {
+  display: none !important;
+}
+
+@keyframes ldFlow {
+  to {
+    --ld-ang: 360deg;
+  }
+}
+
+/* 内层布局：图标 + 文字，垂直居中，宽度吃满 */
+body.pm-mode .xe-widget.xe-conversations .xe-comment-entry {
+  display: flex !important;
+  align-items: center;
+  gap: 13px;
+  padding: 0 !important;
+  min-height: 46px;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  background: var(--ld-icon-bg);
+  box-shadow: inset 0 0 0 1px var(--ld-icon-bd);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img img,
+body.pm-mode .xe-widget.xe-conversations .xe-user-img img.img-circle {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border-radius: 13px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .xe-user-img {
+  transform: rotate(-4deg) scale(1.08);
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-comment {
+  position: static !important;
+  min-height: 62px;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0;
+  padding: 0 !important;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-name.overflowClip_1 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100% !important;
+  padding-right: 22px;
+  line-height: 1.4;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-name strong {
+  font-size: 15px !important;
+  font-weight: 640;
+  letter-spacing: -0.005em;
+  color: var(--ld-ink);
+}
+
+body.pm-mode.night .xe-widget.xe-conversations .xe-user-name strong {
+  color: var(--ld-ink) !important;
+}
+
+body.pm-mode .xe-widget.xe-conversations p.overflowClip_2 {
+  width: 100% !important;
+  margin: 4px 0 0 !important;
+  font-size: 12.5px !important;
+  line-height: 1.55;
+  color: var(--ld-ink-dim) !important;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.pm-mode.night .xe-widget.xe-conversations p.overflowClip_2 {
+  color: var(--ld-ink-dim) !important;
+}
+
+/* 右上角箭头 */
+.ld-go {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  z-index: 4;
+  background: var(--ld-go-bg);
+  color: var(--ld-ink-dim);
+  opacity: 0;
+  transform: translate(2px, -2px) scale(0.82);
+  transition: opacity 0.36s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s,
+    color 0.3s;
+  pointer-events: none;
+}
+
+.ld-go svg {
+  width: 12px;
+  height: 12px;
+}
+
+body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover .ld-go {
+  opacity: 1;
+  transform: none;
+  background: linear-gradient(135deg, var(--ld-g1), var(--ld-g2));
+  color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(56, 189, 248, 0.9);
+}
+
+/* 点击涟漪（.ld-ripple / ldRip）已按需求移除：点击卡片不再有水波扩散。 */
+
+/* ---------------- 入场：已改为「滚动进入 zoom-in」 ----------------
+   原来是 pmCardIn 入场动画（弹性浮起），2026-10-23 按用户要求换成和 lcg521.cn 一样的
+   滚动出现/消失效果，见文件末尾第 10 节。@keyframes pmCardIn 保留着，回退时把第 10 节
+   删掉、再把这里的 animation 规则改回来即可。 */
+@keyframes pmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+body.pm-mode .pm-scroll.pm-anim .nav-category.pm-active .site-card-col {
+  /* 停用：入场改由滚动观察器控制（文件末尾第 10 节） */
+  animation: none;
+}
+
+
+/* ---------------- 二级分类 chips：滑动白块 ---------------- */
+body.pm-mode .sub-category-nav {
+  background: rgba(238, 241, 248, 0.88) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ld-card-bd) !important;
+  box-shadow: none !important;
+  padding-bottom: 10px;
+}
+
+body.pm-mode .sub-category-link {
+  border-radius: 11px !important;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s;
+}
+
+body.pm-mode .sub-category-link.is-active {
+  background: var(--ld-card-bg) !important;
+  color: var(--ld-ink) !important;
+  box-shadow: 0 6px 16px -10px rgba(20, 24, 48, 0.55), inset 0 0 0 1px var(--ld-card-bd);
+  transform: translateY(-1px);
+}
+
+body.pm-mode.night .sub-category-nav {
+  background: rgba(22, 24, 29, 0.9) !important;
+}
+
+/* ---------------- 窄屏 ---------------- */
+@media screen and (max-width: 1100px) {
+  body.pm-mode .nav-card-scroll > .row {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 13px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  body.pm-mode .nav-card-scroll > .row {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+  /* 移动端图标保持 48px：缩小后白底图标会糊成一团 */
+  body.pm-mode .xe-widget.xe-conversations .xe-comment {
+    min-height: 58px;
+  }
+  body.pm-mode .pm-title {
+    font-size: 18px;
+  }
+  /* 原始站点在 ≤767 也关掉了卡片上浮 */
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info:hover::before {
+    animation: none;
+  }
+
+  body.pm-mode .main-content::before {
+    animation: none !important;
+  }
+  body.pm-mode .xe-widget.xe-conversations.box2.label-info,
+  .ld-go,
+  body.pm-mode .xe-widget.xe-conversations .xe-user-img {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+   九、体验优化落地（2026-10-23，源自 .workbuddy/参考/动效方案/体验优化/）
+   —— 演示页定稿后搬进正式样式，回退办法：截掉本节到最后即可（原文件备份在
+      .workbuddy/参考/落地前备份-20261023/），配套脚本是 custom.js 末尾的 uxEnhance()。
+   包含：1 卡片右键菜单 / 3 键盘焦点环 + 快捷提示 / 4 手机触摸反馈 /
+        5 二级分类 chips 滑动白块 / 6 空分类占位 / 7 图标加载兜底 / 8 站点数徽章
+   演示期的右下浮标（.ux-dock）、假图 404 开关（breakImages）未搬过来。
+   ========================================================================== */
+
+body.pm-mode {
+  --ux-ink: #14171f;
+  --ux-ink-2: #5b6472;
+  --ux-ink-3: #8b95a3;
+  --ux-surface: rgba(255, 255, 255, 0.9);
+  --ux-surface-solid: #fff;
+  --ux-line: rgba(18, 20, 28, 0.08);
+  --ux-line-strong: rgba(18, 20, 28, 0.16);
+  --ux-hover: rgba(56, 189, 248, 0.12);
+  --ux-accent: #0e8fc4;
+  --ux-accent-soft: rgba(104, 216, 255, 0.2);
+  --ux-ring: #1fa5db;
+  --ux-shadow: 0 20px 46px -14px rgba(15, 23, 42, 0.3), 0 2px 8px rgba(15, 23, 42, 0.08);
+  --ux-empty-bd: rgba(18, 20, 28, 0.14);
+}
+/* ============================================================================
+   交互增强：右键菜单、toast、chips 滑块、滚动提示、空态
+   本项目自有组件
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+body.pm-mode.night {
+  --ux-ink: #e8eef6;
+  --ux-ink-2: #9aa7b6;
+  --ux-ink-3: #74808f;
+  --ux-surface: rgba(32, 37, 50, 0.94);
+  --ux-surface-solid: #212633;
+  --ux-line: rgba(255, 255, 255, 0.09);
+  --ux-line-strong: rgba(255, 255, 255, 0.18);
+  --ux-hover: rgba(139, 227, 255, 0.14);
+  --ux-accent: #7dd3fc;
+  --ux-accent-soft: rgba(125, 211, 252, 0.22);
+  --ux-ring: #7dd3fc;
+  --ux-shadow: 0 22px 52px -14px rgba(0, 0, 0, 0.72), 0 2px 10px rgba(0, 0, 0, 0.42);
+  --ux-empty-bd: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------------- 3. 键盘焦点环 ----------------
+   主题早期把 outline 全清了，键盘用户看不到自己在哪。用 :focus-visible 补回来。
+   注意：文本输入框是「编辑宿主」，鼠标点进去也会匹配 :focus-visible（浏览器认为
+   既然能直接打字就算键盘交互），所以搜索框 input#txt 必须从这条通用规则里排除，
+   它的焦点反馈只由外层 .search-box 的光晕承担（见 60-card-surface.css）。 */
+
+body.pm-mode a:focus-visible,
+body.pm-mode button:focus-visible,
+body.pm-mode input:not(#txt):focus-visible,
+body.pm-mode .sub-category-link:focus-visible {
+  outline: 2px solid var(--ux-ring) !important;
+  outline-offset: 2px !important;
+  border-radius: 8px;
+}
+
+/* 搜索框：任何方式聚焦都不画实心环（2026-10-25 去蓝框）
+   原来这里给 input#txt 单独加了一圈 2px 的 var(--ux-ring) 蓝环，鼠标点一下就亮，
+   和常亮的 .pm-ring 流光边框叠在一起很脏。现在统一按住 outline / box-shadow，
+   焦点提示只留 .search-box:focus-within 的模糊光晕。 */
+body.pm-mode .pm-searchbar .sousuo input#txt:focus,
+body.pm-mode .pm-searchbar .sousuo input#txt:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* 卡片本体可聚焦（Tab 能停在卡片上，回车直接打开） */
+body.pm-mode .xe-widget.xe-conversations:focus-visible {
+  outline: 2px solid var(--ux-ring) !important;
+  outline-offset: 3px !important;
+  border-color: transparent !important;
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 5px var(--ux-accent-soft),
+    0 24px 44px -22px rgba(15, 23, 42, 0.5) !important;
+}
+
+/* 卡片内那个 href="#" 的标题不再单独吃焦点，避免 Tab 停两次 */
+body.pm-mode .xe-widget.xe-conversations .xe-user-name:focus-visible {
+  outline: none !important;
+}
+
+/* 键盘提示：第一次按 Tab 后短暂出现，告诉用户可以用 / 和 Esc
+   （每个会话只露一次，靠 sessionStorage 记住） */
+.ux-kbd-tip {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  z-index: 100003;
+  transform: translate(-50%, 12px);
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--ux-surface);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid var(--ux-line);
+  box-shadow: var(--ux-shadow);
+  color: var(--ux-ink-2);
+  font: 12.5px/1.4 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease, transform 0.24s ease;
+}
+
+.ux-kbd-tip.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.ux-kbd-tip kbd {
+  display: inline-block;
+  min-width: 18px;
+  margin: 0 2px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--ux-line-strong);
+  background: var(--ux-surface-solid);
+  color: var(--ux-ink);
+  font: 600 11px/1.6 ui-monospace, "SF Mono", Consolas, monospace;
+  text-align: center;
+}
+
+/* ---------------- 1. 卡片右键菜单 ---------------- */
+
+.ux-menu {
+  position: fixed;
+  z-index: 100001;
+  min-width: 186px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--ux-surface);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--ux-line);
+  box-shadow: var(--ux-shadow);
+  color: var(--ux-ink);
+  font: 13px/1.4 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  opacity: 0;
+  transform: scale(0.94) translateY(-6px);
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.ux-menu.open {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.ux-menu-head {
+  padding: 5px 9px 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--ux-line);
+  color: var(--ux-ink-3);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.ux-menu-head b {
+  display: block;
+  color: var(--ux-ink);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 168px;
+}
+
+.ux-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 9px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ux-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease;
+}
+
+.ux-menu-item i {
+  width: 15px;
+  font-size: 12px;
+  color: var(--ux-ink-3);
+  text-align: center;
+  transition: color 0.14s ease;
+}
+
+.ux-menu-item:hover,
+.ux-menu-item:focus-visible {
+  background: var(--ux-hover);
+  color: var(--ux-accent);
+  outline: none;
+}
+
+.ux-menu-item:hover i,
+.ux-menu-item:focus-visible i {
+  color: var(--ux-accent);
+}
+
+.ux-menu-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--ux-line);
+}
+
+/* 右键命中的卡片：轻微提示一下「我选中了这张」 */
+.ux-menu-target {
+  border-color: var(--ux-ring) !important;
+  box-shadow: 0 0 0 3px var(--ux-accent-soft) !important;
+}
+
+/* 轻提示 */
+.ux-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  z-index: 100004;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ux-surface);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--ux-line);
+  box-shadow: var(--ux-shadow);
+  color: var(--ux-ink);
+  font: 13px/1.4 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  transform: translate(-50%, 14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.24s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.ux-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.ux-toast i {
+  font-size: 13px;
+  color: #22a06b;
+}
+
+.ux-toast.err i {
+  color: #e0453a;
+}
+
+/* ---------------- 4. 手机触摸反馈（只在不支持 hover 的设备上） ---------------- */
+
+@media (hover: none), (pointer: coarse) {
+  body.pm-mode .xe-widget.xe-conversations {
+    transition: transform 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  body.pm-mode .xe-widget.xe-conversations:active {
+    transform: scale(0.982) !important;
+    background: var(--ux-accent-soft) !important;
+    box-shadow: 0 0 0 2px var(--ux-accent-soft) !important;
+  }
+
+  body.pm-mode .xe-widget.xe-conversations:active .xe-user-img {
+    transform: scale(0.94);
+  }
+
+  body.pm-mode .sub-category-link:active {
+    transform: scale(0.96);
+  }
+}
+
+/* ---------------- 5. 二级分类 chips：滑动白块分段控件 ----------------
+   - 整条 = 一条胶囊轨道（半透明白 + 毛玻璃 + 1px 细边 + 4px 内边距）
+   - 选中项 = 轨道里一块白色圆角块，靠 --ux-pill-x / --ux-pill-w 滑过去
+   - 图标和站点数按设计稿隐藏；想恢复删掉下面那两条 display:none 即可
+   ========================================================================== */
+
+body.pm-mode .sub-category-nav.ux-chips {
+  /* 跟随文档流，不吸顶：滚走就跟着「童年回忆」标题一起滚走。
+     这里只要 relative —— 滑块 ::before 是 absolute，得有个包含块。 */
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  width: max-content;
+  max-width: 100%;
+  /* 左右比上下多留 5px：滑块跑到最右端时不会啃掉轨道自己的圆角 */
+  padding: 4px 9px !important;
+  /* 下边距必须是 0：副栏下沿就是滚动区的顶边，留任何空隙都会让卡片在这条缝里露头。
+     卡片与导航之间的呼吸感由内容自己的 padding 给（.nav-category 的 padding-top 18px），
+     那份 padding 会跟着内容一起滚走，不会挡刀。 */
+  margin: 0 !important;
+  border: 1px solid rgba(18, 20, 28, 0.08) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.66) !important;
+  box-shadow: 0 10px 26px -20px rgba(15, 23, 42, 0.55) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  backdrop-filter: blur(10px) saturate(1.3);
+  text-decoration: none !important;
+  /* 桌面用 clip 而不是 auto：clip 不产生「可滚动区」。
+     用 auto 时滑块在动画瞬间会溢出 2px（宽度还在过渡、位移已经跳过去），
+     轨道就变成可横向滚动的容器，一旦被滚了 2px，右端圆角就被推出可视区
+     —— 这就是「点最后一个分类，胶囊轨道像被截短」的根源。
+     手机上仍要横滑，见 ≤767 断点。 */
+  overflow-x: clip;
+  overflow-y: visible;
+  scrollbar-width: none;
+}
+
+body.pm-mode .sub-category-nav.ux-chips::-webkit-scrollbar {
+  display: none;
+}
+
+/* 滑块：白色圆角块，宽度/位移由 JS 写在 --ux-pill-* 上
+   （absolute 的 left/top 以「内边距盒」为基准，轨道有 1px 边框，所以 4px 正好落在分段上） */
+body.pm-mode .sub-category-nav.ux-chips::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: var(--ux-pill-w, 0px);
+  height: calc(100% - 8px);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 16px -8px rgba(20, 24, 48, 0.5);
+  transform: translateX(var(--ux-pill-x, 0px));
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+/* 每个分段：纯文字，无边框无底色，压在滑块上面 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 0 !important;
+  padding: 8px 15px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: #6d7488 !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  /* 主题/浏览器默认下划线都清掉：选中项不该出现下划线 */
+  text-decoration: none !important;
+  transition: color 0.35s ease !important;
+}
+
+/* 主题给 span/i 设了 15px，这里跟着主体字号走 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link span {
+  font-size: 15px !important;
+  line-height: inherit !important;
+  text-decoration: none !important;
+}
+
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link:hover {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: var(--ux-ink) !important;
+  text-decoration: none !important;
+}
+
+/* 选中项：文字变成主色（浅色用加深派生色保证白底对比度、夜间用夜间主色），并挂上流光描边 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link.is-current,
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link.is-active {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: var(--site-accent-deep, #0b83b8) !important;
+  /* 不加粗：字重一变分段宽度就变，滑块和文字会跟着抖一下 */
+  text-decoration: none !important;
+}
+
+body.pm-mode.night .sub-category-nav.ux-chips .sub-category-link.is-current,
+body.pm-mode.night .sub-category-nav.ux-chips .sub-category-link.is-active {
+  color: var(--ux-accent, #7dd3fc) !important;
+}
+
+/* ---- 选中项流光描边（和卡片同款光弧，只是更细） ----
+   实现：环 = 一个绝对定位的 <i.ux-ring>（静态 mask 挖空成 1.5px 边框），
+   里面一个 >= 环对角线的正方形圆盘 <b>，盘上是 conic-gradient，靠 transform rotate 转圈。
+
+   为什么不用伪元素 + conic-gradient(from var(--ang)) 那一套：
+   角度变量确实在变（实测 80° → 137° → 196°），animation 也是 running，
+   但 Chromium 不会重绘带 mask-composite 的伪元素 —— 屏幕上一帧都不动。
+   换成 transform 动画后走合成层，纯 GPU 转，必定动，也不吃主线程。 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link .ux-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  /* 描边粗细 */
+  padding: 1.5px;
+  border-radius: inherit;
+  pointer-events: none;
+  /* 先透明，等滑块滑到位再由 JS 加 .on 淡入 */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link .ux-ring.on {
+  opacity: 1;
+}
+
+/* 旋转盘：正方形、中心对齐；320% 边长远大于环对角线，四角也在盘内 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link .ux-ring > b {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 320%;
+  aspect-ratio: 1 / 1;
+  background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--ld-flow-1) 26deg,
+      var(--ld-flow-2) 54deg,
+      var(--ld-flow-3) 84deg,
+      transparent 122deg,
+      transparent 202deg,
+      var(--ld-flow-4) 240deg,
+      var(--ld-flow-2) 272deg,
+      transparent 312deg,
+      transparent 360deg
+    ),
+    linear-gradient(var(--ld-flow-base), var(--ld-flow-base));
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: uxRingSpin 4.4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes uxRingSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .sub-category-nav.ux-chips .sub-category-link .ux-ring > b {
+    animation: none;
+  }
+}
+
+/* 设计稿里没有图标和数字（.ux-ring 也是 i，要放行） */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link > i:not(.ux-ring) {
+  display: none !important;
+}
+
+body.pm-mode .sub-category-nav.ux-chips .ux-count {
+  display: none !important;
+}
+
+/* 键盘进到这一排时给轨道描一圈（鼠标点击不触发，用 :has + :focus-visible 区分） */
+body.pm-mode .sub-category-nav.ux-chips:has(.sub-category-link:focus-visible) {
+  border-color: rgba(31, 165, 219, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(31, 165, 219, 0.16), 0 10px 26px -20px rgba(15, 23, 42, 0.55) !important;
+}
+
+/* 键盘焦点落进某个分段时，滑块直接滑过去（JS 里 focusin 处理），
+   分段本身只留一圈细描边，避免被轨道的 overflow 裁掉 */
+body.pm-mode .sub-category-nav.ux-chips .sub-category-link:focus-visible {
+  outline: 2px solid var(--ux-ring) !important;
+  outline-offset: 0 !important;
+  border-radius: 10px !important;
+}
+
+/* 深色：轨道变成浅白 7%，滑块变成一档抬起的面板色 */
+body.pm-mode.night .sub-category-nav.ux-chips {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 12px 28px -20px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.pm-mode.night .sub-category-nav.ux-chips::before {
+  background: #2b3240;
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.7);
+}
+
+body.pm-mode.night .sub-category-nav.ux-chips .sub-category-link {
+  color: #8b95a3 !important;
+}
+
+body.pm-mode.night .sub-category-nav.ux-chips .sub-category-link:hover {
+  color: #e8eef6 !important;
+}
+
+/* 边缘渐隐：只在真能横滑时才淡（JS 写 --ux-fade-l/-r，桌面放得下就是 0） */
+body.pm-mode .sub-category-nav.ux-chips {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--ux-fade-l, 0px),
+    #000 calc(100% - var(--ux-fade-r, 0px)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--ux-fade-l, 0px),
+    #000 calc(100% - var(--ux-fade-r, 0px)),
+    transparent 100%
+  );
+}
+
+/* 手机：轨道留在文档流里，只是要能横滑 */
+@media (max-width: 767px) {
+  body.pm-mode .sub-category-nav.ux-chips {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  body.pm-mode .sub-category-nav.ux-chips .sub-category-link {
+    padding: 9px 15px !important;
+  }
+}
+
+/* ---------------- 6. 空分类占位 ----------------
+   某个分类一张卡片都没有时（例如后台把站点全删了），别留一片空白。 */
+
+.ux-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 54px 24px 58px;
+  border: 1.5px dashed var(--ux-empty-bd);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.06), rgba(148, 163, 184, 0));
+  color: var(--ux-ink-2);
+  text-align: center;
+}
+
+.ux-empty-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 2px;
+  border-radius: 18px;
+  background: var(--ux-accent-soft);
+  color: var(--ux-accent);
+  font-size: 22px;
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+}
+
+.ux-empty-tit {
+  color: var(--ux-ink);
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.ux-empty-sub {
+  max-width: 300px;
+  color: var(--ux-ink-3);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* ---------------- 7. 图标兜底：加载失败时显示首字母色块 ---------------- */
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img.ux-icon-fallback {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--ux-hue, 210) 72% 56% / 0.16) !important;
+  box-shadow: inset 0 0 0 1px hsl(var(--ux-hue, 210) 72% 56% / 0.3);
+}
+
+body.pm-mode.night .xe-widget.xe-conversations .xe-user-img.ux-icon-fallback {
+  background: hsl(var(--ux-hue, 210) 68% 60% / 0.22) !important;
+  box-shadow: inset 0 0 0 1px hsl(var(--ux-hue, 210) 68% 62% / 0.34);
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img.ux-icon-fallback img {
+  display: none !important;
+}
+
+body.pm-mode .xe-widget.xe-conversations .xe-user-img.ux-icon-fallback::after {
+  content: attr(data-ux-initial);
+  color: hsl(var(--ux-hue, 210) 66% 40%);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+body.pm-mode.night .xe-widget.xe-conversations .xe-user-img.ux-icon-fallback::after {
+  color: hsl(var(--ux-hue, 210) 74% 72%);
+}
+
+/* ---------------- 8. 站点数量徽章：白胶囊 + 状态绿点 ----------------
+   原版（C-灵动卡片.html 的 .pill）：6×6 绿点 + 半透明白胶囊 + 11.5px 灰字。
+   导航站的 .pm-count 是 <em> 纯文本（custom.js 填 "N 个站点"），绿点只能用 ::before。 */
+
+body.pm-mode .pm-title .pm-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #6d7488;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--ux-line);
+  border-radius: 999px;
+  padding: 7px 13px;
+}
+
+body.pm-mode .pm-title .pm-count::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+}
+
+/* 夜间：白胶囊换深色玻璃，字色提亮，绿点保持（深底上反而更醒目） */
+body.pm-mode.night .pm-title .pm-count {
+  color: #9aa7b6;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.pm-mode.night .pm-title .pm-count::before {
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18);
+}
+
+/* 手机：标题缩到 17px，徽章跟着收一档，别把标题行撑高 */
+@media (max-width: 767px) {
+  body.pm-mode .pm-title .pm-count {
+    font-size: 11px;
+    padding: 5px 11px;
+    gap: 6px;
+  }
+}
+
+/* ---------------- 9. 二级分类切换延迟（历史记录，已停用） ----------------
+   原先这里靠「setPanel() 按面板内顺序重写 animation-delay」来修正 pmCardIn 的延迟。
+   2026-10-23 入场动画整体换成滚动 zoom-in（见下面第 10 节），卡片不再有 animation，
+   这段 delay 逻辑也随之从 custom.js 里移除了。 */
+
+/* ============================================================================
+   十、卡片滚动进入 / 离开动画（2026-10-23）
+   —— 对齐 https://lcg521.cn/：那站的文章卡用 AOS 的 `zoom-in`
+      · 初始态 opacity:0 + transform:scale(.6)，进入视口回到常态
+      · transition 0.7s cubic-bezier(.445,.05,.55,.95)（= easeInOutSine），卡片之间没有错落延迟
+      · AOS 只看「元素顶边有没有越过视口底部 -120px 那条线」：
+        往下滚经过线 → 放大出现；往上滚掉回线下 → 缩回淡出；
+        **已经滚到视口上方的卡片不会被收回**（所以往上滚时上面的卡片是原地待着，不会闪一下）
+   导航站的滚动容器是 .pm-scroll 而不是 window，所以没用 AOS / 不监听 scroll，
+   改成 IntersectionObserver（root 随断点切换），见 custom.js 末尾的 buildCardObserver()。
+   退化：观察器不可用时直接给卡片加 .card-in，等于全部可见。
+   ========================================================================== */
+
+body.pm-mode .nav-card-scroll .site-card-col {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.7s cubic-bezier(0.445, 0.05, 0.55, 0.95),
+    transform 0.7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+body.pm-mode .nav-card-scroll .site-card-col.card-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 重演进场的「瞬时归位」钩子（由 custom.js 的 replayCards 临时挂上）。
+   不能只把 .card-in 摘掉了事：对已经亮过的卡片，摘掉会启动一条 1→0 的 0.7s 淡出，
+   等两帧后再加回来时过渡才走了 3%，看上去就是「没有动画」。
+   挂上这个类 → 摘 .card-in 瞬时落到 opacity:0/scale(.6) → 强制一次样式重算 → 再放开过渡。 */
+body.pm-mode .nav-card-scroll .site-card-col.card-reset {
+  transition: none !important;
+}
+
+/* 系统开了「减少动态效果」：不做缩放淡入，直接出现 */
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .nav-card-scroll .site-card-col,
+  body.pm-mode .nav-card-scroll .site-card-col.card-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+   十一、底部「下面还有内容」提示箭头（2026-10-23）
+   · 由 custom.js 的 setupScrollHint() 动态创建（不改 layout），能继续下滑才浮出
+   · 外观沿用搜索条右侧的 .pm-theme-toggle：玻璃圆钮 + 蓝色光晕
+   · 定位：fixed 挂 body，横向居中对齐主内容区（主内容在桌面是 left:260/right:14，
+     所以中心 = 50% + 123px；≤1100 是 left:96/right:10 → +43px；≤767 回到 50%）
+   · z-index 必须 > .main-content 的 50（它自己成层叠上下文，否则箭头被卡片盖住点不到），
+     又要 < 手机侧栏的 10000
+   ========================================================================== */
+body.pm-mode .pm-scroll-hint {
+  position: fixed;
+  left: calc(50% + 123px);
+  bottom: 8px; /* 2026-10-24 方案 C 落地：26→8，紧贴屏幕底边（用户要求下移） */
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(125, 150, 170, 0.34);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4b5c68;
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  box-shadow: 0 10px 24px rgba(12, 40, 70, 0.16), 0 1px 2px rgba(12, 40, 70, 0.1);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 12px);
+  transition:
+    opacity 0.32s ease,
+    transform 0.32s ease,
+    visibility 0.32s ease,
+    color 0.32s ease,
+    border-color 0.32s ease,
+    box-shadow 0.32s ease;
+}
+
+body.pm-mode .pm-scroll-hint.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+body.pm-mode .pm-scroll-hint i {
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  animation: pmHintBob 1.9s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes pmHintBob {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+body.pm-mode .pm-scroll-hint:hover,
+body.pm-mode .pm-scroll-hint:focus-visible {
+  outline: none;
+  border-color: rgba(104, 216, 255, 0.9);
+  background: rgba(236, 249, 255, 0.98);
+  color: #1f9fd6;
+  box-shadow:
+    0 0 0 6px rgba(104, 216, 255, 0.14),
+    0 0 22px rgba(104, 216, 255, 0.42);
+  transform: translate(-50%, -2px);
+}
+
+body.pm-mode.night .pm-scroll-hint {
+  border-color: rgba(125, 211, 252, 0.34);
+  background: rgba(52, 63, 76, 0.95);
+  color: #9ddcfa;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(125, 211, 252, 0.08),
+    0 0 18px rgba(125, 211, 252, 0.16);
+}
+
+body.pm-mode.night .pm-scroll-hint:hover,
+body.pm-mode.night .pm-scroll-hint:focus-visible {
+  border-color: rgba(125, 211, 252, 0.88);
+  background: rgba(58, 70, 84, 0.98);
+  color: #7dd3fc;
+  box-shadow:
+    0 0 0 6px rgba(125, 211, 252, 0.13),
+    0 0 24px rgba(125, 211, 252, 0.4);
+}
+
+@media screen and (max-width: 1100px) {
+  body.pm-mode .pm-scroll-hint {
+    left: calc(50% + 43px);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  body.pm-mode .pm-scroll-hint {
+    left: 50%;
+    bottom: 8px;
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .pm-scroll-hint,
+  body.pm-mode .pm-scroll-hint i {
+    animation: none;
+    transition: opacity 0.2s ease;
+  }
+}
+
+
+/* ============================================================================
+   十二、二级分类 chips 放不下时横滑（2026-10-23）
+   默认仍是 overflow-x: clip（第 5 节那条）：clip 不产生可滚动区，滑块动画瞬间的
+   2px 溢出不会把轨道滚歪。只有真溢出时 custom.js 的 syncFade() 才加 .is-overflow，
+   换成可滚 + 保留原样的两端渐隐；滚轮也能推（见 setupChips 里的 wheel 监听）。
+   ========================================================================== */
+body.pm-mode .sub-category-nav.ux-chips.is-overflow {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+
+/* ============================================================================
+   十三、方案 C（灵动卡片）落地（2026-10-24，从 public/demo-c.html 演示层移植）
+   组成：① 日间三团彩色 mesh 背景；② 光标拖尾光斑；
+         ③ 侧栏菜单项 + 搜索框的流光边框（.pm-ring）。
+   DOM 由 custom.js 的 setupSchemeC() 注入；演示标记 .demo-stamp 不落地。
+   ========================================================================== */
+
+/* ---- ① 三团彩色 mesh（日间专属；夜间 display:none，由原柔光供色） ---- */
+body.pm-mode .pm-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  display: none;
+}
+
+body.pm-mode:not(.night) .pm-mesh {
+  display: block;
+}
+
+body.pm-mode:not(.night) .pm-mesh i {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+}
+
+body.pm-mode:not(.night) .pm-mesh i:nth-child(1) {
+  width: 44vw;
+  height: 44vw;
+  left: -8vw;
+  top: -12vw;
+  background: #c9d3ff;
+  animation: pmMeshFloat 18s ease-in-out infinite;
+}
+
+body.pm-mode:not(.night) .pm-mesh i:nth-child(2) {
+  width: 34vw;
+  height: 34vw;
+  right: -4vw;
+  top: 6vh;
+  background: #ffd9e4;
+  animation: pmMeshFloat 22s ease-in-out infinite reverse;
+}
+
+body.pm-mode:not(.night) .pm-mesh i:nth-child(3) {
+  width: 30vw;
+  height: 30vw;
+  left: 38vw;
+  bottom: -14vw;
+  background: #cdf3e6;
+  animation: pmMeshFloat 26s ease-in-out infinite;
+}
+
+@keyframes pmMeshFloat {
+  50% {
+    transform: translate3d(4vw, 5vh, 0) scale(1.1);
+  }
+}
+
+/* ---- ② 光标拖尾光斑（日夜都开；浅色 multiply 变暗 / 夜间 screen 提亮） ----
+   挂 .main-content 底层（内容 z-index 1 之下），pointermove 由 custom.js 驱动。 */
+body.pm-mode .pm-blob {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(91, 108, 255, 0.2), rgba(255, 92, 138, 0.1) 45%, transparent 68%);
+  transform: translate3d(-50%, -50%, 0);
+  transition: opacity 0.4s;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  filter: blur(6px);
+}
+
+body.pm-mode.night .pm-blob {
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(125, 150, 255, 0.16), rgba(255, 120, 170, 0.08) 45%, transparent 68%);
+}
+
+/* ---- ③ 流光边框 .pm-ring ----
+   必须用卡片的正解结构（第 5 节注释写明了原因）：伪元素 + conic-gradient 角度动画
+   在 Chromium 不重绘 mask-composite 伪元素 —— 屏幕一帧都不动。
+   正解 = <i.pm-ring>（静态 mask 挖空成 1.5px 边框环）+ 内层 <b>（≥环对角线的
+   conic 圆盘，transform rotate 转圈，走合成层必定动）。
+   显示时机：侧栏 = 悬停 / 当前分类常亮；搜索框 = 常亮。 */
+body.pm-mode .sidebar-menu .main-menu a {
+  position: relative;
+}
+
+body.pm-mode .sidebar-menu .main-menu a .pm-ring,
+body.pm-mode .pm-searchbar .sousuo .search-box .pm-ring {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 1.5px;
+  border-radius: inherit;
+  /* 主题给 .main-menu a > i（图标）写死了 width/min-width/flex —— 必须显式放回 auto，
+     否则环被压成 28px 宽，转盘盖不满整圈边框（≤1100 是 32px，同理） */
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  pointer-events: none;
+  opacity: 0;
+  /* 内层 <b> 是 320% 宽的转盘 —— 必须裁进环盒，否则手机上会撑出横向滚动
+     （mask 只影响绘制，不影响滚动溢出）；mask 本来就只露 1.5px 边框，视觉不变 */
+  overflow: hidden;
+  transition: opacity 0.36s ease;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* 侧栏：悬停临时点亮 */
+body.pm-mode .sidebar-menu .main-menu a:hover .pm-ring {
+  opacity: 1;
+}
+
+/* 侧栏：当前分类（主题点击时把 is-current 移过去）移开鼠标也常亮 */
+body.pm-mode .sidebar-menu .main-menu li.is-current > a .pm-ring {
+  opacity: 1;
+}
+
+/* 搜索框：常亮（用户要求，不依赖悬停/聚焦） */
+body.pm-mode .pm-searchbar .sousuo .search-box .pm-ring {
+  opacity: 1;
+}
+
+body.pm-mode .sidebar-menu .main-menu a .pm-ring > b,
+body.pm-mode .pm-searchbar .sousuo .search-box .pm-ring > b {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 320%;
+  aspect-ratio: 1 / 1;
+  background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--ld-flow-1) 26deg,
+      var(--ld-flow-2) 54deg,
+      var(--ld-flow-3) 84deg,
+      transparent 122deg,
+      transparent 202deg,
+      var(--ld-flow-4) 240deg,
+      var(--ld-flow-2) 272deg,
+      transparent 312deg,
+      transparent 360deg
+    ),
+    linear-gradient(var(--ld-flow-base), var(--ld-flow-base));
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: pmRingSpin 4.4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes pmRingSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .pm-mesh i,
+  body.pm-mode .sidebar-menu .main-menu a .pm-ring > b,
+  body.pm-mode .pm-searchbar .sousuo .search-box .pm-ring > b {
+    animation: none;
+  }
+}
+
+/* 手机：.main-content 是 static，mesh 的 absolute 定位失去参照会撑出横向滚动
+   （实测 scrollWidth 390→611），且手机没有面板底板可供色 —— 直接关掉。 */
+@media screen and (max-width: 767px) {
+  body.pm-mode .pm-mesh {
+    display: none !important;
+  }
+}
+/* ============================================================================
+   站点设置落地（由后台「站点设置」面板控制）
+
+   分工：
+     · 有数值、需要每个站点不同的部分（主色 / 圆角 / 阴影 / 字体 / 动效时长 /
+       Logo 高度）由 layout/common/head.ejs 写成 CSS 变量，在 :root 与
+       body.pm-mode 上覆盖；
+     · 本文件只放「按开关切换」的静态规则，开关是 <html> 上的类，由 head.ejs
+       里的小脚本在首屏绘制前挂上，避免先按默认样式闪一下。
+
+   本文件是 themes/webstack/css-src 的模块之一，构建时按文件名顺序拼接成
+   themes/webstack/source/css/custom.css —— 要改样式请改这里，不要改拼接产物。
+   ============================================================================ */
+
+/* ---------------- 1. 卡片进场动效 ----------------
+   开关关闭时直接显示：主题里 card-in 是滚动观察器加的类，
+   只把过渡和初始位移按住即可，JS 那边不用改。 */
+html.pm-no-card-anim body.pm-mode .nav-card-scroll .site-card-col,
+html.pm-no-card-anim body.pm-mode .nav-card-scroll .site-card-col.card-in {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* 动效时长：主题里两处写死 0.7s，这里统一读 --site-motion（后台可调） */
+body.pm-mode .nav-card-scroll .site-card-col {
+  transition: opacity var(--site-motion, 0.7s) cubic-bezier(0.445, 0.05, 0.55, 0.95),
+    transform var(--site-motion, 0.7s) cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+/* ---------------- 2. Logo ----------------
+   主题给 .logo-expanded 与 img 写死了 42/38/36px 且带 !important，
+   这里用更高的选择器 + !important 接管，高度改由 --site-logo-h 决定。 */
+html body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+html body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+  width: auto !important;
+  height: var(--site-logo-h, 36px) !important;
+  max-width: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* 只显示图标 / 只显示文字 */
+html.is-logo-icon .sidebar-menu .logo-env .font_logo { display: none !important; }
+html.is-logo-text .sidebar-menu .logo-env .logo-expanded { display: none !important; }
+
+/* ---------------- 3. 自定义指针 ----------------
+   两张图都在 source/images/ 下（cursor.png 箭头 / cursor_puppy.png 小手）。
+   主题里原本有一段同内容的规则被注释停用，这里是它的「开关版」。 */
+html.pm-cursor-paw body {
+  cursor: url(/images/cursor.png), default !important;
+}
+
+html.pm-cursor-paw body a,
+html.pm-cursor-paw body button,
+html.pm-cursor-paw body input,
+html.pm-cursor-paw body select,
+html.pm-cursor-paw body label,
+html.pm-cursor-paw body .xe-widget.xe-conversations.box2.label-info {
+  cursor: url(/images/cursor_puppy.png), pointer !important;
+}
+
+/* ---------------- 4. 粒子层 ----------------
+   canvas 由 custom.js 的 setupParticles() 创建并画雪 / 樱花瓣。
+   层级放在内容之上、移动端侧栏（10000）之下，只做氛围、不挡点击。 */
+#pm-fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pm-fx-canvas { display: none; }
+}
+
+/* ---------------- 5. 侧栏收起 / 展开 ----------------
+   开关是 <html class="pm-sb-min">：搜索条右侧的菜单钮切换，状态记在
+   localStorage（custom.js），head.ejs 在首屏前就把类挂上，刷新不会先闪一下侧栏。
+
+   收起后**不消失**，而是收成 76px 图标条：Logo 缩成方标、分类只剩图标，
+   悬停时再用气泡把分类名补出来 —— 侧栏是切分类的唯一入口，
+   藏干净了等于把导航弄丢，所以只做「变窄」，不做「移走」。
+   侧栏宽度与内容区 left 同步收放，两者共用一条缓动，看起来是一起让开。 */
+body.pm-mode .sidebar-menu.fixed {
+  transition: width 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+body.pm-mode .main-content {
+  transition: left 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Logo 区：展开态留出文字位置，收起态只留一个居中方标 */
+body.pm-mode .sidebar-menu .logo-env {
+  transition: padding 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+body.pm-mode .sidebar-menu .main-menu a {
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease,
+    padding 0.34s cubic-bezier(0.22, 0.61, 0.36, 1), gap 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* 只有桌面（侧栏是 232px 完整版）才需要「收成图标条」这件事；
+   平板 ≤1100 侧栏本来就是图标条，手机 ≤767 侧栏是顶部条，各有各的处理 */
+@media screen and (min-width: 1101px) {
+  html.pm-sb-min body.pm-mode .sidebar-menu.fixed,
+  html.pm-sb-min body.pm-mode .sidebar-menu.fixed .sidebar-menu-inner {
+    width: 76px !important;
+  }
+
+  html.pm-sb-min body.pm-mode .main-content {
+    left: 76px !important;
+  }
+
+  /* Logo：缩小居中，名字藏起来（只留图标或用首字徽标顶上） */
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo-env {
+    padding: 16px 12px 14px !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo {
+    justify-content: center;
+    width: 100%;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo-env .logo-expanded {
+    flex: 0 0 auto;
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo-env .logo-expanded img {
+    width: 32px !important;
+    height: 32px !important;
+    max-width: 32px;
+    border-radius: 9px;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo-env .font_logo {
+    display: none !important;
+  }
+
+  /* 分类：只留图标，居中并放大一点；横向内边距收窄 */
+  html.pm-sb-min body.pm-mode #main-menu.main-menu {
+    padding: 12px 8px 20px !important;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .main-menu a {
+    padding: var(--pm-nav-item-pad, 11px) 6px;
+    gap: 0;
+    justify-content: center;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu span.title {
+    display: none !important;
+  }
+
+  html.pm-sb-min body.pm-mode .sidebar-menu .main-menu a > i {
+    flex: 0 0 calc(var(--pm-nav-icon-width, 28px) + 4px);
+    width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    min-width: calc(var(--pm-nav-icon-width, 28px) + 4px);
+    font-size: calc(var(--pm-nav-icon-size, 18px) + 1px);
+  }
+
+  /* 收起后鼠标经过时，分类名由一个跟手的小气泡补出来（见文件末尾 .pm-sb-tip），
+     图标条里没有文字，只靠图标认路容易看错。 */
+}
+
+/* 收起态专用：站点没配 Logo 图（只配了文字）时，用站点名首字顶一个方标，
+   否则那一列会空着一块。header.ejs 只在没有图时输出这个元素。 */
+.pm-logo-badge {
+  display: none;
+}
+
+@media screen and (min-width: 1101px) {
+  html.pm-sb-min body.pm-mode .sidebar-menu .logo-env .pm-logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    color: var(--site-accent-on-dark, #8be3ff);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+  }
+}
+
+/* 平板 ≤1100：侧栏本来就是 76px 图标条，再收就整条藏起来，把宽度全让给内容 */
+@media screen and (max-width: 1100px) and (min-width: 768px) {
+  html.pm-sb-min body.pm-mode .sidebar-menu.fixed {
+    transform: translateX(-100%);
+  }
+
+  html.pm-sb-min body.pm-mode .main-content {
+    left: 0 !important;
+  }
+
+  body.pm-mode .sidebar-menu.fixed {
+    transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1), width 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+
+/* 手机 ≤767：右上角那颗钮已经顶替了右下角的汉堡，原来的汉堡收起来，
+   免得同一个功能在一屏里出现两次、还一上一下两种尺寸。 */
+@media screen and (max-width: 767px) {
+  body.pm-mode .mobile-category-toggle {
+    display: none !important;
+  }
+}
+
+/* ---------------- 6. 收起态的分类名气泡 ----------------
+   侧栏收成图标条后，光看图标容易认错，鼠标经过 / 键盘聚焦时在图标右侧浮出名字。
+   元素由 custom.js 懒创建并逐个定位（position: fixed），
+   挂 body 下是为了躲开 #main-menu 的 overflow 裁切，气泡不会被切一半。 */
+.pm-sb-tip {
+  position: fixed;
+  left: 86px;
+  z-index: 9001;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(20, 26, 36, 0.95);
+  color: #eaf2fb;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) scale(0.96);
+  transform-origin: left center;
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.72);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.pm-sb-tip.is-on {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.pm-mode .sidebar-menu.fixed,
+  body.pm-mode .main-content,
+  body.pm-mode .sidebar-menu .logo-env,
+  body.pm-mode .sidebar-menu .main-menu a,
+  .pm-sb-tip {
+    transition: none;
+  }
+}

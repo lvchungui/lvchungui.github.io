@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 注意：这里必须复制成一个新对象再合并。原来写的是 Object.assign(theme, page)，
+     会直接改动全局 theme —— about 页渲染完之后 theme.type 就永远停在 'about'，
+     首页也跟着走 about 分支（不加载 lozad、多输出一个隐藏 textarea）。 -->
+
+<head>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="viggo" />
+  <title>北极熊说它怕冷 - 有时候简简单单就好了</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  
+<link rel="stylesheet" href="/css/hclonely.css">
+<link rel="stylesheet" href="/css/fonts/linecons/css/linecons.min.css">
+<link rel="stylesheet" href="/css/fonts/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/xenon-core.min.css">
+<link rel="stylesheet" href="/css/xenon-components.min.css">
+<link rel="stylesheet" href="/css/xenon-skins.min.css">
+<link rel="stylesheet" href="/css/nav.min.css">
+
+  <!-- 项目自定义样式：放在主题 CSS 之后逐条覆盖。
+       版本号由 scripts/asset-version.js 按文件内容算 hash，不用再手改 ?v= -->
+  <link rel="stylesheet" type="text/css" href="/css/custom.css?v=eb9fe412">
+  
+<script src="/js/jquery-1.11.1.min.js"></script>
+
+  
+<script src="/js/header.js"></script>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+        
+<script src="/js/html5shiv.min.js"></script>
+
+        
+<script src="/js/respond.min.js"></script>
+
+    <![endif]-->
+  <!-- / FB Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lcg520.com/archives/index.html">
+  <meta property="og:title" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  <meta property="og:description" content="">
+  <meta property="og:site_name" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  
+  <!-- / Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  <meta name="twitter:description" content="">
+  
+  
+  <style id="pm-appearance">
+    :root {
+      --pm-nav-font-size: 18px;
+      --pm-nav-icon-size: 18px;
+      --pm-nav-icon-width: 28px;
+      --pm-nav-gap: 12px;
+      --pm-nav-item-pad: 12px;
+      --pm-search-width: 717px;
+      --pm-search-height: 50px;
+      --pm-search-font: 16px;
+      --pm-search-radius: 10px;
+      --pm-engine-gap: 10px;
+      --pm-engine-left: 0px;
+      --pm-engine-right: auto;
+      --pm-engine-shift: 0px;
+      --pm-engine-dx: 0px;
+      --pm-eng-panel-w: 50%;
+      --pm-eng-cols: 3;
+      --pm-eng-col-gap: 10px;
+      --pm-eng-row-gap: 10px;
+      --pm-eng-item-h: 30px;
+      --pm-eng-font: 14px;
+      --pm-eng-icon-gap: 5px;
+      --pm-eng-item-align: flex-start;
+    }
+  </style>
+  
+  <style id="pm-site">
+    :root {
+      --pm-accent: #0e8fc4;
+      --pm-accent-dark: #7dd3fc;
+      --pm-accent-soft: rgba(14, 143, 196, 0.12);
+      --pm-accent-soft-dark: rgba(125, 211, 252, 0.14);
+      --site-motion: 0.7s;
+      --site-logo-h: 36px;
+      --pm-brand-size: 20px;
+      /* 主色派生：侧栏选中态、指示条、chips 选中文字都从这里取色，
+         以前这些位置写死 #8be3ff / #0b83b8，改主色等于没改 */
+      --site-accent-on-dark: #8ddcfc;
+      --site-accent-deep: #0d84b5;
+      --site-accent-wash-a: rgba(14, 143, 196, 0.28);
+      --site-accent-wash-b: rgba(14, 143, 196, 0.05);
+      --site-accent-line: rgba(14, 143, 196, 0.2);
+      --site-accent-glow: rgba(14, 143, 196, 0.55);
+      
+    }
+
+    /* body.pm-mode / .night 的权重比 :root 高，必须在同一层覆盖 */
+    body.pm-mode {
+      --ux-accent: #0e8fc4;
+      --ux-ring: #0e8fc4;
+      --ux-accent-soft: rgba(14, 143, 196, 0.18);
+      --ld-rad: 18px;
+      --ld-rad-lg: 22px;
+      --ld-card-sd: 0 1px 2px rgba(20, 24, 48, 0.05), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+      --ld-card-sd-h: 0 4px 10px rgba(20, 24, 48, 0.05), 0 28px 52px -26px rgba(20, 24, 48, 0.38);
+    }
+
+    body.pm-mode.night {
+      --ux-accent: #7dd3fc;
+      --ux-ring: #7dd3fc;
+      --ux-accent-soft: rgba(125, 211, 252, 0.22);
+      --ld-card-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+      --ld-card-sd-h: 0 6px 14px rgba(0, 0, 0, 0.4), 0 30px 56px -28px rgba(0, 0, 0, 0.85);
+      /* 夜间主色一般本身就是亮色，深底、白底两条通路都直接用它 */
+      --site-accent-on-dark: #7dd3fc;
+      --site-accent-deep: #7dd3fc;
+      --site-accent-wash-a: rgba(125, 211, 252, 0.3);
+      --site-accent-wash-b: rgba(125, 211, 252, 0.06);
+      --site-accent-line: rgba(125, 211, 252, 0.26);
+      --site-accent-glow: rgba(125, 211, 252, 0.6);
+    }
+  </style>
+  <script>
+    /* 这些开关要在首屏绘制前就变成 <html> 上的类，否则会先按默认样式闪一下 */
+    window.__PM_SITE__ = {"logo":{"mode":"both","height":36},"effect":{"cardAnim":true,"cursor":"system","particles":"none","count":36},"interaction":{"linkTarget":"_blank","contextMenu":true,"scrollHint":true}};
+    (function () {
+      var conf = window.__PM_SITE__;
+      var root = document.documentElement;
+
+      if (!conf.effect.cardAnim) { root.classList.add('pm-no-card-anim'); }
+      if (conf.effect.cursor === 'paw') { root.classList.add('pm-cursor-paw'); }
+      if (conf.logo.mode === 'icon') { root.classList.add('is-logo-icon'); }
+      if (conf.logo.mode === 'text') { root.classList.add('is-logo-text'); }
+
+      /* 卡片点击：打开方式由「站点设置 → 交互」决定，模板里统一调 pmOpen() */
+      window.pmOpen = function (url) {
+        window.open(url, conf.interaction.linkTarget || '_blank');
+      };
+
+      /* 侧栏上次是否被收起：localStorage 里没有就按展开处理。
+         隐私模式下 localStorage 会抛错，所以整段包在 try 里，读不到就当没收起。 */
+      try {
+        if (window.localStorage.getItem('pm_sidebar_hidden') === '1') {
+          root.classList.add('pm-sb-min');
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <!-- 深浅模式：在首屏绘制前就把 night 类挂到 <html> 上，避免刷新时先闪一下浅色 -->
+  <script>
+    (function () {
+      try {
+        var match = document.cookie.match(/(?:^|;\s*)night=([^;]*)/);
+        var value = match ? match[1] : '';
+        var hour = new Date().getHours();
+        var night = value === '1' || (value === '' && (hour >= 18 || hour < 6));
+        if (night) {
+          document.documentElement.classList.add('night');
+        }
+      } catch (error) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+</head>
+
+
+
+
+
+
+<body class="page-body pm-mode">
+<!-- 紧跟 body：把首屏前算出的深浅模式同步到 body，避免内容先按浅色绘制；
+     同时给 <html> 打上 pm-mode，让文档根也锁死 overflow，防止气泡等元素顶出页面滚动条 -->
+<script>document.documentElement.classList.add('pm-mode'); if (document.documentElement.classList.contains('night')) { document.body.classList.add('night'); }</script>
+<div class="page-container">
+
+<div class="sidebar-menu toggle-others fixed">
+  <div class="sidebar-menu-inner">
+    <header class="logo-env">
+      <div class="logo">
+        <a href="/index.html" class="logo-expanded">
+          
+          <img src="/img/logo.png" alt="北极熊说它怕冷" />
+          
+        </a>
+        <!-- 收起成图标条时，若站点没有 Logo 图（只配了文字），用首字顶上去，
+             否则那一列会空着一块。展开态由 CSS 藏起来。 -->
+        
+        <a href="/index.html">
+          
+          <span class="font_logo">北极熊说它怕冷</span>
+          
+        </a>
+      </div>
+    </header>
+    <ul id="main-menu" class="main-menu">
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#常用工具" class="smooth" data-name="常用工具">
+            <i class="fas fa-tools"></i>
+            <span class="title">常用工具</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#人工智能" class="smooth" data-name="人工智能">
+            <i class="fas fa-robot"></i>
+            <span class="title">人工智能</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#工作专区" class="smooth" data-name="工作专区">
+            <i class="fas fa-folder"></i>
+            <span class="title">工作专区</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#摸鱼专区" class="smooth" data-name="摸鱼专区">
+            <i class="fas fa-gamepad"></i>
+            <span class="title">摸鱼专区</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#桌面必备" class="smooth" data-name="桌面必备">
+            <i class="fas fa-desktop"></i>
+            <span class="title">桌面必备</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#科研专区" class="smooth" data-name="科研专区">
+            <i class="fas fa-flask"></i>
+            <span class="title">科研专区</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#校园专区" class="smooth" data-name="校园专区">
+            <i class="linecons-graduation-cap"></i>
+            <span class="title">校园专区</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#学习笔记" class="smooth" data-name="学习笔记">
+            <i class="fas fa-pen"></i>
+            <span class="title">学习笔记</span>
+          </a>
+      </li>
+      
+      <li>
+        <!-- data-name 供收起态做悬停气泡（CSS 伪元素读不到文本只能读属性） -->
+        <a href="#童年回忆" class="smooth" data-name="童年回忆">
+            <i class="fas fa-heart"></i>
+            <span class="title">童年回忆</span>
+          </a>
+      </li>
+      
+      
+      <!-- <li class="submit-tag">
+        <span class="tooltip-blue">有时简简单单就好了</span>
+      </li> -->
+      
+      
+    </ul>
+  </div>
+</div>
+<a href="#" class="mobile-category-toggle visible-xs" data-toggle="mobile-menu" aria-label="打开分类导航">
+  <i class="fas fa-bars"></i>
+</a>
+
+
+<div class="main-content">
+  <nav class="navbar user-info-navbar" role="navigation">
+    <!-- <ul class="user-info-menu left-links list-inline list-unstyled">
+      <li class="hidden-sm hidden-xs hover-line">
+        <a href="#" data-toggle="sidebar">
+          <i class="fas fa-bars"></i>
+        </a>
+      </li> -->
+      <!-- <li class="dropdown hover-line language-switcher">
+        <a href="/index.html" class="dropdown-toggle" data-toggle="dropdown">
+          <img src="/images/flags/flag-cn.png" alt="flag-cn" /> China
+        </a>
+        <ul class="dropdown-menu languages">
+          <li class="active">
+            <a href="/index.html">
+              <img src="/images/flags/flag-cn.png" alt="flag-cn" alt="flag-cn" /> China
+            </a>
+          </li>
+        </ul>
+      </li> -->
+      <!-- <li class="switch-mode hover-line" onclick="switchNightMode()">
+        <a href="#">
+          <svg t="1593061068148" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1681" width="16" height="16">
+            <path d="M582.4 326.4c-140.8 0-256 115.2-256 256s115.2 256 256 256 256-115.2 256-256-115.2-256-256-256z m0 448c-70.4 0-131.2-36.8-164.8-92.8 12.8 3.2 27.2 4.8 40 4.8 121.6 0 219.2-99.2 219.2-219.2 0-17.6-1.6-35.2-6.4-52.8 60.8 32 102.4 96 102.4 169.6 1.6 104-84.8 190.4-190.4 190.4zM582.4 262.4c17.6 0 32-14.4 32-32v-128c0-17.6-14.4-32-32-32s-32 14.4-32 32v128c0 17.6 14.4 32 32 32zM262.4 582.4c0-17.6-14.4-32-32-32h-128c-17.6 0-32 14.4-32 32s14.4 32 32 32h128c17.6 0 32-14.4 32-32zM310.4 356.8c6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6 12.8-12.8 12.8-32 0-44.8l-91.2-91.2c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l91.2 91.2zM944 220.8c-12.8-12.8-32-12.8-44.8 0l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-33.6 0-44.8zM310.4 808l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-32 0-44.8-11.2-11.2-32-11.2-44.8 0z" p-id="1682" fill="#707070"></path>
+          </svg>
+        </a>
+      </li>
+    </ul> -->
+    <!--  -->
+    </nav>
+
+  
+  <!-- 搜索条：最上方一条，不随内容滚动 -->
+  <div class="pm-searchbar">
+    <section class="sousuo">
+      <div class="search">
+        <div class="search-box">
+          <span class="search-icon" style="background: url(/images/search_icon.png) 0px 0px; opacity: 1;"></span>
+          <input type="text" id="txt" class="search-input" autocomplete="off" placeholder="请输入关键字">
+          <button class="search-btn" id="search-btn"><i class="fa fa-search"></i></button>
+        </div>
+        <!-- 搜索热词 -->
+        <div class="box search-hot-text" id="box" style="display: none;">
+          <ul></ul>
+        </div>
+        <!-- 搜索引擎 -->
+        <div class="search-engine" style="display: none;">
+          <div class="search-engine-head">
+            <strong class="search-engine-tit">选择您的默认搜索引擎：</strong>
+            <div class="search-engine-tool">搜索热词： <span id="hot-btn"></span></div>
+          </div>
+          <ul class="search-engine-list search-engine-list_zmki_ul">
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 搜索条右端的两个圆钮：侧栏收起 + 深浅切换。
+         手机上这组会被 CSS 固定到右上角，和汉堡并列（样式、尺寸、间距统一）。 -->
+    <div class="pm-top-actions">
+      <a href="#" class="pm-sidebar-toggle" id="pmSidebarToggle" role="button" aria-pressed="false" aria-label="收起侧栏" title="收起侧栏">
+        <i class="fas fa-outdent"></i>
+      </a>
+      <a href="#" class="pm-theme-toggle floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
+        <i class="fas fa-moon"></i>
+      </a>
+    </div>
+  </div>
+  <script>
+    /* 搜索引擎列表：数据来自 source/_data/search-engines.yml
+       （后台「外观设置 → 搜索引擎」可拖动排序、增删），顺序即下拉面板里的排列。
+       这里注入成全局数组，header.js 的 search() 会优先读它，读不到才用内置列表兜底。 */
+    window.__NAV_ENGINES__ = [{"name":"百度","url":"https://www.baidu.com/s?wd=","type":"external","icon":"-80px 0px","big":"0px 0px"},{"name":"站内","url":"site://nav","type":"site","image":"/img/logo.png"},{"name":"GitHub","url":"https://github.com/search?utf8=✓&q=","type":"external","icon":"-80px -175px","big":"0px -280px"},{"name":"谷歌","url":"https://www.google.com/search?q=","type":"external","icon":"-105px 0px","big":"-40px 0px"},{"name":"必应","url":"https://cn.bing.com/search?q=","type":"external","icon":"-80px -25px","big":"0px -40px"},{"name":"好搜","url":"https://www.so.com/s?q=","type":"external","icon":"-105px -25px","big":"-40px -40px"},{"name":"搜狗","url":"https://www.sogou.com/web?query=","type":"external","icon":"-80px -50px","big":"0px -80px"},{"name":"淘宝","url":"https://s.taobao.com/search?q=","type":"external","icon":"-105px -50px","big":"-40px -80px"},{"name":"京东","url":"http://search.jd.com/Search?keyword=","type":"external","icon":"-80px -75px","big":"0px -120px"},{"name":"天猫","url":"https://list.tmall.com/search_product.htm?q=","type":"external","icon":"-105px -75px","big":"-40px -120px"},{"name":"知乎","url":"https://www.zhihu.com/search?type=content&q=","type":"external","icon":"-105px -100px","big":"-40px -160px"},{"name":"微博","url":"https://s.weibo.com/weibo/","type":"external","icon":"-80px -125px","big":"0px -200px"},{"name":"B站","url":"http://search.bilibili.com/all?keyword=","type":"external","icon":"-105px -125px","big":"-40px -200px"},{"name":"豆瓣","url":"https://www.douban.com/search?source=suggest&q=","type":"external","icon":"-80px -150px","big":"0px -240px"},{"name":"优酷","url":"https://so.youku.com/search_video/q_","type":"external","icon":"-105px -150px","big":"-40px -240px"}];
+  </script>
+  <script>search()</script>
+  
+
+  <!-- 分类标题行：当前分类名 + 站点数（搜索条下方） -->
+  <div class="pm-topbar">
+    <div class="pm-title">
+      <i class="fas fa-tools"></i>
+      <span class="pm-name">常用工具</span>
+      <em class="pm-count"></em>
+    </div>
+  </div>
+
+  <!-- 内容滚动区 -->
+  <div class="pm-scroll">
+  
+  </div>
+
+    
+<script src="/js/footer.js"></script>
+
+
+  
+<footer class="main-footer sticky footer-type-1">
+  <div class="footer-inner">
+    <div class="site-footer-info">
+      <p class="footer-copyright">Copyright &copy; 2022 - 2026&nbsp;&nbsp; 北极熊说它怕冷</p>
+      <p class="footer-stats">
+        
+        <span class="footer-busuanzi">
+          <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
+          <span class="footer-separator">|</span>
+          <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+          <span class="footer-separator">|</span>
+        </span>
+        
+        <span>本站运行时间 <span id="site-runtime">计算中...</span></span>
+      </p>
+    </div>
+    <div class="go-up floating-actions" aria-label="页面快捷操作">
+      <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
+        <i class="fas fa-sun"></i>
+      </a>
+      <!-- <a href="#" data-toggle="sidebar">
+        <i class="fas fa-bars"></i>
+      </a> -->
+    </div>
+  </div>
+</footer>
+</div>
+</div>
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/TweenMax.min.js"></script>
+<script src="/js/resizeable.min.js"></script>
+<script src="/js/joinable.js"></script>
+<script src="/js/xenon-api.min.js"></script>
+<script src="/js/xenon-toggles.min.js"></script>
+<script src="/js/xenon-custom.min.js"></script>
+
+
+<!-- 统计脚本已本地化（原来从 busuanzi.ibruce.info 的 CDN 拉）；
+     计数接口仍在第三方，不通时 4 秒后整块收掉，避免留下「访问人数 | 访问量 |」的空白 -->
+<script async src="/js/busuanzi.pure.mini.js?v=a30fcd42"></script>
+<script>
+(function () {
+  var box = document.querySelector('.footer-busuanzi');
+  if (!box) return;
+  window.setTimeout(function () {
+    var uv = document.getElementById('busuanzi_value_site_uv');
+    var pv = document.getElementById('busuanzi_value_site_pv');
+    var read = function (el) { return el && el.textContent ? el.textContent.trim() : ''; };
+    if (!read(uv) && !read(pv)) box.classList.add('is-off');
+  }, 4000);
+})();
+</script>
+
+<script>
+(function updateSiteRuntime() {
+  var startTime = new Date('2022-01-01T00:00:00+08:00').getTime();
+  var runtimeElement = document.getElementById('site-runtime');
+
+  if (!runtimeElement) {
+    return;
+  }
+
+  function pad(value) {
+    return value < 10 ? '0' + value : String(value);
+  }
+
+  function render() {
+    var seconds = Math.max(Math.floor((Date.now() - startTime) / 1000), 0);
+    var totalDays = Math.floor(seconds / 86400);
+    var years = Math.floor(totalDays / 365);
+    var days = totalDays % 365;
+    var hours = Math.floor((seconds % 86400) / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var restSeconds = seconds % 60;
+
+    runtimeElement.textContent = years + ' 年 ' + days + ' 天 ' + pad(hours) + ' 时 ' + pad(minutes) + ' 分 ' + pad(restSeconds) + ' 秒';
+  }
+
+  render();
+  window.setInterval(render, 1000);
+})();
+</script>
+
+<!-- 显式路径：原来写 js(setting.js.lozad)，实际上一直输出为空，
+     lozad 全靠 custom.body 里那份兜着，删掉 custom.body 后就报 lozad is not defined -->
+<script src="/js/lozad.min.js"></script>
+
+
+
+  <!-- 页面背景层：样式在 20-theme-cards.css 的 div.bg（目前是空规则，留给换背景图） -->
+  <div class="bg"></div>
+
+  <!-- lozad 由 footer.ejs 负责（about 页不加载），这里只挂自定义脚本，
+       所以 custom.js 跑起来时 window.lozad 已经就位 -->
+  <script src="/js/custom.js?v=776829d6"></script>
+</body>
+
+</html>

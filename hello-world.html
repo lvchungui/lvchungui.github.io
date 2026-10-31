@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 注意：这里必须复制成一个新对象再合并。原来写的是 Object.assign(theme, page)，
+     会直接改动全局 theme —— about 页渲染完之后 theme.type 就永远停在 'about'，
+     首页也跟着走 about 分支（不加载 lozad、多输出一个隐藏 textarea）。 -->
+
+<head>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="viggo" />
+  <title>北极熊说它怕冷 - 有时候简简单单就好了</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  
+<link rel="stylesheet" href="/css/hclonely.css">
+<link rel="stylesheet" href="/css/fonts/linecons/css/linecons.min.css">
+<link rel="stylesheet" href="/css/fonts/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/xenon-core.min.css">
+<link rel="stylesheet" href="/css/xenon-components.min.css">
+<link rel="stylesheet" href="/css/xenon-skins.min.css">
+<link rel="stylesheet" href="/css/nav.min.css">
+
+  <!-- 项目自定义样式：放在主题 CSS 之后逐条覆盖。
+       版本号由 scripts/asset-version.js 按文件内容算 hash，不用再手改 ?v= -->
+  <link rel="stylesheet" type="text/css" href="/css/custom.css?v=eb9fe412">
+  
+<script src="/js/jquery-1.11.1.min.js"></script>
+
+  
+<script src="/js/header.js"></script>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+        
+<script src="/js/html5shiv.min.js"></script>
+
+        
+<script src="/js/respond.min.js"></script>
+
+    <![endif]-->
+  <!-- / FB Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lcg520.com/hello-world.html">
+  <meta property="og:title" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  <meta property="og:description" content="">
+  <meta property="og:site_name" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  
+  <!-- / Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="北极熊说它怕冷 - 有时候简简单单就好了">
+  <meta name="twitter:description" content="">
+  
+  
+  <style id="pm-appearance">
+    :root {
+      --pm-nav-font-size: 18px;
+      --pm-nav-icon-size: 18px;
+      --pm-nav-icon-width: 28px;
+      --pm-nav-gap: 12px;
+      --pm-nav-item-pad: 12px;
+      --pm-search-width: 717px;
+      --pm-search-height: 50px;
+      --pm-search-font: 16px;
+      --pm-search-radius: 10px;
+      --pm-engine-gap: 10px;
+      --pm-engine-left: 0px;
+      --pm-engine-right: auto;
+      --pm-engine-shift: 0px;
+      --pm-engine-dx: 0px;
+      --pm-eng-panel-w: 50%;
+      --pm-eng-cols: 3;
+      --pm-eng-col-gap: 10px;
+      --pm-eng-row-gap: 10px;
+      --pm-eng-item-h: 30px;
+      --pm-eng-font: 14px;
+      --pm-eng-icon-gap: 5px;
+      --pm-eng-item-align: flex-start;
+    }
+  </style>
+  
+  <style id="pm-site">
+    :root {
+      --pm-accent: #0e8fc4;
+      --pm-accent-dark: #7dd3fc;
+      --pm-accent-soft: rgba(14, 143, 196, 0.12);
+      --pm-accent-soft-dark: rgba(125, 211, 252, 0.14);
+      --site-motion: 0.7s;
+      --site-logo-h: 36px;
+      --pm-brand-size: 20px;
+      /* 主色派生：侧栏选中态、指示条、chips 选中文字都从这里取色，
+         以前这些位置写死 #8be3ff / #0b83b8，改主色等于没改 */
+      --site-accent-on-dark: #8ddcfc;
+      --site-accent-deep: #0d84b5;
+      --site-accent-wash-a: rgba(14, 143, 196, 0.28);
+      --site-accent-wash-b: rgba(14, 143, 196, 0.05);
+      --site-accent-line: rgba(14, 143, 196, 0.2);
+      --site-accent-glow: rgba(14, 143, 196, 0.55);
+      
+    }
+
+    /* body.pm-mode / .night 的权重比 :root 高，必须在同一层覆盖 */
+    body.pm-mode {
+      --ux-accent: #0e8fc4;
+      --ux-ring: #0e8fc4;
+      --ux-accent-soft: rgba(14, 143, 196, 0.18);
+      --ld-rad: 18px;
+      --ld-rad-lg: 22px;
+      --ld-card-sd: 0 1px 2px rgba(20, 24, 48, 0.05), 0 12px 26px -18px rgba(20, 24, 48, 0.3);
+      --ld-card-sd-h: 0 4px 10px rgba(20, 24, 48, 0.05), 0 28px 52px -26px rgba(20, 24, 48, 0.38);
+    }
+
+    body.pm-mode.night {
+      --ux-accent: #7dd3fc;
+      --ux-ring: #7dd3fc;
+      --ux-accent-soft: rgba(125, 211, 252, 0.22);
+      --ld-card-sd: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+      --ld-card-sd-h: 0 6px 14px rgba(0, 0, 0, 0.4), 0 30px 56px -28px rgba(0, 0, 0, 0.85);
+      /* 夜间主色一般本身就是亮色，深底、白底两条通路都直接用它 */
+      --site-accent-on-dark: #7dd3fc;
+      --site-accent-deep: #7dd3fc;
+      --site-accent-wash-a: rgba(125, 211, 252, 0.3);
+      --site-accent-wash-b: rgba(125, 211, 252, 0.06);
+      --site-accent-line: rgba(125, 211, 252, 0.26);
+      --site-accent-glow: rgba(125, 211, 252, 0.6);
+    }
+  </style>
+  <script>
+    /* 这些开关要在首屏绘制前就变成 <html> 上的类，否则会先按默认样式闪一下 */
+    window.__PM_SITE__ = {"logo":{"mode":"both","height":36},"effect":{"cardAnim":true,"cursor":"system","particles":"none","count":36},"interaction":{"linkTarget":"_blank","contextMenu":true,"scrollHint":true}};
+    (function () {
+      var conf = window.__PM_SITE__;
+      var root = document.documentElement;
+
+      if (!conf.effect.cardAnim) { root.classList.add('pm-no-card-anim'); }
+      if (conf.effect.cursor === 'paw') { root.classList.add('pm-cursor-paw'); }
+      if (conf.logo.mode === 'icon') { root.classList.add('is-logo-icon'); }
+      if (conf.logo.mode === 'text') { root.classList.add('is-logo-text'); }
+
+      /* 卡片点击：打开方式由「站点设置 → 交互」决定，模板里统一调 pmOpen() */
+      window.pmOpen = function (url) {
+        window.open(url, conf.interaction.linkTarget || '_blank');
+      };
+
+      /* 侧栏上次是否被收起：localStorage 里没有就按展开处理。
+         隐私模式下 localStorage 会抛错，所以整段包在 try 里，读不到就当没收起。 */
+      try {
+        if (window.localStorage.getItem('pm_sidebar_hidden') === '1') {
+          root.classList.add('pm-sb-min');
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <!-- 深浅模式：在首屏绘制前就把 night 类挂到 <html> 上，避免刷新时先闪一下浅色 -->
+  <script>
+    (function () {
+      try {
+        var match = document.cookie.match(/(?:^|;\s*)night=([^;]*)/);
+        var value = match ? match[1] : '';
+        var hour = new Date().getHours();
+        var night = value === '1' || (value === '' && (hour >= 18 || hour < 6));
+        if (night) {
+          document.documentElement.classList.add('night');
+        }
+      } catch (error) {}
+    })();
+  </script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+</head>
+
+ 
+
+  
+<footer class="main-footer sticky footer-type-1">
+  <div class="footer-inner">
+    <div class="site-footer-info">
+      <p class="footer-copyright">Copyright &copy; 2022 - 2026&nbsp;&nbsp; 北极熊说它怕冷</p>
+      <p class="footer-stats">
+        
+        <span class="footer-busuanzi">
+          <span id="busuanzi_container_site_uv">访问人数 <span id="busuanzi_value_site_uv"></span></span>
+          <span class="footer-separator">|</span>
+          <span id="busuanzi_container_site_pv">访问量 <span id="busuanzi_value_site_pv"></span></span>
+          <span class="footer-separator">|</span>
+        </span>
+        
+        <span>本站运行时间 <span id="site-runtime">计算中...</span></span>
+      </p>
+    </div>
+    <div class="go-up floating-actions" aria-label="页面快捷操作">
+      <a href="#" class="floating-action floating-action-theme" onclick="switchNightMode(); this.blur(); return false;" aria-label="切换深浅模式" title="切换深浅模式">
+        <i class="fas fa-sun"></i>
+      </a>
+      <!-- <a href="#" data-toggle="sidebar">
+        <i class="fas fa-bars"></i>
+      </a> -->
+    </div>
+  </div>
+</footer>
+</div>
+</div>
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/TweenMax.min.js"></script>
+<script src="/js/resizeable.min.js"></script>
+<script src="/js/joinable.js"></script>
+<script src="/js/xenon-api.min.js"></script>
+<script src="/js/xenon-toggles.min.js"></script>
+<script src="/js/xenon-custom.min.js"></script>
+
+
+<!-- 统计脚本已本地化（原来从 busuanzi.ibruce.info 的 CDN 拉）；
+     计数接口仍在第三方，不通时 4 秒后整块收掉，避免留下「访问人数 | 访问量 |」的空白 -->
+<script async src="/js/busuanzi.pure.mini.js?v=a30fcd42"></script>
+<script>
+(function () {
+  var box = document.querySelector('.footer-busuanzi');
+  if (!box) return;
+  window.setTimeout(function () {
+    var uv = document.getElementById('busuanzi_value_site_uv');
+    var pv = document.getElementById('busuanzi_value_site_pv');
+    var read = function (el) { return el && el.textContent ? el.textContent.trim() : ''; };
+    if (!read(uv) && !read(pv)) box.classList.add('is-off');
+  }, 4000);
+})();
+</script>
+
+<script>
+(function updateSiteRuntime() {
+  var startTime = new Date('2022-01-01T00:00:00+08:00').getTime();
+  var runtimeElement = document.getElementById('site-runtime');
+
+  if (!runtimeElement) {
+    return;
+  }
+
+  function pad(value) {
+    return value < 10 ? '0' + value : String(value);
+  }
+
+  function render() {
+    var seconds = Math.max(Math.floor((Date.now() - startTime) / 1000), 0);
+    var totalDays = Math.floor(seconds / 86400);
+    var years = Math.floor(totalDays / 365);
+    var days = totalDays % 365;
+    var hours = Math.floor((seconds % 86400) / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var restSeconds = seconds % 60;
+
+    runtimeElement.textContent = years + ' 年 ' + days + ' 天 ' + pad(hours) + ' 时 ' + pad(minutes) + ' 分 ' + pad(restSeconds) + ' 秒';
+  }
+
+  render();
+  window.setInterval(render, 1000);
+})();
+</script>
+
+<!-- 显式路径：原来写 js(setting.js.lozad)，实际上一直输出为空，
+     lozad 全靠 custom.body 里那份兜着，删掉 custom.body 后就报 lozad is not defined -->
+<script src="/js/lozad.min.js"></script>
+
+
+
+  <!-- 页面背景层：样式在 20-theme-cards.css 的 div.bg（目前是空规则，留给换背景图） -->
+  <div class="bg"></div>
+
+  <!-- lozad 由 footer.ejs 负责（about 页不加载），这里只挂自定义脚本，
+       所以 custom.js 跑起来时 window.lozad 已经就位 -->
+  <script src="/js/custom.js?v=776829d6"></script>
+</body>
+
+</html>
