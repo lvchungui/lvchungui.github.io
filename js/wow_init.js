@@ -1,0 +1,1 @@
+for(var arr=document.getElementsByClassName("box2"),i=0;i<arr.length;i++)arr[i].classList.add("wow"),arr[i].classList.add("animate__zoomIn");wow=new WOW({boxClass:"wow",animateClass:"animate__animated",offset:0,mobile:!1,live:!0}),wow.init();
