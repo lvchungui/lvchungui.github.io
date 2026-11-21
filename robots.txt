@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# 归档页是 Hexo 自带的博客列表，对导航站没有检索价值，但留着也不算错误答案，
+# 这里只挡一层，避免被当成低质重复内容抓取。
+Disallow: /archives/
+
+# 后台和构建期脚本从来不在产物里，无需设置；这里只声明真正的站点地图。
+Sitemap: https://lcg520.com/sitemap.xml
